@@ -1,26 +1,123 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+  Crest App design tokens — derived directly from the Figma screens
+  (no dedicated design-system/brand page exists; values inferred from
+  Account Creation + KYC frames). shadcn/ui-compatible CSS variables.
+
+  Confidently derived:
+    - Primary/brand: deep navy #061D52 (1/2 badge, selected chip, filled CTA)
+    - Font: Inter · Foreground #111827 · Muted text #666 · Surface #f9f9f9
+    - Radius: ~12px on cards/inputs
+  Inferences (review later):
+    - success/border/destructive/warning were not fully observable in-frame.
+*/
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
+  --radius: 0.75rem; /* 12px — cards/inputs in Figma */
+
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111827; /* gray-900 headings */
+
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+
+  /* Brand navy */
+  --primary: #061d52;
+  --primary-foreground: #ffffff;
+
+  /* Secondary: derived from the outline/selected-chip treatment (navy on tint) — INFERENCE */
+  --secondary: #f9f9f9;
+  --secondary-foreground: #061d52;
+
+  --muted: #f9f9f9; /* surface panels */
+  --muted-foreground: #666666; /* secondary text */
+
+  --accent: #eef1f8; /* light navy tint behind selected states — INFERENCE */
+  --accent-foreground: #061d52;
+
+  /* TODO(design): exact success green for upload progress arcs not extractable from PNG */
+  --success: #22c55e;
+  --success-foreground: #ffffff;
+
+  /* TODO(design): destructive/error color not present in provided frames — sensible default */
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  /* TODO(design): border/input hairline inferred as gray-200 */
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #061d52;
+}
+
+.dark {
+  /* TODO(design): no dark-mode screens provided — values inverted sensibly, review before shipping dark mode */
+  --background: #0b1220;
+  --foreground: #f9fafb;
+  --card: #111827;
+  --card-foreground: #f9fafb;
+  --popover: #111827;
+  --popover-foreground: #f9fafb;
+  --primary: #3b5bdb;
+  --primary-foreground: #ffffff;
+  --secondary: #1f2937;
+  --secondary-foreground: #f9fafb;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --accent: #1f2937;
+  --accent-foreground: #f9fafb;
+  --success: #22c55e;
+  --success-foreground: #052e16;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1f2937;
+  --input: #1f2937;
+  --ring: #3b5bdb;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--color-border);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }

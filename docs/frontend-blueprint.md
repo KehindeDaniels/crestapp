@@ -43,7 +43,7 @@ src/
     (public)/               # RSC, no auth: marketing, search, listing detail
     (auth)/                 # login, register, password, verify (guest-only)
     (onboarding)/kyc/       # KYC wizard (authed, status=pending ok)
-    (dashboard)/            # authed app shell: properties, contracts, messages, etc.
+    (client)/               # authed client app shell: properties, contracts, messages, etc. (renter/buyer/agent/landlord — NOT the separate admin Dashboard, see §17 Phase 7)
     api/                    # Next route handlers ONLY where truly needed (e.g. og-image). Not a proxy.
     layout.tsx  globals.css  not-found.tsx  error.tsx
   features/
@@ -77,11 +77,12 @@ proxy.ts                    # optimistic auth redirects (Next 16 name for middle
 Feature module public surface is its `index.ts`; cross-feature imports go through it.
 
 ## 4. Routing strategy (App Router)
-- **Route groups** encode access class without affecting URLs: `(public)`, `(auth)`, `(onboarding)`, `(dashboard)`.
+- **Route groups** encode access class without affecting URLs: `(public)`, `(auth)`, `(onboarding)`, `(client)`. (`(client)` is the authed renter/buyer/agent/landlord app shell — the separate admin Dashboard, a distinct Figma page/persona for Crest staff, lives under nested `/admin/*` routes inside it, see §17 Phase 7.)
 - **Public (RSC, server-fetch allowed):** `/`, `/properties` (search), `/properties/[id]` (listing detail). These hit unauthenticated backend endpoints (`/api/properties/search`) and are SEO/OG-optimized. Use `generateMetadata` (async `params`).
-- **Auth (guest-only):** `/login`, `/register`, `/forgot-password`, `/reset-password`, `/verify`. `proxy.ts` bounces authenticated users to `/dashboard`.
+- **Auth (guest-only):** `/login`, `/register` (5-step wizard: `/register/verify-email`, `/register/phone`, `/register/verify-phone`, `/register/password` — email/phone verification is wizard-internal, not a standalone `/verify` route), `/forgot-password`, `/reset-password`. `proxy.ts` bounces authenticated users to `/dashboard`.
 - **Onboarding:** `/kyc` multi-step (`/kyc/id`, `/kyc/selfie`, `/kyc/processing`) — **URL-driven steps** so refresh/back works; RHF + Zustand hold wizard state.
-- **Dashboard (authed):** `/dashboard`, `/properties/new`, `/properties/mine`, `/properties/[id]/manage`, `/contracts`, `/contracts/[id]`, `/messages`, `/messages/[userId]`, `/support`, `/notifications`, `/profile`, and `/admin/*` (RoleGate=admin).
+- **Client app (authed, `(client)` route group):** `/dashboard`, `/properties/new`, `/properties/mine`, `/properties/[id]/manage`, `/contracts`, `/contracts/[id]`, `/messages`, `/messages/[userId]`, `/support`, `/notifications`, `/profile` — the renter/buyer/agent/landlord persona.
+- **Admin Dashboard (authed, `/admin/*`, RoleGate=admin):** a distinct Figma page/persona for Crest staff — analytics, property review/approval, KYC verification queue, transactions, documents, user management. Nested inside `(client)` at the route level but gated separately; deferred to Phase 7 (see §17).
 - **Async params everywhere** (`const { id } = await params`). Run `next typegen` and use `PageProps<'/properties/[id]'>`.
 - **Loading/error UX:** per-segment `loading.tsx` (skeletons) and `error.tsx`. Use `not-found.tsx` for missing entities; `forbidden()`/`unauthorized()` (new in 16) for role/permission failures with `forbidden.tsx`/`unauthorized.tsx`.
 - **Modals:** intercepting + parallel routes for quick-view (property preview, image lightbox) where valuable; every parallel slot needs `default.tsx` (Next 16 requirement).
@@ -97,7 +98,7 @@ Three concentric rings, all typed:
 
 ## 6. Authentication & authorization architecture
 - **Login/register** call Laravel directly; on success store `{ token, user }`. Token persisted in a **JS-readable cookie** `crest_token` (`Secure`, `SameSite=Lax`, 7-day max-age) plus an in-memory Zustand `sessionStore`; a minimal `crest_role`/`crest_status` cookie enables optimistic guards. (Trade-off acknowledged: client-readable = XSS-exposed; mitigated by strict CSP, output encoding, dependency hygiene. Abstraction allows later migration to httpOnly BFF.)
-- **`proxy.ts` (optimistic only):** existence/shape check of `crest_token` cookie → redirect unauth users away from `(dashboard)`/`(onboarding)`, and authed users away from `(auth)`. No network calls (per Next 16 guidance).
+- **`proxy.ts` (optimistic only):** existence/shape check of `crest_token` cookie → redirect unauth users away from `(client)`/`(onboarding)`, and authed users away from `(auth)`. No network calls (per Next 16 guidance).
 - **Authoritative checks on the client:** `useAuth()` hydrates from `/api/user`; `AuthGuard` in the dashboard layout redirects on 401. `apiClient` treats any `401` as session-expired → clear session → redirect `/login`.
 - **Authorization primitives:**
   - `RoleGate role="admin"` — role-based UI + admin routes.
@@ -138,7 +139,7 @@ Three concentric rings, all typed:
 
 ## 12. Layout architecture
 - **Root layout** (`app/layout.tsx`): `<html>` (+ `data-scroll-behavior="smooth"` if we want the old scroll reset), fonts via `next/font`, `Providers` (QueryClient, tooltip, toaster), base metadata.
-- **Group layouts:** `(public)` = marketing header/footer; `(auth)` = centered card + brand panel (matches Figma auth screens); `(onboarding)` = minimal stepper chrome; `(dashboard)` = `AppShell` (sidebar + topbar with notifications/messages, KYC banner when pending).
+- **Group layouts:** `(public)` = marketing header/footer; `(auth)` = centered card + brand panel (matches Figma auth screens); `(onboarding)` = minimal stepper chrome; `(client)` = `AppShell` (sidebar + topbar with notifications/messages, KYC banner when pending) — the renter/buyer/agent/landlord shell, distinct from the admin Dashboard.
 - **Nested layouts** for sub-areas (e.g. `/messages` two-pane). Remember Next caveat: **do not put auth checks only in layouts** (they don't re-render on nav) — gate at page/component level too.
 - Skeleton `loading.tsx` per major segment to keep transitions instant (Next 16 improved prefetching).
 
@@ -176,10 +177,10 @@ Three concentric rings, all typed:
 - **Phase 4 — Property ownership:** post rental/sale, media upload, my-properties, verification document upload + status, activate/deactivate.
 - **Phase 5 — Contracts & payments:** quick-create flow, fee breakdown, accept/reject, Flutterwave payment link + status polling, contract list/detail.
 - **Phase 6 — Communication & support:** messaging (conversations, send, block/unblock), notifications, support tickets, fraud report.
-- **Phase 7 — Admin:** KYC review, contract admin/analytics, fee config, verification queue (RoleGate + react-table).
+- **Phase 7 — Admin Dashboard:** separate persona/surface under `/admin/*` (RoleGate=admin) — analytics overview (listed/approved/rejected property counts, transaction trend, KYC donut — assembled client-side from multiple `*/statistics` + `find-users-admin` responses, no single overview endpoint exists), property review/approval queue, KYC verification queue, transactions, documents, user directory (via `find-users-admin`, KYC-scoped). Figma has a dedicated "Dashboard" page for this — confirmed distinct from the client-app screens, not yet inspected in detail.
 - **Phase 8 — Hardening:** a11y pass, CSP/security headers, Sentry, E2E coverage, performance budget, staging→prod.
 
-> **Screen-coverage gap (from Figma vs backend):** Figma currently covers Account Creation, KYC, Home, Search, Listing. Backend implies **not-yet-designed** screens: contracts/fees/payment, messaging + blocking, support/fraud, notifications, document e-signature workflow, profile/credibility/ratings, and the full admin suite. Flag these for design before their phases.
+> **Screen-coverage gap (from Figma vs backend):** The Figma file has 3 top-level pages: "Mobile & Web App" (client-facing — currently covers Account Creation, KYC, Home, Search, Listing), "Dashboard" (admin — sidebar confirms Property Reviews/Transactions/Documents/KYC Verification/Users/Profile/Settings, not yet inspected screen-by-screen), and "Logo Branding" (not yet inspected — may resolve the design-token TODOs in `globals.css`). Backend implies additional **not-yet-designed** client screens: contracts/fees/payment, messaging + blocking, support/fraud, notifications, document e-signature workflow, profile/credibility/ratings. Flag these for design before their phases. On the admin side, the backend still lacks: user suspend/activate, a non-KYC-scoped user directory, and an admin support desk — flag for backend work before Phase 7.
 
 ## 18. Architectural decisions & reasoning (ADR summary)
 1. **Feature-first structure** — scales to the ~13 backend modules without a tangled layer soup; each feature is independently ownable/testable.
@@ -206,7 +207,7 @@ Three concentric rings, all typed:
 2. **`config/env.ts`** (Zod-validated) + `.env.example` (`NEXT_PUBLIC_API_URL`).
 3. **`lib/api/client.ts`** — `apiClient` + `publicFetch` + `ApiError` normalization (422 + `error_code`).
 4. **`lib/query` provider** + root `Providers` + `sonner` toaster.
-5. **`proxy.ts`** optimistic guards; route groups `(public)/(auth)/(onboarding)/(dashboard)`.
+5. **`proxy.ts`** optimistic guards; route groups `(public)/(auth)/(onboarding)/(client)`.
 6. **Auth feature** — schemas, api, hooks, `sessionStore`, token cookie, `useAuth`, `AuthGuard`, guest redirects; build register/login/forgot/reset/verify.
 7. **Guards** — `RoleGate`, `KycGuard`, `VerifiedGate`.
 8. **KYC wizard** (URL steps + RHF + upload/selfie).

@@ -27,8 +27,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
           },
           "response": [
@@ -48,8 +54,14 @@
                 },
                 "url": {
                   "raw": "{{local_url}}/api/auth/register",
-                  "host": ["{{local_url}}"],
-                  "path": ["api", "auth", "register"]
+                  "host": [
+                    "{{local_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
                 }
               },
               "status": "Created",
@@ -114,8 +126,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           },
           "response": [
@@ -135,8 +153,14 @@
                 },
                 "url": {
                   "raw": "{{local_url}}/api/auth/login",
-                  "host": ["{{local_url}}"],
-                  "path": ["api", "auth", "login"]
+                  "host": [
+                    "{{local_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
                 }
               },
               "status": "OK",
@@ -201,8 +225,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login/google",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login", "google"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login",
+                "google"
+              ]
             }
           },
           "response": []
@@ -220,8 +251,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/auth/logout",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "logout"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
             }
           },
           "response": []
@@ -242,8 +279,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/password/reset",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "password", "reset"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "password",
+                "reset"
+              ]
             }
           },
           "response": [
@@ -263,8 +307,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/auth/password/reset",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "auth", "password", "reset"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "password",
+                    "reset"
+                  ]
                 }
               },
               "status": "OK",
@@ -365,8 +416,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/password/reset/confirm",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "password", "reset", "confirm"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "password",
+                "reset",
+                "confirm"
+              ]
             }
           },
           "response": [
@@ -386,8 +445,16 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/auth/password/reset/confirm",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "auth", "password", "reset", "confirm"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "password",
+                    "reset",
+                    "confirm"
+                  ]
                 }
               },
               "status": "OK",
@@ -488,8 +555,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/password/change",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "password", "change"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "password",
+                "change"
+              ]
             }
           },
           "response": [
@@ -509,8 +583,16 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/auth/password/reset/confirm",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "auth", "password", "reset", "confirm"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "password",
+                    "reset",
+                    "confirm"
+                  ]
                 }
               },
               "status": "OK",
@@ -609,8 +691,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/auth/password/change",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "auth", "password", "change"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "password",
+                    "change"
+                  ]
                 }
               },
               "status": "OK",
@@ -707,15 +796,110 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"type\": \"email\",//email or phone\n  \"identifier\": \"sameladebisola@gmail.com\"\n}"
+              "raw": "{\n  \"type\": \"phone\",\n  \"identifier\": \"08012345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/auth/verification/send",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "verification", "send"]
-            }
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "verification",
+                "send"
+              ]
+            },
+            "description": "Send a verification code via email or SMS.\n\n- `type`: `email` or `phone`\n- `identifier`: email address or phone number\n\n**SMS note:** When `type` is `phone`, the response includes `code` so frontend can proceed when the SMS provider is unavailable."
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 SMS - Code Returned",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/verification/send",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "verification",
+                    "send"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n  \"message\": \"Verification code has been sent to your phone.\",\n  \"code\": \"482913\"\n}"
+            },
+            {
+              "name": "200 Email - No Code in Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/verification/send",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "verification",
+                    "send"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "value": "application/json",
+                  "key": "Content-Type"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Verification code has been sent to your email.\"\n}"
+            }
+          ]
         },
         {
           "name": "Verify Code",
@@ -733,8 +917,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/verification/verify",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "verification", "verify"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "verification",
+                "verify"
+              ]
             }
           },
           "response": []
@@ -767,8 +958,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/user",
-              "host": ["{{base_url}}"],
-              "path": ["api", "user"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
             }
           },
           "response": []
@@ -796,8 +992,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -823,8 +1024,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -842,8 +1048,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/profile/credibility",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile", "credibility"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile",
+                "credibility"
+              ]
             }
           },
           "response": []
@@ -869,8 +1081,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/profile/rate",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile", "rate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile",
+                "rate"
+              ]
             }
           },
           "response": []
@@ -891,8 +1109,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -923,8 +1146,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/kyc/find-single",
-              "host": ["{{base_url}}"],
-              "path": ["api", "kyc", "find-single"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "kyc",
+                "find-single"
+              ]
             }
           },
           "response": [
@@ -949,8 +1178,14 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/kyc/find-single",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "kyc", "find-single"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "kyc",
+                    "find-single"
+                  ]
                 }
               },
               "status": "OK",
@@ -1056,8 +1291,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/kyc/find-users-admin",
-              "host": ["{{base_url}}"],
-              "path": ["api", "kyc", "find-users-admin"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "kyc",
+                "find-users-admin"
+              ]
             }
           },
           "response": []
@@ -1083,8 +1324,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/kyc/submit",
-              "host": ["{{base_url}}"],
-              "path": ["api", "kyc", "submit"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "kyc",
+                "submit"
+              ]
             }
           },
           "response": []
@@ -1110,8 +1357,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/kyc/process-manual",
-              "host": ["{{base_url}}"],
-              "path": ["api", "kyc", "process-manual"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "kyc",
+                "process-manual"
+              ]
             }
           },
           "response": []
@@ -1137,8 +1390,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/search",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "search"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "search"
+              ]
             }
           },
           "response": [
@@ -1158,8 +1417,14 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/properties/search",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "properties", "search"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "properties",
+                    "search"
+                  ]
                 }
               },
               "status": "OK",
@@ -1261,8 +1526,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/rental",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "rental"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "rental"
+              ]
             }
           },
           "response": []
@@ -1288,8 +1559,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/sale",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "sale"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "sale"
+              ]
             }
           },
           "response": []
@@ -1347,8 +1624,17 @@
             "url": {
               "raw": "https://api.crestapp.ng/api/properties/22/media",
               "protocol": "https",
-              "host": ["api", "crestapp", "ng"],
-              "path": ["api", "properties", "22", "media"]
+              "host": [
+                "api",
+                "crestapp",
+                "ng"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "22",
+                "media"
+              ]
             }
           },
           "response": [
@@ -1406,8 +1692,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/properties/4/media",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "properties", "4", "media"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "properties",
+                    "4",
+                    "media"
+                  ]
                 }
               },
               "status": "Created",
@@ -1513,8 +1806,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "1"
+              ]
             }
           },
           "response": []
@@ -1541,8 +1840,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/19/activate",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "19", "activate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "19",
+                "activate"
+              ]
             }
           },
           "response": [
@@ -1568,8 +1874,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/properties/19/activate",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "properties", "19", "activate"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "properties",
+                    "19",
+                    "activate"
+                  ]
                 }
               },
               "status": "OK",
@@ -1674,8 +1987,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/properties/18/activate",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "properties", "18", "activate"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "properties",
+                    "18",
+                    "activate"
+                  ]
                 }
               },
               "status": "Bad Request",
@@ -1773,8 +2093,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/properties/1/deactivate",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "1", "deactivate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "1",
+                "deactivate"
+              ]
             }
           },
           "response": []
@@ -1792,8 +2119,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/properties/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "1"
+              ]
             }
           },
           "response": []
@@ -1820,8 +2153,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/my-properties",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "my-properties"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "my-properties"
+              ]
             }
           },
           "response": []
@@ -1839,8 +2178,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/properties/statistics",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "statistics"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "statistics"
+              ]
             }
           },
           "response": []
@@ -1902,8 +2247,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/1/verification/documents",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "1", "verification", "documents"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "1",
+                "verification",
+                "documents"
+              ]
             }
           },
           "response": []
@@ -1921,8 +2274,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/properties/1/verification/submit",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "1", "verification", "submit"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "1",
+                "verification",
+                "submit"
+              ]
             }
           },
           "response": []
@@ -1952,8 +2313,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/1/verification/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "1", "verification", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "1",
+                "verification",
+                "status"
+              ]
             }
           },
           "response": []
@@ -1971,8 +2340,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/properties/1/verification/logs",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "1", "verification", "logs"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "1",
+                "verification",
+                "logs"
+              ]
             }
           },
           "response": []
@@ -1998,8 +2375,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/properties/19/verification/validate",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "19", "verification", "validate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "19",
+                "verification",
+                "validate"
+              ]
             }
           },
           "response": [
@@ -2024,7 +2409,9 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/properties/19/verification/validate",
-                  "host": ["{{base_url}}"],
+                  "host": [
+                    "{{base_url}}"
+                  ],
                   "path": [
                     "api",
                     "properties",
@@ -2129,8 +2516,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/properties/verification/documents/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "properties", "verification", "documents", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "verification",
+                "documents",
+                "1"
+              ]
             }
           },
           "response": []
@@ -2157,8 +2552,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/verification/search",
-              "host": ["{{base_url}}"],
-              "path": ["api", "verification", "search"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "verification",
+                "search"
+              ]
             }
           },
           "response": [
@@ -2175,8 +2576,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/verification/pending",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "verification", "pending"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "verification",
+                    "pending"
+                  ]
                 }
               },
               "status": "OK",
@@ -2301,8 +2708,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/communication/blocking/block",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "communication", "blocking", "block"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "communication",
+                    "blocking",
+                    "block"
+                  ]
                 },
                 "description": "Block another user. Once blocked, the blocker cannot send messages to the blocked user, and the blocked user cannot send messages to or view conversations with the blocker.\n\nREQUIRED PARAMETERS:\n- blocked_id (integer, required): The user_id of the user to block. Must exist in users table and cannot be the current user's own ID.\n\nOPTIONAL PARAMETERS:\n- reason (string, optional, max:255): Reason for blocking the user.\n\nERRORS:\n- 422: Validation failed (missing/invalid blocked_id, trying to block self, non-existent user)\n- 409: User is already blocked\n- 500: Server error during block operation"
               },
@@ -2339,8 +2753,15 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/block",
-                      "host": ["{{base_url}}"],
-                      "path": ["api", "communication", "blocking", "block"]
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "communication",
+                        "blocking",
+                        "block"
+                      ]
                     },
                     "description": "Block another user. Once blocked, the blocker cannot send messages to the blocked user, and the blocked user cannot send messages to or view conversations with the blocker.\n\nREQUIRED PARAMETERS:\n- blocked_id (integer, required): The user_id of the user to block. Must exist in users table and cannot be the current user's own ID.\n\nOPTIONAL PARAMETERS:\n- reason (string, optional, max:255): Reason for blocking the user.\n\nERRORS:\n- 422: Validation failed (missing/invalid blocked_id, trying to block self, non-existent user)\n- 409: User is already blocked\n- 500: Server error during block operation"
                   },
@@ -2388,8 +2809,15 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/block",
-                      "host": ["{{base_url}}"],
-                      "path": ["api", "communication", "blocking", "block"]
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "communication",
+                        "blocking",
+                        "block"
+                      ]
                     },
                     "description": "Block another user. Once blocked, the blocker cannot send messages to the blocked user, and the blocked user cannot send messages to or view conversations with the blocker.\n\nREQUIRED PARAMETERS:\n- blocked_id (integer, required): The user_id of the user to block. Must exist in users table and cannot be the current user's own ID.\n\nOPTIONAL PARAMETERS:\n- reason (string, optional, max:255): Reason for blocking the user.\n\nERRORS:\n- 422: Validation failed (missing/invalid blocked_id, trying to block self, non-existent user)\n- 409: User is already blocked\n- 500: Server error during block operation"
                   },
@@ -2437,8 +2865,15 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/block",
-                      "host": ["{{base_url}}"],
-                      "path": ["api", "communication", "blocking", "block"]
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "communication",
+                        "blocking",
+                        "block"
+                      ]
                     },
                     "description": "Block another user. Once blocked, the blocker cannot send messages to the blocked user, and the blocked user cannot send messages to or view conversations with the blocker.\n\nREQUIRED PARAMETERS:\n- blocked_id (integer, required): The user_id of the user to block. Must exist in users table and cannot be the current user's own ID.\n\nOPTIONAL PARAMETERS:\n- reason (string, optional, max:255): Reason for blocking the user.\n\nERRORS:\n- 422: Validation failed (missing/invalid blocked_id, trying to block self, non-existent user)\n- 409: User is already blocked\n- 500: Server error during block operation"
                   },
@@ -2474,8 +2909,16 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/communication/blocking/unblock/2",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "communication", "blocking", "unblock", "2"],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "communication",
+                    "blocking",
+                    "unblock",
+                    "2"
+                  ],
                   "variable": [
                     {
                       "key": "blocked_id",
@@ -2505,7 +2948,9 @@
                     ],
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/unblock/2",
-                      "host": ["{{base_url}}"],
+                      "host": [
+                        "{{base_url}}"
+                      ],
                       "path": [
                         "api",
                         "communication",
@@ -2553,7 +2998,9 @@
                     ],
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/unblock/2",
-                      "host": ["{{base_url}}"],
+                      "host": [
+                        "{{base_url}}"
+                      ],
                       "path": [
                         "api",
                         "communication",
@@ -2603,8 +3050,15 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/communication/blocking/blocked",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "communication", "blocking", "blocked"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "communication",
+                    "blocking",
+                    "blocked"
+                  ]
                 },
                 "description": "Get a list of all users the authenticated user has blocked. Returns each block record with the blocked user's full profile details.\n\nNO REQUEST BODY REQUIRED\nReturns all blocked users ordered by most recently blocked first.\n\nERRORS:\n- 500: Server error fetching blocked users"
               },
@@ -2627,8 +3081,15 @@
                     ],
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/blocked",
-                      "host": ["{{base_url}}"],
-                      "path": ["api", "communication", "blocking", "blocked"]
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "communication",
+                        "blocking",
+                        "blocked"
+                      ]
                     },
                     "description": "Get a list of all users the authenticated user has blocked. Returns each block record with the blocked user's full profile details.\n\nNO REQUEST BODY REQUIRED\nReturns all blocked users ordered by most recently blocked first.\n\nERRORS:\n- 500: Server error fetching blocked users"
                   },
@@ -2664,8 +3125,16 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/communication/blocking/check/2",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "communication", "blocking", "check", "2"],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "communication",
+                    "blocking",
+                    "check",
+                    "2"
+                  ],
                   "variable": [
                     {
                       "key": "user_id",
@@ -2695,7 +3164,9 @@
                     ],
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/check/2",
-                      "host": ["{{base_url}}"],
+                      "host": [
+                        "{{base_url}}"
+                      ],
                       "path": [
                         "api",
                         "communication",
@@ -2743,7 +3214,9 @@
                     ],
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/check/2",
-                      "host": ["{{base_url}}"],
+                      "host": [
+                        "{{base_url}}"
+                      ],
                       "path": [
                         "api",
                         "communication",
@@ -2791,7 +3264,9 @@
                     ],
                     "url": {
                       "raw": "{{base_url}}/api/communication/blocking/check/2",
-                      "host": ["{{base_url}}"],
+                      "host": [
+                        "{{base_url}}"
+                      ],
                       "path": [
                         "api",
                         "communication",
@@ -2855,8 +3330,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/communication/messages/send",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "communication", "messages", "send"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "communication",
+                    "messages",
+                    "send"
+                  ]
                 },
                 "description": "Demonstrates the error returned when trying to send a message to a blocked user. This is the same send message endpoint, but if a block relationship exists you will get a 403 error with error_code USER_BLOCKED.\n\nREFERENCE: This shows how the blocking feature integrates with the existing messaging system. The same 403 error is returned when:\n1. Trying to send a message to a user you have blocked\n2. Trying to send a message to a user who has blocked you\n\nERRORS:\n- 403: USER_BLOCKED - Cannot send message due to block restriction\n- 422: Validation failed for message parameters"
               },
@@ -2893,8 +3375,15 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/communication/messages/send",
-                      "host": ["{{base_url}}"],
-                      "path": ["api", "communication", "messages", "send"]
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "communication",
+                        "messages",
+                        "send"
+                      ]
                     },
                     "description": "Demonstrates the error returned when trying to send a message to a blocked user. This is the same send message endpoint, but if a block relationship exists you will get a 403 error with error_code USER_BLOCKED.\n\nREFERENCE: This shows how the blocking feature integrates with the existing messaging system. The same 403 error is returned when:\n1. Trying to send a message to a user you have blocked\n2. Trying to send a message to a user who has blocked you\n\nERRORS:\n- 403: USER_BLOCKED - Cannot send message due to block restriction\n- 422: Validation failed for message parameters"
                   },
@@ -2942,8 +3431,15 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/communication/messages/send",
-                      "host": ["{{base_url}}"],
-                      "path": ["api", "communication", "messages", "send"]
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "communication",
+                        "messages",
+                        "send"
+                      ]
                     },
                     "description": "Demonstrates the error returned when trying to send a message to a blocked user. This is the same send message endpoint, but if a block relationship exists you will get a 403 error with error_code USER_BLOCKED.\n\nREFERENCE: This shows how the blocking feature integrates with the existing messaging system. The same 403 error is returned when:\n1. Trying to send a message to a user you have blocked\n2. Trying to send a message to a user who has blocked you\n\nERRORS:\n- 403: USER_BLOCKED - Cannot send message due to block restriction\n- 422: Validation failed for message parameters"
                   },
@@ -2979,7 +3475,9 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/communication/messages/conversation/2",
-                  "host": ["{{base_url}}"],
+                  "host": [
+                    "{{base_url}}"
+                  ],
                   "path": [
                     "api",
                     "communication",
@@ -3016,7 +3514,9 @@
                     ],
                     "url": {
                       "raw": "{{base_url}}/api/communication/messages/conversation/2",
-                      "host": ["{{base_url}}"],
+                      "host": [
+                        "{{base_url}}"
+                      ],
                       "path": [
                         "api",
                         "communication",
@@ -3071,8 +3571,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/communication/messages/send",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "messages", "send"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "messages",
+                "send"
+              ]
             }
           },
           "response": []
@@ -3090,8 +3597,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/conversations",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "messages", "conversations"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "messages",
+                "conversations"
+              ]
             }
           },
           "response": []
@@ -3109,8 +3623,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/conversation/6",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "messages", "conversation", "6"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "messages",
+                "conversation",
+                "6"
+              ]
             }
           },
           "response": []
@@ -3128,8 +3650,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/read/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "messages", "read", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "messages",
+                "read",
+                "1"
+              ]
             }
           },
           "response": []
@@ -3147,8 +3677,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "messages", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "messages",
+                "1"
+              ]
             }
           },
           "response": []
@@ -3166,8 +3703,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/unread-count",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "messages", "unread-count"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "messages",
+                "unread-count"
+              ]
             }
           },
           "response": []
@@ -3185,8 +3729,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/search?query=property",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "messages", "search"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "messages",
+                "search"
+              ],
               "query": [
                 {
                   "key": "query",
@@ -3210,7 +3761,9 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/conversation/1/archive",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "communication",
@@ -3236,7 +3789,9 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/conversation/1/unarchive",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "communication",
@@ -3262,8 +3817,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/messages/statistics",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "messages", "statistics"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "messages",
+                "statistics"
+              ]
             }
           },
           "response": []
@@ -3294,8 +3856,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/communication/support/tickets",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "support", "tickets"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "support",
+                "tickets"
+              ]
             }
           },
           "response": []
@@ -3313,8 +3882,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/support/tickets",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "support", "tickets"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "support",
+                "tickets"
+              ]
             }
           },
           "response": []
@@ -3332,8 +3908,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/support/tickets/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "support", "tickets", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "support",
+                "tickets",
+                "1"
+              ]
             }
           },
           "response": []
@@ -3359,7 +3943,9 @@
             },
             "url": {
               "raw": "{{base_url}}/api/communication/support/tickets/1/messages",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "communication",
@@ -3385,7 +3971,9 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/support/tickets/1/close",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "communication",
@@ -3419,8 +4007,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/communication/support/report-fraud",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "support", "report-fraud"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "support",
+                "report-fraud"
+              ]
             }
           },
           "response": []
@@ -3438,8 +4033,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/communication/support/statistics",
-              "host": ["{{base_url}}"],
-              "path": ["api", "communication", "support", "statistics"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "communication",
+                "support",
+                "statistics"
+              ]
             }
           },
           "response": []
@@ -3484,8 +4086,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/transactions/rental/123",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "transactions", "rental", "123"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transactions",
+                    "rental",
+                    "123"
+                  ]
                 },
                 "description": "Initiate a rental transaction for a property. Requires KYC verification and appropriate user role (tenant/buyer/user)."
               },
@@ -3560,8 +4169,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/transactions/purchase/456",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "transactions", "purchase", "456"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transactions",
+                    "purchase",
+                    "456"
+                  ]
                 },
                 "description": "Initiate a property purchase transaction. Requires KYC verification and appropriate user role (buyer/user)."
               },
@@ -3622,8 +4238,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/transactions/123",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "transactions", "123"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transactions",
+                    "123"
+                  ]
                 },
                 "description": "Get detailed information about a specific transaction. User must be buyer, seller, or admin."
               },
@@ -3688,8 +4310,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/transactions/123/status",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "transactions", "123", "status"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transactions",
+                    "123",
+                    "status"
+                  ]
                 },
                 "description": "Update transaction status. Valid statuses: initiated, pending_payment, payment_received, in_escrow, completed, cancelled, disputed, refunded. User must be buyer, seller, or admin."
               },
@@ -3763,8 +4392,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/transactions/123/cancel",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "transactions", "123", "cancel"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transactions",
+                    "123",
+                    "cancel"
+                  ]
                 },
                 "description": "Cancel a transaction. Only cancellable in initiated or pending_payment status. User must be buyer, seller, or admin."
               },
@@ -3832,8 +4468,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/transactions?type=rent&status=completed&start_date=2024-01-01&end_date=2024-02-15&per_page=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "transactions"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transactions"
+              ],
               "query": [
                 {
                   "key": "type",
@@ -3877,8 +4518,13 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/transactions?type=rent&status=completed&start_date=2024-01-01&end_date=2024-02-15&per_page=10",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "transactions"],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transactions"
+                  ],
                   "query": [
                     {
                       "key": "type",
@@ -3935,8 +4581,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/transactions/statistics",
-              "host": ["{{base_url}}"],
-              "path": ["api", "transactions", "statistics"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "statistics"
+              ]
             },
             "description": "Get transaction statistics for dashboard. Admin users see all transactions, regular users see only their own transactions."
           },
@@ -3953,8 +4605,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/transactions/statistics",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "transactions", "statistics"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transactions",
+                    "statistics"
+                  ]
                 }
               },
               "status": "OK",
@@ -3981,8 +4639,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/transactions/statistics",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "transactions", "statistics"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "transactions",
+                    "statistics"
+                  ]
                 }
               },
               "status": "OK",
@@ -4031,8 +4695,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/quick-create",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "quick-create"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "quick-create"
+              ]
             }
           },
           "response": [
@@ -4052,8 +4722,14 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/quick-create",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "quick-create"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "quick-create"
+                  ]
                 }
               },
               "status": "Created",
@@ -4152,8 +4828,14 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/quick-create",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "quick-create"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "quick-create"
+                  ]
                 }
               },
               "status": "Created",
@@ -4260,8 +4942,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts"
+              ]
             }
           },
           "response": [
@@ -4287,8 +4974,13 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts"
+                  ]
                 }
               },
               "status": "Created",
@@ -4325,8 +5017,13 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts"
+                  ]
                 }
               },
               "status": "Created",
@@ -4424,8 +5121,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts?per_page=15&property_id=19",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts"
+              ],
               "query": [
                 {
                   "key": "type",
@@ -4483,8 +5185,13 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts"
+                  ]
                 }
               },
               "status": "OK",
@@ -4514,8 +5221,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "1"
+              ]
             }
           },
           "response": [
@@ -4532,8 +5245,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts/1",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "1"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "1"
+                  ]
                 }
               },
               "status": "OK",
@@ -4562,8 +5281,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts/by-property/{propertyId}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "by-property", "{propertyId}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "by-property",
+                "{propertyId}"
+              ]
             }
           },
           "response": []
@@ -4590,8 +5316,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/1/accept",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "1", "accept"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "1",
+                "accept"
+              ]
             }
           },
           "response": [
@@ -4617,8 +5350,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/1/accept",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "1", "accept"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "1",
+                    "accept"
+                  ]
                 }
               },
               "status": "OK",
@@ -4657,8 +5397,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/1/reject",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "1", "reject"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "1",
+                "reject"
+              ]
             }
           },
           "response": [
@@ -4684,8 +5431,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/1/reject",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "1", "reject"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "1",
+                    "reject"
+                  ]
                 }
               },
               "status": "OK",
@@ -4724,8 +5478,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/1/cancel",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "1", "cancel"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "1",
+                "cancel"
+              ]
             }
           },
           "response": [
@@ -4751,8 +5512,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/1/cancel",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "1", "cancel"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "1",
+                    "cancel"
+                  ]
                 }
               },
               "status": "OK",
@@ -4782,8 +5550,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts/1/fees",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "1", "fees"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "1",
+                "fees"
+              ]
             }
           },
           "response": [
@@ -4800,8 +5575,15 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts/1/fees",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "1", "fees"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "1",
+                    "fees"
+                  ]
                 }
               },
               "status": "OK",
@@ -4831,8 +5613,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts/statistics",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "statistics"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "statistics"
+              ]
             }
           },
           "response": [
@@ -4849,8 +5637,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts/statistics",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "statistics"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "statistics"
+                  ]
                 }
               },
               "status": "OK",
@@ -4878,8 +5672,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts/statistics",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "statistics"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "statistics"
+                  ]
                 }
               },
               "status": "OK",
@@ -4923,7 +5723,9 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/{contractId}/payment/generate-link",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "contracts",
@@ -4954,8 +5756,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/{contractId}/payment/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "{contractId}", "payment", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "{contractId}",
+                "payment",
+                "status"
+              ]
             }
           },
           "response": []
@@ -4967,7 +5777,9 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/contracts/{contractId}/payment/gateways",
-              "host": ["{{base_url}}"],
+              "host": [
+                "{{base_url}}"
+              ],
               "path": [
                 "api",
                 "contracts",
@@ -4997,8 +5809,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts/admin?type=rent&status=accepted&owner_id=789&client_id=456&property_id=123&start_date=2024-01-01&end_date=2024-01-31&per_page=20&search=Lagos",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "admin"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "admin"
+              ],
               "query": [
                 {
                   "key": "type",
@@ -5062,8 +5880,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts/admin",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "admin"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "admin"
+                  ]
                 }
               },
               "status": "OK",
@@ -5093,8 +5917,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts/admin/analytics?start_date=2024-01-01&end_date=2024-01-31&type=rent",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "admin", "analytics"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "admin",
+                "analytics"
+              ],
               "query": [
                 {
                   "key": "start_date",
@@ -5128,8 +5959,15 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts/admin/analytics",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "admin", "analytics"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "admin",
+                    "analytics"
+                  ]
                 }
               },
               "status": "OK",
@@ -5168,8 +6006,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/admin/1/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "admin", "1", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "admin",
+                "1",
+                "status"
+              ]
             }
           },
           "response": [
@@ -5195,8 +6041,16 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/admin/1/status",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "admin", "1", "status"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "admin",
+                    "1",
+                    "status"
+                  ]
                 }
               },
               "status": "OK",
@@ -5235,8 +6089,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/admin/1/in-progress",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "admin", "1", "in-progress"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "admin",
+                "1",
+                "in-progress"
+              ]
             }
           },
           "response": [
@@ -5262,8 +6124,16 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/admin/1/in-progress",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "admin", "1", "in-progress"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "admin",
+                    "1",
+                    "in-progress"
+                  ]
                 }
               },
               "status": "OK",
@@ -5302,8 +6172,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/admin/1/complete",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "admin", "1", "complete"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "admin",
+                "1",
+                "complete"
+              ]
             }
           },
           "response": [
@@ -5329,8 +6207,16 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/admin/1/complete",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "admin", "1", "complete"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "admin",
+                    "1",
+                    "complete"
+                  ]
                 }
               },
               "status": "OK",
@@ -5360,8 +6246,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts/admin/fee-configuration",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "admin", "fee-configuration"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "admin",
+                "fee-configuration"
+              ]
             }
           },
           "response": [
@@ -5378,8 +6271,15 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts/admin/fee-configuration",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "admin", "fee-configuration"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "admin",
+                    "fee-configuration"
+                  ]
                 }
               },
               "status": "OK",
@@ -5418,8 +6318,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/admin/fee-configuration",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "admin", "fee-configuration"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "admin",
+                "fee-configuration"
+              ]
             }
           },
           "response": [
@@ -5445,8 +6352,15 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/contracts/admin/fee-configuration",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "admin", "fee-configuration"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "admin",
+                    "fee-configuration"
+                  ]
                 }
               },
               "status": "OK",
@@ -5476,8 +6390,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/contracts/admin/process-expired",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contracts", "admin", "process-expired"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contracts",
+                "admin",
+                "process-expired"
+              ]
             }
           },
           "response": [
@@ -5494,8 +6415,15 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/contracts/admin/process-expired",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "contracts", "admin", "process-expired"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "contracts",
+                    "admin",
+                    "process-expired"
+                  ]
                 }
               },
               "status": "OK",
@@ -5595,8 +6523,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/documents/upload",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "upload"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "upload"
+              ]
             }
           },
           "response": [
@@ -5678,8 +6612,14 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/documents/upload",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "documents", "upload"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "documents",
+                    "upload"
+                  ]
                 }
               },
               "status": "Created",
@@ -5777,8 +6717,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/documents/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1"
+              ]
             }
           },
           "response": [
@@ -5795,8 +6741,14 @@
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/documents/1",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "documents", "1"]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "documents",
+                    "1"
+                  ]
                 }
               },
               "status": "OK",
@@ -5902,8 +6854,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/documents/1/associate",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "associate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "associate"
+              ]
             }
           },
           "response": []
@@ -5921,8 +6880,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/documents/1/associate/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "associate", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "associate",
+                "1"
+              ]
             }
           },
           "response": []
@@ -5940,8 +6907,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/documents/entity/property/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "entity", "property", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "entity",
+                "property",
+                "1"
+              ]
             }
           },
           "response": []
@@ -5959,8 +6934,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/documents/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1"
+              ]
             }
           },
           "response": []
@@ -5986,8 +6967,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/documents/1/metadata",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "metadata"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "metadata"
+              ]
             }
           },
           "response": []
@@ -6013,8 +7001,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/documents/1/workflow/initiate",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "workflow", "initiate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "workflow",
+                "initiate"
+              ]
             }
           },
           "response": []
@@ -6040,8 +7036,17 @@
             },
             "url": {
               "raw": "{{base_url}}/api/documents/1/workflow/1/complete",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "workflow", "1", "complete"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "workflow",
+                "1",
+                "complete"
+              ]
             }
           },
           "response": []
@@ -6059,8 +7064,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/documents/1/workflow/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "workflow", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "workflow",
+                "status"
+              ]
             }
           },
           "response": []
@@ -6086,8 +7099,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/documents/1/signatures/request",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "signatures", "request"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "signatures",
+                "request"
+              ]
             }
           },
           "response": []
@@ -6113,8 +7134,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/documents/1/signatures/sign",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "signatures", "sign"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "signatures",
+                "sign"
+              ]
             }
           },
           "response": []
@@ -6140,8 +7169,16 @@
             },
             "url": {
               "raw": "{{base_url}}/api/documents/1/signatures/verify",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "signatures", "verify"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "signatures",
+                "verify"
+              ]
             }
           },
           "response": []
@@ -6159,8 +7196,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/documents/1/signatures/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "signatures", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "signatures",
+                "status"
+              ]
             }
           },
           "response": []
@@ -6178,8 +7223,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/documents/1/signatures/history",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "signatures", "history"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "signatures",
+                "history"
+              ]
             }
           },
           "response": []
@@ -6197,8 +7250,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/documents/1/signatures/cancel",
-              "host": ["{{base_url}}"],
-              "path": ["api", "documents", "1", "signatures", "cancel"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documents",
+                "1",
+                "signatures",
+                "cancel"
+              ]
             }
           },
           "response": []
@@ -6232,8 +7293,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/configuration/countries",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "configuration", "countries"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "configuration",
+                "countries"
+              ]
             }
           },
           "response": []
@@ -6251,8 +7319,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/configuration/currencies",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "configuration", "currencies"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "configuration",
+                "currencies"
+              ]
             }
           },
           "response": []
@@ -6270,8 +7345,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/configuration/localization",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "configuration", "localization"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "configuration",
+                "localization"
+              ]
             }
           },
           "response": []
@@ -6289,8 +7371,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/configuration/settings",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "configuration", "settings"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "configuration",
+                "settings"
+              ]
             }
           },
           "response": []
@@ -6308,8 +7397,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/configuration/payment-gateways",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "configuration", "payment-gateways"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "configuration",
+                "payment-gateways"
+              ]
             }
           },
           "response": []
@@ -6347,8 +7443,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/platform/files/upload",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "files", "upload"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "files",
+                "upload"
+              ]
             }
           },
           "response": []
@@ -6374,8 +7477,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/platform/files/validate",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "files", "validate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "files",
+                "validate"
+              ]
             }
           },
           "response": []
@@ -6393,8 +7503,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/files/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "files", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "files",
+                "1"
+              ]
             }
           },
           "response": []
@@ -6412,8 +7529,16 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/files/1/secure-url",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "files", "1", "secure-url"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "files",
+                "1",
+                "secure-url"
+              ]
             }
           },
           "response": []
@@ -6431,8 +7556,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/files/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "files", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "files",
+                "1"
+              ]
             }
           },
           "response": []
@@ -6450,8 +7582,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/platform/files",
-              "host": ["{{base_url}}"],
-              "path": ["api", "platform", "files"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "platform",
+                "files"
+              ]
             }
           },
           "response": []
@@ -6474,8 +7612,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/notifications",
-              "host": ["{{base_url}}"],
-              "path": ["api", "notifications"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ]
             }
           },
           "response": []
@@ -6493,8 +7636,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/notifications/1/read",
-              "host": ["{{base_url}}"],
-              "path": ["api", "notifications", "1", "read"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "1",
+                "read"
+              ]
             }
           },
           "response": []
@@ -6512,8 +7662,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/notifications/preferences",
-              "host": ["{{base_url}}"],
-              "path": ["api", "notifications", "preferences"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "preferences"
+              ]
             }
           },
           "response": []
@@ -6539,8 +7695,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/notifications/preferences",
-              "host": ["{{base_url}}"],
-              "path": ["api", "notifications", "preferences"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "preferences"
+              ]
             }
           },
           "response": []
@@ -6566,8 +7728,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/webhooks/flutterwave",
-              "host": ["{{base_url}}"],
-              "path": ["api", "webhooks", "flutterwave"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "webhooks",
+                "flutterwave"
+              ]
             }
           },
           "response": []
@@ -6588,8 +7756,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/webhooks/paystack",
-              "host": ["{{base_url}}"],
-              "path": ["api", "webhooks", "paystack"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "webhooks",
+                "paystack"
+              ]
             }
           },
           "response": []
@@ -6610,13 +7784,3166 @@
             },
             "url": {
               "raw": "{{base_url}}/api/webhooks/stripe",
-              "host": ["{{base_url}}"],
-              "path": ["api", "webhooks", "stripe"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "webhooks",
+                "stripe"
+              ]
             }
           },
           "response": []
         }
       ]
+    },
+    {
+      "name": "Admin Panel",
+      "item": [
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "Get User Details",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Users",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users"
+                  ],
+                  "query": [
+                    {
+                      "description": "search, role, status, kyc_status, per_page, page",
+                      "key": "search",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "role",
+                      "value": "tenant",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "active",
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "25"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update User Role",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  },
+                  {
+                    "value": "application/json",
+                    "key": "Content-Type"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"role\": \"landlord\",\n  \"reason\": \"Promoted to landlord\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/role",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "role"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Activate User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/activate",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "activate"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Suspend User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Violation of platform terms\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/suspend",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "suspend"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get User Activity",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/activity",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "activity"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Force Logout User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/force-logout",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "force-logout"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset User Password",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"NewPassword123\",\n  \"password_confirmation\": \"NewPassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/reset-password",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "reset-password"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export Users",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/export",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "export"
+                  ]
+                },
+                "description": "Export users to CSV (§3.1)"
+              },
+              "response": []
+            },
+            {
+              "name": "List Deletion Requests",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/deletion-requests",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "deletion-requests"
+                  ],
+                  "query": [
+                    {
+                      "value": "pending",
+                      "description": "pending, approved, rejected",
+                      "key": "status"
+                    }
+                  ]
+                },
+                "description": "List account deletion requests (§3.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Deletion Request",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"User requested account deletion via support\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/deletion-request",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "deletion-request"
+                  ]
+                },
+                "description": "Record deletion request for a user (§3.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Approve Deletion Request",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"admin_notes\": \"Verified identity and approved deletion\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/deletion-requests/1/approve",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "deletion-requests",
+                    "1",
+                    "approve"
+                  ]
+                },
+                "description": "Approve account deletion request (§3.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Reject Deletion Request",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"admin_notes\": \"Active transactions must be resolved first\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/deletion-requests/1/reject",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "deletion-requests",
+                    "1",
+                    "reject"
+                  ]
+                },
+                "description": "Reject account deletion request (§3.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Lock User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  },
+                  {
+                    "value": "application/json",
+                    "key": "Content-Type"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Too many failed login attempts\",\n  \"duration_hours\": 24\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/lock",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "lock"
+                  ]
+                },
+                "description": "Lock user account after failed logins (§3.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Unlock User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/unlock",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "unlock"
+                  ]
+                },
+                "description": "Unlock user account (§3.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "User KYC History",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/kyc-history",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "kyc-history"
+                  ]
+                },
+                "description": "KYC submission history for a user (§3.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Export User Activity",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/users/1/activity/export",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "activity",
+                    "export"
+                  ]
+                },
+                "description": "Export user activity report to CSV (§3.5)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Admin Logout",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "description": "Admin bearer token",
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/logout",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@crestapp.ng\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description": "Admin/staff login. Roles: admin, support_agent, lawyer, surveyor. Saves token to admin_token variable."
+              },
+              "response": []
+            },
+            {
+              "name": "Invite Staff",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"agent@crestapp.ng\",\n  \"phone_number\": \"+2348012345678\",\n  \"role\": \"support_agent\",\n  \"first_name\": \"Support\",\n  \"last_name\": \"Agent\",\n  \"send_invite_email\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/invite",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "invite"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Change Password",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"current_password\": \"OldPassword123\",\n  \"new_password\": \"NewPassword123!\",\n  \"new_password_confirmation\": \"NewPassword123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/password/change",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "password",
+                    "change"
+                  ]
+                },
+                "description": "Staff password change with policy enforcement (§1.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "List Sessions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/sessions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "sessions"
+                  ]
+                },
+                "description": "List active staff sessions (§1.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Revoke Session",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/sessions/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "sessions",
+                    "1"
+                  ]
+                },
+                "description": "Revoke a specific session by token ID (§1.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Revoke Other Sessions",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/sessions/revoke-others",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "sessions",
+                    "revoke-others"
+                  ]
+                },
+                "description": "Revoke all sessions except current (§1.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Password Policy",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/password-policy",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "password-policy"
+                  ]
+                },
+                "description": "Get password policy config (admin only, §1.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Password Policy",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  },
+                  {
+                    "value": "application/json",
+                    "key": "Content-Type"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"min_length\": 8,\n  \"require_uppercase\": true,\n  \"require_lowercase\": true,\n  \"require_number\": true,\n  \"require_special\": false,\n  \"expiry_days\": null\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/password-policy",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "password-policy"
+                  ]
+                },
+                "description": "Update password policy (admin only, §1.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Session Settings",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/session-settings",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "session-settings"
+                  ]
+                },
+                "description": "Get session timeout and multi-device settings (§1.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Session Settings",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"timeout_minutes\": 10080,\n  \"max_concurrent_sessions\": 5,\n  \"restrict_multi_device\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/session-settings",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "auth",
+                    "session-settings"
+                  ]
+                },
+                "description": "Update session and multi-device login settings (§1.2)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "KYC",
+          "item": [
+            {
+              "name": "List KYC Submissions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/kyc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "kyc"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "pending"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "25"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Approve KYC",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/kyc/1/approve",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "kyc",
+                    "1",
+                    "approve"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reject KYC",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Document image is unclear\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/kyc/1/reject",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "kyc",
+                    "1",
+                    "reject"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Request KYC Resubmission",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Please upload a clearer selfie\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/kyc/1/request-resubmission",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "kyc",
+                    "1",
+                    "request-resubmission"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "New admin KYC routes. Legacy mobile-compatible endpoints remain in KYC Management: POST /api/kyc/find-users-admin and POST /api/kyc/process-manual (with requester_id)."
+        },
+        {
+          "name": "Properties",
+          "item": [
+            {
+              "name": "Get Property Details",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Properties",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "pending_approval",
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "25"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Approve Property",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/approve",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "approve"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reject Property",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  },
+                  {
+                    "value": "application/json",
+                    "key": "Content-Type"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Incomplete ownership documents\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/reject",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "reject"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Feature Property",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"featured\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/feature",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "feature"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Property Status",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"active\",\n  \"reason\": \"Manual activation by admin\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/status",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Fraud Reports",
+          "item": [
+            {
+              "name": "List Fraud Reports",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/fraud-reports",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "fraud-reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "pending"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Fraud Report",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/fraud-reports/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "fraud-reports",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Fraud Report",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"assigned_to\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/fraud-reports/1/assign",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "fraud-reports",
+                    "1",
+                    "assign"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Resolve Fraud Report",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"resolved\",\n  \"resolution_notes\": \"Investigated and user warned\",\n  \"action_taken\": \"warning\",\n  \"suspend_user\": false\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/fraud-reports/1/resolve",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "fraud-reports",
+                    "1",
+                    "resolve"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export Properties",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/export",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "export"
+                  ]
+                },
+                "description": "Export properties to CSV (§4.1)"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Property (Admin)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  },
+                  {
+                    "value": "application/json",
+                    "key": "Content-Type"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Updated Property Title\",\n  \"price\": 25000000,\n  \"reason\": \"Admin correction\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1"
+                  ]
+                },
+                "description": "Admin override edit property (§4.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Mark Property Sold",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/mark-sold",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "mark-sold"
+                  ]
+                },
+                "description": "Mark property as sold manually (§4.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Schedule Property",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"scheduled_activate_at\": \"2026-07-15T08:00:00Z\",\n  \"scheduled_deactivate_at\": null\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/schedule",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "schedule"
+                  ]
+                },
+                "description": "Schedule property activation/deactivation (§4.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Property Audit Trail",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/audit-trail",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "audit-trail"
+                  ]
+                },
+                "description": "Property audit trail (§4.5)"
+              },
+              "response": []
+            },
+            {
+              "name": "Property Transactions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/transactions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "transactions"
+                  ]
+                },
+                "description": "Property transaction history (§4.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Mark Property Rented",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/properties/1/mark-rented",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "properties",
+                    "1",
+                    "mark-rented"
+                  ]
+                },
+                "description": "Mark property as rented manually (§4.4)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Transactions",
+          "item": [
+            {
+              "name": "List Transactions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "in_escrow",
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "25"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Transaction Details",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Refund Transaction",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 500000,\n  \"reason\": \"Customer requested refund\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/1/refund",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "1",
+                    "refund"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Release Escrow",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"All conditions met - admin override\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/1/release-escrow",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "1",
+                    "release-escrow"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cancel Transaction",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cancellation_reason\": \"Dispute resolved in favour of buyer\",\n  \"refund_requested\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/1/cancel",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "1",
+                    "cancel"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Escrows",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/escrows",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "escrows"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export Transactions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/export",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "export"
+                  ]
+                },
+                "description": "Export transactions to CSV (§5.5)"
+              },
+              "response": []
+            },
+            {
+              "name": "Transaction Reports",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/reports",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2026-06-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2026-07-08"
+                    }
+                  ]
+                },
+                "description": "Transaction volume and revenue reports (§5.5)"
+              },
+              "response": []
+            },
+            {
+              "name": "Escrow History",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/1/escrow-history",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "1",
+                    "escrow-history"
+                  ]
+                },
+                "description": "Escrow history for a transaction (§5.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Flag Escrow Dispute",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  },
+                  {
+                    "value": "application/json",
+                    "key": "Content-Type"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"dispute_details\": \"Buyer claims property condition mismatch\",\n  \"dispute_type\": \"property_condition\",\n  \"initiator_id\": 2,\n  \"respondent_id\": 3\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/1/flag-dispute",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "1",
+                    "flag-dispute"
+                  ]
+                },
+                "description": "Flag escrow for dispute (§5.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Transaction Status",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"completed\",\n  \"reason\": \"Admin verified completion offline\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/1/status",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "1",
+                    "status"
+                  ]
+                },
+                "description": "Manual transaction status override (§5.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Flag Suspicious Transaction",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Unusual payment pattern detected\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/transactions/1/flag-suspicious",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "transactions",
+                    "1",
+                    "flag-suspicious"
+                  ]
+                },
+                "description": "Flag transaction for fraud review (§5.4)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Support",
+          "item": [
+            {
+              "name": "Get All Tickets (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/communication/support/admin/tickets",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "communication",
+                    "support",
+                    "admin",
+                    "tickets"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Ticket (Admin)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"assigned_to\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/communication/support/admin/tickets/1/assign",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "communication",
+                    "support",
+                    "admin",
+                    "tickets",
+                    "1",
+                    "assign"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Ticket Status (Admin)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"in_progress\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/communication/support/admin/tickets/1/status",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "communication",
+                    "support",
+                    "admin",
+                    "tickets",
+                    "1",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Platform",
+          "item": [
+            {
+              "name": "Get Audit Logs",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/audit/logs",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "audit",
+                    "logs"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Security Events",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/audit/security-events",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "audit",
+                    "security-events"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Send System Notification",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Platform Maintenance\",\n  \"message\": \"Scheduled maintenance tonight at 11 PM\",\n  \"priority\": \"high\",\n  \"channel\": \"in_app\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/platform/notifications/send/system",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "notifications",
+                    "send",
+                    "system"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Platform Settings",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"settings\": {\n    \"default_currency\": \"NGN\",\n    \"default_country\": \"Nigeria\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/platform/configuration/settings",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "configuration",
+                    "settings"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Send Bulk Notification",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  },
+                  {
+                    "value": "application/json",
+                    "key": "Content-Type"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_ids\": [1, 2, 3],\n  \"title\": \"Important Update\",\n  \"message\": \"Please review your profile information\",\n  \"priority\": \"medium\",\n  \"channel\": \"in_app\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/platform/notifications/send/bulk",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "notifications",
+                    "send",
+                    "bulk"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Dashboard",
+          "item": [
+            {
+              "name": "Dashboard Stats",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/stats",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "stats"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Platform Health",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/health",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Recent Activities",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/activities",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "activities"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "User Growth",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/user-growth",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "user-growth"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Revenue Stats",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/revenue",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "revenue"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Summary Financial",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/summary/financial",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "summary",
+                    "financial"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Summary Properties",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/summary/properties",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "summary",
+                    "properties"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Summary Transactions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/summary/transactions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "summary",
+                    "transactions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Summary Support",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/summary/support",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "summary",
+                    "support"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "System Logs",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/system-logs",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "system-logs"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Support Agent Dashboard",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/dashboard/support-agent",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "dashboard",
+                    "support-agent"
+                  ]
+                },
+                "description": "Support agent role dashboard (§2.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Lawyer Dashboard",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/dashboard/lawyer",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "dashboard",
+                    "lawyer"
+                  ]
+                },
+                "description": "Lawyer role dashboard (§2.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Surveyor Dashboard",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/dashboard/surveyor",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "dashboard",
+                    "surveyor"
+                  ]
+                },
+                "description": "Surveyor role dashboard (§2.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Summary Users",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/platform/dashboard/summary/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "platform",
+                    "dashboard",
+                    "summary",
+                    "users"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Payments",
+          "item": [
+            {
+              "name": "List Payments",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/payments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "payments"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "completed"
+                    },
+                    {
+                      "key": "transaction_id",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "List all payments with gateway references (§5.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Failed Payments",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/payments/failed",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "payments",
+                    "failed"
+                  ]
+                },
+                "description": "List failed payments (§5.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Payment Receipts",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/payments/receipts",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "payments",
+                    "receipts"
+                  ]
+                },
+                "description": "View payment receipts (§5.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Verify Payment",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/payments/1/verify",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "payments",
+                    "1",
+                    "verify"
+                  ]
+                },
+                "description": "Verify payment status with gateway (§5.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Reconcile Payments",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"start_date\": \"2026-06-01\",\n  \"end_date\": \"2026-07-08\",\n  \"auto_verify_pending\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/payments/reconcile",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "payments",
+                    "reconcile"
+                  ]
+                },
+                "description": "Reconcile payments between system and gateway (§5.3)"
+              },
+              "response": []
+            },
+            {
+              "name": "Refund History",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/refunds",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "refunds"
+                  ]
+                },
+                "description": "View refund history (§5.4)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Disputes",
+          "item": [
+            {
+              "name": "List Disputes",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/disputes",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "disputes"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "open"
+                    }
+                  ]
+                },
+                "description": "List all transaction disputes (§5.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Dispute",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/disputes/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "disputes",
+                    "1"
+                  ]
+                },
+                "description": "Get dispute details with transaction context (§5.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Dispute",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction_id\": 1,\n  \"initiator_id\": 2,\n  \"respondent_id\": 3,\n  \"dispute_type\": \"payment\",\n  \"description\": \"Payment not received as agreed\",\n  \"flag_escrow\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/disputes",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "disputes"
+                  ]
+                },
+                "description": "Create a new dispute (§5.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Dispute Mediator",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"mediator_id\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/disputes/1/assign",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "disputes",
+                    "1",
+                    "assign"
+                  ]
+                },
+                "description": "Assign mediator to dispute (§5.4)"
+              },
+              "response": []
+            },
+            {
+              "name": "Resolve Dispute",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "value": "Bearer {{admin_token}}",
+                    "key": "Authorization"
+                  },
+                  {
+                    "value": "application/json",
+                    "key": "Content-Type"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"resolution_type\": \"partial_refund\",\n  \"resolution_amount\": 50000,\n  \"resolution_notes\": \"Partial refund issued to buyer\",\n  \"release_escrow\": false,\n  \"process_refund\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/disputes/1/resolve",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "disputes",
+                    "1",
+                    "resolve"
+                  ]
+                },
+                "description": "Resolve dispute with optional escrow release/refund (§5.4)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Verifications",
+          "item": [
+            {
+              "name": "List Verifications",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/verifications",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "verifications"
+                  ],
+                  "query": [
+                    {
+                      "key": "verification_status",
+                      "value": "pending"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Verifier",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"professional_user_id\": 5,\n  \"report_type\": \"legal\",\n  \"notes\": \"Assigned for legal verification\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/verifications/1/assign",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "verifications",
+                    "1",
+                    "assign"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Approve Property Verification",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/verifications/1/approve-verification",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "verifications",
+                    "1",
+                    "approve-verification"
+                  ]
+                },
+                "description": "Approve property verification (§4.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Re-request Verification",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"professional_user_id\": 5,\n  \"notes\": \"Please re-inspect and submit updated report\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/verifications/1/re-request",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "verifications",
+                    "1",
+                    "re-request"
+                  ]
+                },
+                "description": "Re-request verification from professionals (§4.2)"
+              },
+              "response": []
+            },
+            {
+              "name": "Reject Property Verification",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reason\": \"Ownership documents incomplete\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/verifications/1/reject-verification",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "verifications",
+                    "1",
+                    "reject-verification"
+                  ]
+                },
+                "description": "Reject property verification (§4.2)"
+              },
+              "response": []
+            }
+          ]
+        }
+      ],
+      "description": "Admin panel APIs added separately from mobile endpoints. Existing mobile routes under Authentication, KYC Management, Property Management, etc. are unchanged. Use admin_token (set by Admin Login) for these requests."
     },
     {
       "name": "New Request",
@@ -6668,7 +10995,9 @@
         "type": "text/javascript",
         "packages": {},
         "requests": {},
-        "exec": [""]
+        "exec": [
+          ""
+        ]
       }
     }
   ],

@@ -1,10 +1,15 @@
 import type { ReactNode } from "react";
+import { AuthGuard } from "@/components/guards";
 
-/** Minimal chrome for onboarding flows (KYC wizard). Auth guard added in Phase 1/2. */
+/** Minimal chrome for onboarding flows (KYC wizard). Authed — status=pending is fine. */
 export default function OnboardingLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  return <div className="bg-background min-h-screen">{children}</div>;
+  return (
+    <AuthGuard>
+      <div className="bg-background min-h-screen">{children}</div>
+    </AuthGuard>
+  );
 }

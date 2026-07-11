@@ -10,10 +10,9 @@ import { AUTH_COOKIE } from "@/config/constants";
  */
 const GUEST_ONLY = [
   "/login",
-  "/register",
+  "/register", // covers /register/verify-email, /register/phone, etc. (startsWith)
   "/forgot-password",
   "/reset-password",
-  "/verify",
 ];
 const PROTECTED_PREFIXES = [
   "/dashboard",

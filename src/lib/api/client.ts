@@ -5,7 +5,10 @@ import { ApiError, toApiError } from "./errors";
 const BASE_URL = env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
 const DEFAULT_TIMEOUT_MS = 20_000;
 
-type Json = Record<string, unknown> | unknown[];
+// `object` (not Record<string, unknown>) so hand-declared `interface` request
+// payloads are accepted too — interfaces don't structurally satisfy an index
+// signature the way z.infer'd type aliases do.
+type Json = object;
 
 interface RequestOptions extends Omit<RequestInit, "body"> {
   /** JSON body (auto-serialized) or FormData/BodyInit for uploads. */

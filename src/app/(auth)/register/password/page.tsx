@@ -32,7 +32,16 @@ export default function RegisterPasswordPage() {
 
   useEffect(() => {
     if (!wizard.phoneVerified) router.replace("/register");
-  }, [wizard.phoneVerified, router]);
+    // Mount-only guard: checked once when this step is entered. Deliberately
+    // NOT reactive to wizard.phoneVerified — onSuccess below calls
+    // wizard.reset() (which flips phoneVerified back to false) in the same
+    // render pass as router.push("/login"); a reactive effect here would
+    // re-fire on that reset and race router.replace("/register") against the
+    // intended navigation. Mirrors the identical mount-only pattern in
+    // src/app/(onboarding)/kyc/processing/page.tsx. See
+    // docs/design-vs-backend-gaps.md (Phase 2.5) for the full writeup.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const form = useForm<RegisterPasswordInput>({
     resolver: zodResolver(registerPasswordSchema),

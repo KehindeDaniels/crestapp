@@ -36,7 +36,7 @@ export default function KycProcessingPage() {
 
   function handleContinue() {
     wizard.reset();
-    router.push("/dashboard");
+    router.push("/home");
   }
 
   return (

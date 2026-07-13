@@ -19,7 +19,7 @@ export function useAuth() {
   const clear = useSessionStore((s) => s.clear);
 
   const hasToken = Boolean(getToken());
-  const { data, error, isFetching, isFetched } = useCurrentUser();
+  const { data, error, isPending } = useCurrentUser();
 
   useEffect(() => {
     if (!hasToken) {
@@ -33,6 +33,14 @@ export function useAuth() {
   return {
     user,
     isAuthenticated: status === "authenticated",
-    isLoading: hasToken && !isFetched && isFetching,
+    // `isPending` (query has no data/error yet) rather than `!isFetched &&
+    // isFetching` — the latter has a real gap on the very first render,
+    // before TanStack Query's internal effect has actually started the
+    // fetch, where isFetching is momentarily false. AuthGuard's redirect
+    // effect could win that race and fire before /api/user is even called,
+    // sending an authenticated user to /login (which proxy.ts then bounces
+    // to /home, since the real cookie is still present) — a false "not
+    // logged in" redirect discovered via live testing on /kyc.
+    isLoading: hasToken && isPending,
   };
 }

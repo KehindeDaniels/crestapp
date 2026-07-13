@@ -5,8 +5,12 @@ import type { KycStatus } from "@/config/constants";
 
 /**
  * Blocks children unless KYC is approved; otherwise shows a "verify to continue"
- * CTA. `kycStatus` is passed in by the caller — the actual KYC status query is
- * built in Phase 2 (features/kyc); this guard is the reusable shell for it.
+ * CTA. `kycStatus` is passed in by the caller rather than fetched internally —
+ * `useMyKycStatus()` now exists (features/kyc/hooks.ts, Phase 2.5); pass its
+ * `.data` in as `kycStatus` once a real call site needs this guard. Left
+ * prop-driven deliberately: this component has zero real call sites yet, so
+ * refactoring it to fetch internally would be guessing at how future callers
+ * (Phase 4+ contracts/transactions) want to compose it.
  */
 export function KycGuard({
   kycStatus,

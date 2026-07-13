@@ -9,5 +9,5 @@ export default async function LoginPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const { next } = await searchParams;
-  return <LoginForm nextPath={next && next.startsWith("/") ? next : "/dashboard"} />;
+  return <LoginForm nextPath={next && next.startsWith("/") ? next : "/home"} />;
 }

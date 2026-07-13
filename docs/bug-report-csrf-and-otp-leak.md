@@ -7,6 +7,14 @@
 
 ---
 
+## ⚠️ Update — the Issue 1 fix appears to be partial, not global
+
+After the reported fix, `GET /api/user` and `POST /api/auth/verification/send` now work correctly from the real browser (confirmed via DevTools Network tab and live testing). **But `POST /api/kyc/find-single` still returns `419 CSRF token mismatch`** when called from the browser (confirmed live, same symptom as originally reported — works via `curl` without an `Origin` header, fails from a real browser request).
+
+This suggests the stateful-domains fix was applied to some routes/middleware groups but not all — please check whether `/api/kyc/find-single` (and possibly other KYC/admin routes) are on a different route group or middleware stack than the ones already fixed, and confirm the same fix is applied consistently across **all** API routes the frontend calls, not just the ones explicitly reported before.
+
+---
+
 ## Issue 1: CSRF error blocks every request from the frontend (Blocker)
 
 ### What's happening

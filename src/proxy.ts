@@ -15,7 +15,7 @@ const GUEST_ONLY = [
   "/reset-password",
 ];
 const PROTECTED_PREFIXES = [
-  "/dashboard",
+  "/home",
   "/kyc",
   "/properties/new",
   "/properties/mine",
@@ -41,7 +41,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (isGuestOnly && hasToken) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/home", request.url));
   }
 
   return NextResponse.next();

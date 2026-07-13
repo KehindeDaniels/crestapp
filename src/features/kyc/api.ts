@@ -1,5 +1,12 @@
 import { apiClient } from "@/lib/api/client";
-import type { FileUploadResponse, KycSubmitPayload, KycSubmitResponse } from "./types";
+import { KYC_STATUSES, type KycStatus } from "@/config/constants";
+import type { ID } from "@/types/api";
+import type {
+  FileUploadResponse,
+  KycFindSingleResponse,
+  KycSubmitPayload,
+  KycSubmitResponse,
+} from "./types";
 
 /**
  * Extracts the uploaded file's URL from an undocumented response shape (the
@@ -22,6 +29,29 @@ function parseUploadUrl(response: FileUploadResponse): string {
   return url;
 }
 
+/**
+ * Extracts a KYC status from the (undocumented, likely absent) `kyc` field of
+ * a find-single response. Unlike `parseUploadUrl` above, this NEVER throws —
+ * this is a read on a non-critical reminder banner, not a write. Any
+ * unparseable/missing shape safely falls back to `null`, which callers treat
+ * as "not approved yet" (show the reminder). Showing an unnecessary reminder
+ * is much lower-risk than hiding a genuinely needed one.
+ *
+ * Returns `null`, NOT `undefined` — TanStack Query forbids a queryFn from
+ * resolving with `undefined` (throws "Query data cannot be undefined",
+ * confirmed live via console error on ["kyc","mine"]). `null` is valid data.
+ */
+export function parseKycStatus(response: KycFindSingleResponse): KycStatus | null {
+  const status =
+    response.kyc?.kyc_status ?? response.kyc?.status ??
+    response.data?.kyc?.kyc_status ?? response.data?.kyc?.status ??
+    response.kyc_status;
+
+  return (KYC_STATUSES as readonly string[]).includes(status ?? "")
+    ? (status as KycStatus)
+    : null;
+}
+
 export const kycApi = {
   /** Uploads a single file and returns its resolved URL. `purpose` mirrors the Postman example's "property_document" convention. */
   async uploadFile(file: File, purpose: string): Promise<string> {
@@ -39,5 +69,25 @@ export const kycApi = {
     apiClient<KycSubmitResponse>("/api/kyc/submit", {
       method: "POST",
       body: payload,
+    }),
+
+  /**
+   * Self-lookup (requester_id === user_id). NOT CONFIRMED whether a non-admin
+   * user is actually authorized to call this about themselves — the Postman
+   * collection files it under "KYC Management" with no explicit access-level
+   * note. May 403 in practice. See docs/design-vs-backend-gaps.md (Phase 2.5).
+   *
+   * `include_kyc` is sent as a real boolean, NOT the string "true" shown in
+   * the Postman example — Laravel's `boolean` validation rule rejects that
+   * literal string (confirmed live: 422 "must be true or false").
+   */
+  findSingle: (params: { requester_id: ID; user_id: ID }) =>
+    apiClient<KycFindSingleResponse>("/api/kyc/find-single", {
+      method: "POST",
+      body: {
+        requester_id: params.requester_id,
+        user_id: params.user_id,
+        include_kyc: true,
+      },
     }),
 };

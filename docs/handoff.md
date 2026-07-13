@@ -82,11 +82,32 @@ src/app/(onboarding)/kyc/
   page.tsx           # intro screen ("Let's verify your account") -> /kyc/id
   id/page.tsx         # doc type tabs, cosmetic country field (not wired — see gaps doc), document number input (added, not in Figma), front/back upload -> /kyc/selfie
   selfie/page.tsx      # selfie upload (guards: redirects to /kyc/id if front upload missing) -> /kyc/processing
-  processing/page.tsx   # guards: redirects to /kyc/selfie if selfie missing; calls kyc.submit() once on mount (ref-guarded against double-fire); shows spinner -> success card -> "Continue" resets wizard and pushes to /dashboard
+  processing/page.tsx   # guards: redirects to /kyc/selfie if selfie missing; calls kyc.submit() once on mount (ref-guarded against double-fire); shows spinner -> success card -> "Continue" resets wizard and pushes to /home
 ```
-Every KYC gap (missing document-number field, cosmetic country field, undocumented upload/submit response shapes, no live camera, no confirmed KYC-status-check endpoint) is detailed in `docs/design-vs-backend-gaps.md` — don't re-derive, read that file.
+Every KYC gap (missing document-number field, cosmetic country field, undocumented upload/submit response shapes, no live camera) is detailed in `docs/design-vs-backend-gaps.md` — don't re-derive, read that file.
 
 Installed shadcn primitives (Phase 1 + 2 combined): `button`, `input`, `label`, `card`, `input-otp`, `form`. No new primitives needed for KYC (used `lucide-react` icons directly).
+
+### Phase 2.5 — Post-Phase-2 bugfixes (live testing after the backend's CSRF/OTP fix)
+Once the backend fix landed, live testing surfaced three real issues, all now fixed:
+1. **Register→login race, fixed.** `register/password/page.tsx`'s guard `useEffect` was reactive to `wizard.phoneVerified`; its own `onSuccess` called `wizard.reset()` (flips that field back to `false`) in the same render pass as `router.push("/login")`, re-triggering the guard and racing `router.replace("/register")` against the intended navigation. Fixed by making the guard mount-only (`useEffect(..., [])`), mirroring the identical pre-existing pattern in `kyc/processing/page.tsx`. Scoped to this one file — the other 4 wizard steps never call `reset()`, so their reactive guards are untouched and correct.
+2. **`/dashboard` → `/home` rename, and it's load-bearing, not cosmetic.** `src/app/(client)/` had only a `layout.tsx` — `/dashboard` didn't exist, so every redirect to it (`proxy.ts`, login's default `nextPath`, KYC completion) 404'd. Renamed to `/home` everywhere (`src/proxy.ts` ×2, `login/page.tsx`, `kyc/processing/page.tsx`, plus 3 doc references) — backed by the actual Figma frame named "Home" (`docs/figma-links.md`, node `1411-2864`). **"Dashboard" is now reserved exclusively for the separate admin persona (`/admin/*`, Phase 7)** — this was an explicit prior architectural decision, and the rename closes a gap where the literal path still said `/dashboard` even after the route group itself was renamed to `(client)`.
+3. **KYC made skippable with a persistent reminder.** New `useMyKycStatus()` hook (`src/features/kyc/hooks.ts`, using the previously-unused `queryKeys.kyc.mine`) calls a new `kycApi.findSingle()` (`POST /api/kyc/find-single`, self-lookup), parsed defensively via `parseKycStatus()` — which, unlike `parseUploadUrl()`, never throws; an unparseable/missing shape safely falls back to "not approved" (show the reminder), since that's lower-risk than hiding a real one. New `KycReminderCard` (`src/features/kyc/components/`) renders on the new `src/app/(client)/home/page.tsx` placeholder, styled to match `KycGuard`'s existing fallback CTA. `KycGuard` itself was left prop-driven (zero real call sites yet) — only its doc comment updated to point at the new hook.
+
+**Two open risks, not yet resolved — verify live before trusting this fully:**
+- The Postman collection's only `find-single` example (even with `include_kyc: "true"`) contains `user` + `profile` and **no `kyc` field at all** — unconfirmed whether the backend actually returns KYC status this way.
+- Unconfirmed whether a **non-admin user is even authorized** to call `find-single` about themselves — may 403 in practice. Needs a live `curl` test with a real non-admin Bearer token.
+
+`src/app/(client)/home/page.tsx` is a **tightly-scoped placeholder** (welcome heading + reminder card only) — not the real Home screen (property feed/search, Figma node `1411-2864`), which is genuine Phase 3 scope.
+
+### Phase 2.5b — `useAuth` race condition (found via live testing on `/kyc`, fixed)
+After deploying the above, the user reported: clicking into KYC (or typing `/kyc` directly) auto-redirected back to `/home`. Root cause, confirmed via DevTools Network tab evidence (`GET /api/user` → `200`, ruling out an actual auth failure) plus code tracing:
+
+`useAuth()`'s `isLoading` was computed as `hasToken && !isFetched && isFetching`. On the very first render of a fresh page load, there's a real gap where `isFetching` is still `false` — TanStack Query's internal effect hasn't started the fetch yet — so `isLoading` momentarily evaluates to `false` while `isAuthenticated` is also still `false` (session status starts at `"idle"`). `AuthGuard`'s redirect effect can win that race and fire `router.replace('/login?next=%2Fkyc')` **before `/api/user` is even called**. That's a client-side transition, which re-hits `proxy.ts` for `/login` — which correctly sees the still-valid real cookie and bounces guest-only routes back to `/home` (its own correct, unrelated logic). Two individually-"correct" redirects compound into a confusing loop. Happens identically via link-click or typed URL because both are fresh page loads, and the race exists on every fresh mount.
+
+**Fix:** `src/features/auth/use-auth.ts` — swapped to TanStack Query's `isPending` (true continuously from mount until the query actually settles, no gap) instead of the `!isFetched && isFetching` combination. One file changed. `isFetching`/`isFetched` confirmed unused elsewhere before removing.
+
+**Verified:** `pnpm typecheck`, `pnpm build`, `pnpm lint` all clean after the fix. **Not yet verified**: an actual live browser retest on `/kyc` with a real session — do this before assuming it's fully resolved.
 
 ## Verified Next.js 16.2.10 / React 19.2.4 facts (checked against `node_modules/next/dist/docs`, re-verify if the installed version changes)
 - `middleware.ts` → **`proxy.ts`**, exported function name `proxy`, Node runtime only. **Must live in `src/` if `app` is in `src/`.**
@@ -105,10 +126,23 @@ Installed shadcn primitives (Phase 1 + 2 combined): `button`, `input`, `label`, 
 - Several endpoints (`verification/send` for phone, `kyc/submit`, `platform/files/upload`, `platform/configuration/countries`) have **zero documented example responses** in the collection — see `docs/design-vs-backend-gaps.md` for how each was handled.
 
 ## Verification performed this session
+
+**Phase 1+2 (original):**
 - `pnpm typecheck` — clean (after fixing the `Json` type gotcha above).
 - `pnpm build` — clean, 13 routes total (9 from Phase 1 + 4 new KYC routes), correct static/dynamic split, `ƒ Proxy (Middleware)` present.
 - `pnpm lint` — clean, 0 warnings.
-- **Not done this session**: no live browser test of the KYC submit flow, because of the known CSRF bug (see above) — `curl` without an `Origin` header would give a false-positive "it works" result, so it wasn't used to claim success here.
+- **Not done then**: no live browser test of the KYC submit flow, because of the known CSRF bug (see above) — `curl` without an `Origin` header would give a false-positive "it works" result, so it wasn't used to claim success.
+
+**Phase 2.5 (this session, after the backend's CSRF/OTP fix landed):**
+- `pnpm typecheck`, `pnpm build` (17 routes now, `/home` present, no `/dashboard`, `ƒ Proxy (Middleware)` present), `pnpm lint` — all clean.
+- `grep -rn "/dashboard" src docs` — zero live references remain; the only 2 remaining matches in `docs/` are historical descriptions of the bug itself (correct, not missed occurrences).
+- **Live proxy redirect test, actually run against a running dev server**: `/home` with no cookie → `307` to `/login?next=%2Fhome`; `/login` with a cookie present → `307` to `/home`. Both confirmed.
+- **⚠️ Gotcha re-encountered**: the first test attempt gave a false negative (plain `200`, no redirect at all) because the dev server running at the time was started *before* the `proxy.ts` edit — proxy/middleware changes are not hot-reloaded the way page files are; a full server restart was required. This bit us in Phase 1 too (see the `proxy.ts`-must-live-in-`src/` gotcha above) — **whenever `proxy.ts` changes, always restart the dev server before testing, don't trust an already-running instance.**
+- **Not done this session**: `find-single` was not live-curl-tested with a real Bearer token (would require creating/using a real account — a live side-effect not taken without asking). This is the single most important remaining verification — see Phase 2.5 open risks above.
 
 ## Immediate next step
-**Phase 3 — Public property surface (RSC)** per the blueprint roadmap: property search with filters (URL state) and listing detail, rendered via Server Components hitting `publicFetch` (unauthenticated `/api/properties/search`) — this is the first real test of the RSC/public-vs-authed hard line described in architectural decision #2. Figma: Home, Search Property, Listing for sale. **Before starting**, check whether the CSRF/OTP bugs are fixed — if so, do a real end-to-end browser test of the full register → verify → KYC flow first, since none of it has been live-verified yet.
+**Phase 3 — Public property surface (RSC)** per the blueprint roadmap: property search with filters (URL state) and listing detail, rendered via Server Components hitting `publicFetch` (unauthenticated `/api/properties/search`) — this is the first real test of the RSC/public-vs-authed hard line described in architectural decision #2. Figma: Home, Search Property, Listing for sale.
+
+**Before starting, two things worth doing:**
+1. A full live browser walkthrough of register → verify → login → KYC → `/home` (none of it has been end-to-end browser-verified yet — only individual pieces via `curl`).
+2. `curl` `POST /api/kyc/find-single` with a real non-admin Bearer token to resolve the two open Phase 2.5 risks (real `kyc` field shape, self-lookup authorization) — update `parseKycStatus()` and `docs/design-vs-backend-gaps.md` with whatever is found.

@@ -1,3 +1,6 @@
+import type { KycStatus, UserStatus } from "@/config/constants";
+import type { ID } from "@/types/api";
+
 /**
  * KYC document type. Only "national_id" is confirmed by the Postman collection
  * example — "drivers_license"/"international_passport" are inferred from the
@@ -42,4 +45,22 @@ export interface FileUploadResponse {
     file_url?: string;
     path?: string;
   };
+}
+
+/**
+ * POST /api/kyc/find-single response (self-lookup: requester_id === user_id).
+ * CONFIRMED via the Postman collection's own documented example (even with
+ * include_kyc: "true" set): the response only ever contains `user` + `profile`
+ * — there is NO `kyc` field anywhere in the one example given. This is very
+ * likely a backend gap, not something fixable client-side. We defensively
+ * probe a few plausible shapes for a future/undocumented `kyc` field and
+ * treat anything we can't confidently parse as "unknown" (see parseKycStatus
+ * in api.ts). See docs/design-vs-backend-gaps.md (Phase 2.5).
+ */
+export interface KycFindSingleResponse {
+  user?: { user_id: ID; status?: UserStatus };
+  profile?: { profile_id: ID; user_id: ID };
+  kyc?: { kyc_status?: KycStatus; status?: KycStatus } | null;
+  data?: { kyc?: { kyc_status?: KycStatus; status?: KycStatus } | null };
+  kyc_status?: KycStatus;
 }

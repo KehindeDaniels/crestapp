@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isApiError } from "@/lib/api/errors";
@@ -65,24 +66,39 @@ export default function KycProcessingPage() {
               ? submitKyc.error.message
               : "Something went wrong submitting your verification."}
           </p>
-          <Button
-            disabled={!userId}
-            onClick={() => {
-              if (!userId) return;
-              hasSubmitted.current = false;
-              submitKyc.mutate({
-                requester_id: userId,
-                document_type: wizard.documentType,
-                document_number: wizard.documentNumber,
-                document_front_url: wizard.frontFileUrl,
-                document_back_url: wizard.backFileUrl,
-                selfie_url: wizard.selfieFileUrl,
-              });
-              hasSubmitted.current = true;
-            }}
-          >
-            Try again
-          </Button>
+          {isApiError(submitKyc.error) &&
+          submitKyc.error.message.toLowerCase().includes("pending kyc submission") ? (
+            // Defense-in-depth: the (onboarding)/kyc/layout.tsx gate should
+            // prevent reaching this page at all in this case. If it still
+            // happens (stale cache, race), retrying will just 422 again —
+            // there's no error_code to key off, so this is a string-match
+            // heuristic, deliberately narrow. See docs/design-vs-backend-gaps.md.
+            <Link
+              href="/home"
+              className="inline-block rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+            >
+              Back to Home
+            </Link>
+          ) : (
+            <Button
+              disabled={!userId}
+              onClick={() => {
+                if (!userId) return;
+                hasSubmitted.current = false;
+                submitKyc.mutate({
+                  requester_id: userId,
+                  document_type: wizard.documentType,
+                  document_number: wizard.documentNumber,
+                  document_front_url: wizard.frontFileUrl,
+                  document_back_url: wizard.backFileUrl,
+                  selfie_url: wizard.selfieFileUrl,
+                });
+                hasSubmitted.current = true;
+              }}
+            >
+              Try again
+            </Button>
+          )}
         </div>
       )}
 

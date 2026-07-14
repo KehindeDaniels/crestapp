@@ -2,6 +2,13 @@
 
 > Scope: pure visual-fidelity decisions made while rebuilding screens pixel-perfect against Figma — flattening choices, inferred breakpoints, token splits, and copy that wasn't confirmed by a design pull. **Not** for design-vs-backend API mismatches (see `docs/design-vs-backend-gaps.md`) and **not** for implementation bugs (see `docs/bug-report-csrf-and-otp-leak.md`).
 
+## Landing page (`/`) and Home (`/home`) — no Figma design, built deliberately minimal
+
+Neither screen has a Figma source. Both were built as original, minimal compositions from the existing design system (tokens, fonts, already-downloaded auth assets) rather than new visual language — and deliberately kept simple rather than fleshed out, per explicit instruction.
+
+- **`/` (`src/app/page.tsx`)**: hero with the existing logo lockup, house illustration (both already in `public/images/auth/`, reused rather than sourcing new assets), and two CTAs (`Get Started` → `/register`, `Sign In` → `/login`) into the real, already-built auth flow. Purely presentational — no new functionality, no changes to the auth routes themselves.
+- **`/home` (`src/app/(client)/home/page.tsx`)**: a reference screenshot exists (`docs/design/screenshots/home/Home-{Rent,Buy,Airbnb}.png` — full sidebar nav, property search bar, a listing feed with fabricated sample data, a KYC banner, a "List your Properties" CTA) but was **deliberately not followed**, per explicit instruction: only two features (auth, KYC) are actually built, so a fake sidebar/search/listing-feed with no real data behind it would misrepresent progress and create UI that has to be un-built once the real property features land (Phase 3). Kept to a greeting + the existing `KycReminderCard` — an honest reflection of current state, not a mockup of the target state.
+
 ## `/welcome` and `/register/role` — no Figma node available, built from a screenshot
 Both screens trace back to `docs/design/screenshots/after account creation.png`, which has no accessible node ID or link (only the raw image). Full flow-level reasoning (why role selection moved into registration, the sessionStorage first-login heuristic) is in `docs/design-vs-backend-gaps.md`'s Phase 3 section — this entry is scoped to the visual decisions only:
 - **`/welcome`**: colors approximated using existing tokens read against the screenshot (`--primary` navy for the congrats banner, `--success` green for the "done" checkmark) rather than exact hex values sampled from the image pixels. The checkmark icon on the banner is a `lucide-react` `BadgeCheck`, not the real asset (which wasn't exported) — a reasonable stand-in, not a confirmed match.

@@ -241,6 +241,13 @@ Caught and fixed one real bug mid-implementation: the first draft of the corner-
 
 **Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, route list unchanged. **Not verified:** no visual check against the running app — no browser/screenshot tool is available in this environment (same limitation noted every design pass this session). Worth a manual look at all 4 screens before considering this done.
 
+### Phase 3 — Landing page (`/`) and Home (`/home`) placeholders, no Figma for either
+`src/app/page.tsx` (was a bare "Phase 0 scaffolding" placeholder) is now a minimal hero — logo, headline, house illustration (reusing existing auth assets), `Get Started`/`Sign In` CTAs into the real `/register`/`/login` flow. Purely presentational, no functional changes.
+
+`src/app/(client)/home/page.tsx` stays a deliberately minimal placeholder (greeting + `KycReminderCard`) — a reference screenshot exists for the real target design (`docs/design/screenshots/home/`, full sidebar/search/listing-feed) but was intentionally **not** followed: building fake listing/search UI with no real data behind it would misrepresent progress at standup and create throwaway work once Phase 3's real property features land. Full reasoning: `docs/design-fidelity-notes.md`.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, route list unchanged.
+
 ## Immediate next step
 **Phase 3 — Public property surface (RSC)** per the blueprint roadmap: property search with filters (URL state) and listing detail, rendered via Server Components hitting `publicFetch` (unauthenticated `/api/properties/search`) — this is the first real test of the RSC/public-vs-authed hard line described in architectural decision #2. Figma: Home, Search Property, Listing for sale.
 

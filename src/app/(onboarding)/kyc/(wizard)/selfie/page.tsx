@@ -37,7 +37,7 @@ export default function KycSelfiePage() {
         </span>
       </div>
 
-      <div className="rounded-xl border p-6">
+      <div className="rounded-2xl bg-muted p-6">
         <p className="mb-4 text-sm font-medium">Look directly into the camera</p>
         <SelfieCapture purpose="kyc_selfie" onUploaded={(url) => setSelfieUrl(url)} />
       </div>

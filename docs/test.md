@@ -48,3 +48,16 @@ https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=145
 
 https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2805&t=EH7m7ry4RVtHR8C5-1
 https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2805&t=EH7m7ry4RVtHR8C5-1
+
+Home
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2864&t=EH7m7ry4RVtHR8C5-1
+Home sub links
+
+Home-Buy
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2865&t=EH7m7ry4RVtHR8C5-1
+
+Home rent
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-4689&t=EH7m7ry4RVtHR8C5-1
+
+Home airbnb
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-4944&t=EH7m7ry4RVtHR8C5-1

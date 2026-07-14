@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CheckSquare2, ChevronDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils/cn";
+import { formatFileSize } from "@/lib/utils/format";
 import {
   FileUploadField,
   useKycWizardStore,
@@ -19,14 +21,40 @@ const DOCUMENT_TYPE_LABELS: Record<KycDocumentType, string> = {
   international_passport: "International Passport",
 };
 
+/** A "Front Side"/"Back Side" status row — mirrors what's happening in the
+ * matching drop zone on the right. There's no real byte-level upload
+ * progress here (the fetch-based upload client doesn't expose it) — this is
+ * a simplified pending/done state, not a literal percentage, unlike the
+ * animated progress rings shown in the Figma reference. */
+function FileStatusRow({ file, uploaded }: { file: File; uploaded: boolean }) {
+  return (
+    <div className="flex items-center gap-3 rounded-lg border p-3">
+      <CheckSquare2 className="size-5 shrink-0 text-primary" />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">{file.name}</p>
+        <p className="text-xs text-muted-foreground">
+          {formatFileSize(file.size)} · {uploaded ? "Uploaded" : "Uploading…"}
+        </p>
+      </div>
+      {uploaded ? (
+        <span className="size-5 shrink-0 rounded-full border-2 border-success" />
+      ) : (
+        <Loader2 className="size-5 shrink-0 animate-spin text-muted-foreground" />
+      )}
+    </div>
+  );
+}
+
 export default function KycIdUploadPage() {
   const router = useRouter();
   const setIdDocument = useKycWizardStore((s) => s.setIdDocument);
 
   const [documentType, setDocumentType] = useState<KycDocumentType>("national_id");
   const [documentNumber, setDocumentNumber] = useState("");
+  const [frontFile, setFrontFile] = useState<File | null>(null);
   const [frontFileUrl, setFrontFileUrl] = useState("");
   const [frontFileName, setFrontFileName] = useState("");
+  const [backFile, setBackFile] = useState<File | null>(null);
   const [backFileUrl, setBackFileUrl] = useState("");
   const [backFileName, setBackFileName] = useState("");
 
@@ -59,21 +87,21 @@ export default function KycIdUploadPage() {
         </span>
       </div>
 
-      <div className="rounded-xl border p-6">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="space-y-4">
+      <div className="rounded-2xl bg-muted p-6 sm:p-8">
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="space-y-5">
             <div>
               <Label className="mb-2 block">Choose an ID to verify your account</Label>
-              <div className="flex gap-1 rounded-lg bg-muted p-1">
+              <div className="flex flex-wrap gap-4">
                 {KYC_DOCUMENT_TYPES.map((type) => (
                   <button
                     key={type}
                     type="button"
                     onClick={() => setDocumentType(type)}
                     className={cn(
-                      "flex-1 rounded-md px-2 py-2 text-xs font-medium transition-colors",
+                      "rounded-lg px-4 py-2 text-sm font-medium transition-colors",
                       documentType === type
-                        ? "bg-background text-primary shadow-xs"
+                        ? "border border-primary text-primary"
                         : "text-muted-foreground",
                     )}
                   >
@@ -88,7 +116,23 @@ export default function KycIdUploadPage() {
               <Label htmlFor="country" className="mb-2 block">
                 Choose your Country/Region
               </Label>
-              <Input id="country" defaultValue="Nigeria" />
+              <div className="relative">
+                <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-base">
+                  🇳🇬
+                </span>
+                <Input id="country" defaultValue="Nigeria" className="pr-9 pl-9" readOnly />
+                <ChevronDown className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" />
+              </div>
+            </div>
+
+            <div>
+              <Label className="mb-2 block">ID Type</Label>
+              <div className="flex items-center justify-between rounded-lg bg-background px-3 py-2.5">
+                <span className="text-sm text-muted-foreground">
+                  {DOCUMENT_TYPE_LABELS[documentType]}
+                </span>
+                <CheckSquare2 className="size-4 text-muted-foreground" />
+              </div>
             </div>
 
             <div>
@@ -102,6 +146,23 @@ export default function KycIdUploadPage() {
                 onChange={(e) => setDocumentNumber(e.target.value)}
               />
             </div>
+
+            {frontFile && (
+              <div>
+                <Label className="mb-2 block">Front Side</Label>
+                <FileStatusRow file={frontFile} uploaded={Boolean(frontFileUrl)} />
+              </div>
+            )}
+            {backFile && (
+              <div>
+                <Label className="mb-2 block">Back Side</Label>
+                <FileStatusRow file={backFile} uploaded={Boolean(backFileUrl)} />
+              </div>
+            )}
+
+            <Button className="w-full" disabled={!canContinue} onClick={handleContinue}>
+              Continue
+            </Button>
           </div>
 
           <div className="space-y-4">
@@ -109,6 +170,7 @@ export default function KycIdUploadPage() {
               label="Upload Front ID Card"
               purpose="kyc_document_front"
               fileName={frontFileName}
+              onFileSelected={setFrontFile}
               onUploaded={(url, name) => {
                 setFrontFileUrl(url);
                 setFrontFileName(name);
@@ -118,18 +180,18 @@ export default function KycIdUploadPage() {
               label="Upload Back ID Card"
               purpose="kyc_document_back"
               fileName={backFileName}
+              onFileSelected={setBackFile}
               onUploaded={(url, name) => {
                 setBackFileUrl(url);
                 setBackFileName(name);
               }}
             />
+            <p className="text-center text-sm font-medium text-muted-foreground underline">
+              Need Help?
+            </p>
           </div>
         </div>
       </div>
-
-      <Button className="w-full" disabled={!canContinue} onClick={handleContinue}>
-        Continue
-      </Button>
     </div>
   );
 }

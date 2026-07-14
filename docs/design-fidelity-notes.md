@@ -7,6 +7,33 @@ Both screens trace back to `docs/design/screenshots/after account creation.png`,
 - **`/welcome`**: colors approximated using existing tokens read against the screenshot (`--primary` navy for the congrats banner, `--success` green for the "done" checkmark) rather than exact hex values sampled from the image pixels. The checkmark icon on the banner is a `lucide-react` `BadgeCheck`, not the real asset (which wasn't exported) — a reasonable stand-in, not a confirmed match.
 - **`/register/role`**: has no Figma frame of its own at all — the checkbox UI only exists inside the post-login screen's design, never as a standalone registration step. Styled to match its still-generic, not-yet-pixel-perfect sibling steps (`/register`, `/register/phone`) rather than inventing a pixel-perfect layout with nothing to verify it against.
 
+## KYC screens — pixel-perfect pass (from screenshots + node links, `docs/design/screenshots/kyc/`)
+
+Worked from the user-provided screenshots (`KYC.png`, `Upload Identification Card.png`/`2.png`, `Take a Selfie.png`, `Scanning.png`) rather than fresh Figma pulls, per instruction to use them as the primary reference. Existing functionality (camera capture, upload flow, submission state) was untouched — this pass only closed visual gaps. Framed as targeted fixes against an "almost perfect" baseline, not a rebuild.
+
+### KYC intro (`(onboarding)/kyc/(wizard)/page.tsx`)
+- Replaced the `lucide-react` `Lock`-in-a-circle placeholder with the real exported padlock illustration (`public/images/kyc/padlock-fingerprint.svg`, user-provided; renamed from its original comma/space-containing filename for URL cleanliness).
+- Swapped the second row's icon from `ScanFace` to `Camera` — the screenshot shows a plain camera outline, not a face-scan icon.
+- Added a rounded-square icon badge (`bg-accent`) behind each row's icon, matching the screenshot's two-tone icon treatment (previously a bare icon with no badge).
+- Added a small `ShieldCheck` icon before the disclaimer line ("Your information is only used for...") — previously plain text only.
+
+### Upload a valid ID (`(onboarding)/kyc/(wizard)/id/page.tsx`)
+- **Document-type tabs**: was a segmented-pill control (shared muted background, active tab gets a white background); Figma shows only the active tab with a navy outline, inactive tabs as plain text. Rebuilt to match.
+- **"ID Type" confirmation box**: a second, read-only element mirroring the tab selection above (muted row + checkmark) that doesn't exist in the current data model as a separate concept — it's the screenshot showing the same `documentType` value twice, once as tabs and once as a confirmation row. Added as a display-only echo of the tab selection, not a new independent field.
+- **Front/Back status rows**: the screenshot shows a file-manager-style row in the *left* column (checkbox + filename + size + a progress indicator) alongside the drop zone in the *right* column — previously only the drop zone existed, with no left-column echo. Added `FileStatusRow` (local to this page) plus a new `onFileSelected` prop on `FileUploadField` so the parent can show "Uploading…" the instant a file is picked, not just after the upload finishes. **Not a literal byte-accurate progress percentage** — the screenshot shows a specific "34%"/"100%" ring, but the fetch-based upload client used throughout this app doesn't expose upload progress events (would require switching to `XMLHttpRequest` or a streaming request body for this one flow, not worth it for a visual-only gap). Simplified to pending/done, not a percentage.
+- **Country/Region field**: still fully cosmetic (unchanged — no backend field to wire it to, see `docs/design-vs-backend-gaps.md`), but restyled to look like a select (flag + chevron-down icon) instead of a plain editable text input.
+- **Upload drop zone icon**: added a circular `bg-muted` badge behind the cloud-upload icon (`lucide-react` `UploadCloud`, swapped from the plain `Upload` icon) to match the screenshot's icon treatment.
+- **Layout**: card background changed from a bordered white box to a filled `bg-muted` panel (no visible border) to match the screenshot's softer look; the `Continue` button moved from spanning the full page width below the card to sitting inside the left column only, matching the screenshot.
+- **"Need Help?"**: added as static styled text (not a real link — no support flow/route exists to point it at).
+
+### Take a Selfie (`(onboarding)/kyc/(wizard)/selfie/page.tsx`)
+Already close to the screenshot from the earlier `getUserMedia` work — only change was the card wrapper (bordered white box → `bg-muted` filled panel), for visual consistency with the ID upload screen's panel style.
+
+### Scanning state, built new (`(onboarding)/kyc/processing/page.tsx`)
+Previously deliberately deferred (see `docs/design-vs-backend-gaps.md`'s KYC camera-capture section) — this pass is that deferred visual work. New `ScanningFrame` component: four corner brackets (`rounded-tl-lg`/`tr`/`bl`/`br` + thick border on the two relevant sides per corner — an earlier draft tried to share one conditional class string across all four corners and had the rounding wrong on the bottom two; rewritten as four explicit elements instead of debugging the shared version further) around the **real captured selfie** (`wizard.selfieFileUrl`, not a placeholder), with an animated scan-line (`@keyframes scan` in `globals.css`) sweeping top-to-bottom while `kyc/submit` is in flight.
+- **Progress bar/percentage is simulated, not real** — same constraint as the upload status rows: `kyc/submit` is a single fast POST with no byte-level progress to report. Ramps from 8% toward 90% over the request's lifetime, jumps to 100% on success, resets to 0% on a fresh retry. Flagged clearly in a code comment; don't mistake the number for a real measurement of anything.
+- Uses `next/image` directly against the live `api.crestapp.ng` selfie URL with `unoptimized` (the URL already came back from the backend's own CDN/download endpoint — no need to double-optimize through Next's image pipeline for a one-time-viewed processing screen).
+
 ## Login / Welcome screen (`aDI3HOS6NVQWnLdIx5Zvif`, node `1395:1540`)
 
 ### Flattened assets (user-approved, see `docs/design/account-creation-pixel-perfect-plan.md`) — revised, see below

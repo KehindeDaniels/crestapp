@@ -229,6 +229,18 @@ Rather than chase down every possible unmount trigger individually, moved the su
 
 **Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, route list unchanged.
 
+### Phase 3 (KYC) — pixel-perfect pass across all 4 screens
+Closed visual gaps against user-provided screenshots (`docs/design/screenshots/kyc/`) on top of the already-working functionality (camera capture, upload flow, submission state) — no behavior changes in this pass. Full per-screen breakdown: `docs/design-fidelity-notes.md`.
+
+- **Intro** (`kyc/(wizard)/page.tsx`): real padlock illustration (`public/images/kyc/padlock-fingerprint.svg`, user-provided), `Camera` icon (was `ScanFace`), icon badges behind each row, shield icon on the disclaimer line.
+- **Upload ID** (`kyc/(wizard)/id/page.tsx`): fixed tab style (outline-only active tab, not a segmented pill), added a read-only "ID Type" confirmation row, added Front/Back status rows in the left column (new `onFileSelected` prop on `FileUploadField`), circular icon badge on the drop zone, `bg-muted` panel instead of a bordered box, `Continue` scoped to the left column.
+- **Selfie** (`kyc/(wizard)/selfie/page.tsx`): one change — panel style aligned with the ID upload screen (`bg-muted`, no border).
+- **Processing/Scanning** (`kyc/processing/page.tsx`): built the previously-deferred "Scanning" state — corner-bracket viewfinder around the real captured selfie, an animated scan line (`@keyframes scan` in `globals.css`), and a progress bar. **The progress bar is simulated, not real** — `kyc/submit` has no byte-level progress to report; flagged clearly in code comments so it's not mistaken for a real measurement later.
+
+Caught and fixed one real bug mid-implementation: the first draft of the corner-bracket component tried to share one conditional class string across all four corners and got the border-radius wrong on the two bottom corners (rounding the wrong side, plus a redundant inline-style override that didn't fully fix it). Rewritten as four explicit elements — worth knowing if this file gets touched again, since the shared-conditional approach looks reasonable at a glance but was actually broken.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, route list unchanged. **Not verified:** no visual check against the running app — no browser/screenshot tool is available in this environment (same limitation noted every design pass this session). Worth a manual look at all 4 screens before considering this done.
+
 ## Immediate next step
 **Phase 3 — Public property surface (RSC)** per the blueprint roadmap: property search with filters (URL state) and listing detail, rendered via Server Components hitting `publicFetch` (unauthenticated `/api/properties/search`) — this is the first real test of the RSC/public-vs-authed hard line described in architectural decision #2. Figma: Home, Search Property, Listing for sale.
 

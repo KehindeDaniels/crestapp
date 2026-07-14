@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Lock, IdCard, ScanFace } from "lucide-react";
+import Image from "next/image";
+import { Camera, IdCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function KycIntroPage() {
@@ -9,9 +10,13 @@ export default function KycIntroPage() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 p-6">
-      <div className="mx-auto flex size-24 items-center justify-center rounded-full bg-primary/10">
-        <Lock className="size-10 text-primary" />
-      </div>
+      <Image
+        src="/images/kyc/padlock-fingerprint.svg"
+        alt=""
+        width={200}
+        height={200}
+        className="mx-auto"
+      />
 
       <div className="space-y-1 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">
@@ -25,7 +30,9 @@ export default function KycIntroPage() {
 
       <div className="space-y-3">
         <div className="flex items-center gap-3 rounded-xl bg-muted p-4">
-          <IdCard className="size-6 shrink-0 text-primary" />
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent">
+            <IdCard className="size-5 text-primary" />
+          </span>
           <div>
             <p className="text-sm font-semibold">Upload a valid ID picture</p>
             <p className="text-sm text-muted-foreground">
@@ -34,7 +41,9 @@ export default function KycIntroPage() {
           </div>
         </div>
         <div className="flex items-center gap-3 rounded-xl bg-muted p-4">
-          <ScanFace className="size-6 shrink-0 text-primary" />
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent">
+            <Camera className="size-5 text-primary" />
+          </span>
           <div>
             <p className="text-sm font-semibold">Take a selfie of yourself</p>
             <p className="text-sm text-muted-foreground">
@@ -45,7 +54,8 @@ export default function KycIntroPage() {
       </div>
 
       <div className="space-y-3">
-        <p className="text-center text-xs text-muted-foreground">
+        <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+          <ShieldCheck className="size-4 shrink-0" />
           Your information is only used for your identity verification.
         </p>
         <Button className="w-full" onClick={() => router.push("/kyc/id")}>

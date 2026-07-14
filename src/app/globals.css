@@ -135,3 +135,17 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+
+/* KYC "Scanning" state (docs/design/screenshots/kyc/Scanning.png) — a line
+   sweeping down the captured selfie while kyc/submit is in flight. */
+@keyframes scan {
+  0% {
+    top: 0%;
+  }
+  50% {
+    top: calc(100% - 4px);
+  }
+  100% {
+    top: 0%;
+  }
+}

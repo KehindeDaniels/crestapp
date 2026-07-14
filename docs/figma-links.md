@@ -42,11 +42,20 @@ Screen-by-screen breakdown, in flow order. Status column tracks the pixel-perfec
 
 File key for these is still the canonical one (`MSrs3Woe4rF8yM8PVYRYSa`) — **not currently readable**, kept here as a reference until either that file is shared or equivalent working-copy links are provided.
 
-| Screen | Status             | Link                                                                                              |
-| ------ | ------------------ | ------------------------------------------------------------------------------------------------- |
-| KYC    | ✅ Built (Phase 2) | [node 1398-7021](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1398-7021) |
+| Screen                          | Status                                                            | Link                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------| ---------------------------------------------------------------------------------------------------|
+| KYC                              | ✅ Built (Phase 2, pixel-perfect pass done Phase 3 — see below)  | [node 1398-7021](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1398-7021)  |
+| Home                             | 🚧 Placeholder only (Phase 3 scope)                              | [node 1411-2864](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1411-2864)  |
+| Search Property                  | ⬜ Not started (Phase 3)                                          | [node 1417-5223](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1417-5223)  |
+| Listing Welcome                  | ⬜ Not started (Phase 3/4)                                        | [node 1465-6444](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-6444)  |
+| Listing for Sale (apartment)     | ⬜ Not started (Phase 4)                                          | [node 1422-6880](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1422-6880)  |
+| Listing for Rent (apartment)     | ⬜ Not started (Phase 4)                                          | [node 1465-3206](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-3206)  |
+| Listing for Airbnb (apartment)   | ⬜ Not started (Phase 4)                                          | [node 1465-4815](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-4815)  |
+| Listing for Sale (land)          | ⬜ Not started (Phase 4)                                          | [node 1510-5552](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1510-5552)  |
+| Listing for Rent (land)          | ⬜ Not started (Phase 4)                                          | [node 1510-8337](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1510-8337)  |
+| History                          | ⬜ Not started (Phase 5/6 — likely transaction/contract history) | [node 1514-13694](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1514-13694)|
 
-### KYC — working-copy links (use `aDI3HOS6NVQWnLdIx5Zvif`)
+### KYC — working-copy links (use `aDI3HOS6NVQWnLdIx5Zvif`) — pixel-perfect pass done Phase 3, worked from screenshots in `docs/design/screenshots/kyc/`
 
 | Screen                               |        Node | Link                                                                                   |
 | ------------------------------------ | ----------: | -------------------------------------------------------------------------------------- |
@@ -57,16 +66,6 @@ File key for these is still the canonical one (`MSrs3Woe4rF8yM8PVYRYSa`) — **n
 | Take a Selfie                        | `1411-2496` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2496 |
 | Scanning / Capture guidance          | `1453-2052` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1453-2052 |
 | Additional selfie/capture screen     | `1411-2805` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2805 |
-
-| Home | 🚧 Placeholder only (Phase 3 scope) | [node 1411-2864](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1411-2864) |
-| Search Property | ⬜ Not started (Phase 3) | [node 1417-5223](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1417-5223) |
-| Listing Welcome | ⬜ Not started (Phase 3/4) | [node 1465-6444](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-6444) |
-| Listing for Sale (apartment) | ⬜ Not started (Phase 4) | [node 1422-6880](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1422-6880) |
-| Listing for Rent (apartment) | ⬜ Not started (Phase 4) | [node 1465-3206](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-3206) |
-| Listing for Airbnb (apartment) | ⬜ Not started (Phase 4) | [node 1465-4815](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-4815) |
-| Listing for Sale (land) | ⬜ Not started (Phase 4) | [node 1510-5552](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1510-5552) |
-| Listing for Rent (land) | ⬜ Not started (Phase 4) | [node 1510-8337](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1510-8337) |
-| History | ⬜ Not started (Phase 5/6 — likely transaction/contract history) | [node 1514-13694](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1514-13694) |
 
 ## Other Figma pages (not yet linked individually)
 

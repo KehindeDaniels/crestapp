@@ -1,19 +1,76 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { isApiError } from "@/lib/api/errors";
 import { useKycWizardStore, useSubmitKyc } from "@/features/kyc";
 import { useSessionStore } from "@/features/auth";
+
+/**
+ * Corner-bracket viewfinder + scan line, matching the Figma "Scanning" state
+ * (docs/design/screenshots/kyc/Scanning.png) — shown over the real captured
+ * selfie while `kyc/submit` is in flight.
+ */
+function ScanningFrame({ imageUrl, scanning }: { imageUrl: string; scanning: boolean }) {
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-80">
+      <span className="absolute top-4 left-4 size-8 rounded-tl-lg border-t-4 border-l-4 border-primary" />
+      <span className="absolute top-4 right-4 size-8 rounded-tr-lg border-t-4 border-r-4 border-primary" />
+      <span className="absolute bottom-4 left-4 size-8 rounded-bl-lg border-b-4 border-l-4 border-primary" />
+      <span className="absolute right-4 bottom-4 size-8 rounded-br-lg border-r-4 border-b-4 border-primary" />
+
+      <div className="absolute inset-6 overflow-hidden rounded-2xl">
+        <Image src={imageUrl} alt="Captured selfie" fill className="object-cover" unoptimized />
+        {scanning && (
+          <div className="absolute inset-x-0 top-0 h-1 animate-[scan_2.4s_ease-in-out_infinite] bg-primary shadow-[0_0_12px_4px_rgba(6,29,82,0.5)]" />
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function KycProcessingPage() {
   const router = useRouter();
   const wizard = useKycWizardStore();
   const submitKyc = useSubmitKyc();
   const userId = useSessionStore((s) => s.user?.user_id);
+
+  // Simulated progress — `kyc/submit` is a single fast POST with no real
+  // byte-level progress to report, unlike Figma's percentage bar. Ramps up
+  // while submitting, snaps to 100 on success, resets on a fresh attempt.
+  const [progress, setProgress] = useState(0);
+  const progressTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    // Deferred via setTimeout(0) rather than called synchronously in the
+    // effect body — this reset is a genuine response to submissionStatus
+    // changing (a new attempt starting, or one finishing), not something
+    // derivable during render, but react-hooks/set-state-in-effect still
+    // flags any direct setState call in an effect body regardless of intent.
+    const resetTimer = setTimeout(() => {
+      if (wizard.submissionStatus === "submitting") {
+        setProgress(8);
+      } else {
+        setProgress(wizard.submissionStatus === "success" ? 100 : 0);
+      }
+    }, 0);
+
+    if (wizard.submissionStatus === "submitting") {
+      progressTimer.current = setInterval(() => {
+        setProgress((p) => (p >= 90 ? p : p + Math.random() * 12));
+      }, 400);
+    } else if (progressTimer.current) {
+      clearInterval(progressTimer.current);
+    }
+
+    return () => {
+      clearTimeout(resetTimer);
+      if (progressTimer.current) clearInterval(progressTimer.current);
+    };
+  }, [wizard.submissionStatus]);
 
   useEffect(() => {
     if (!wizard.selfieFileUrl) {
@@ -78,17 +135,30 @@ export default function KycProcessingPage() {
     router.push("/home");
   }
 
+  const isProcessing = wizard.submissionStatus === "idle" || wizard.submissionStatus === "submitting";
+
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 p-6 text-center">
       <h1 className="text-2xl font-semibold tracking-tight">Take a Selfie</h1>
 
-      {(wizard.submissionStatus === "idle" || wizard.submissionStatus === "submitting") && (
-        <>
-          <Loader2 className="size-12 animate-spin text-primary" />
+      {isProcessing && (
+        <div className="w-full space-y-6">
+          <ScanningFrame imageUrl={wizard.selfieFileUrl} scanning />
+
           <p className="text-sm text-muted-foreground">
             Hold still, we are processing
           </p>
-        </>
+
+          <div className="space-y-1">
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">{Math.round(progress)}%</p>
+          </div>
+        </div>
       )}
 
       {wizard.submissionStatus === "error" && (

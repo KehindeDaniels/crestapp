@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { CheckCircle2, Loader2, Upload } from "lucide-react";
+import { CheckCircle2, Loader2, UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { isApiError } from "@/lib/api/errors";
 import { useUploadFile } from "../hooks";
@@ -12,6 +12,7 @@ export function FileUploadField({
   purpose,
   fileName,
   onUploaded,
+  onFileSelected,
   accept = "image/*,.pdf",
   capture,
 }: {
@@ -19,6 +20,8 @@ export function FileUploadField({
   purpose: string;
   fileName: string;
   onUploaded: (url: string, fileName: string) => void;
+  /** Fires immediately on file selection, before the upload request starts — lets a parent show a "Front Side"/"Back Side" status row (name + size) right away instead of waiting for the upload to finish. */
+  onFileSelected?: (file: File) => void;
   accept?: string;
   /** "user" triggers the front-facing camera on mobile browsers instead of the file picker. No real getUserMedia video capture is implemented — simplification, not a live camera preview. */
   capture?: "user" | "environment";
@@ -29,6 +32,7 @@ export function FileUploadField({
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    onFileSelected?.(file);
     upload.mutate(
       { file, purpose },
       { onSuccess: (url) => onUploaded(url, file.name) },
@@ -41,18 +45,20 @@ export function FileUploadField({
         type="button"
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "flex w-full flex-col items-center gap-2 rounded-lg border border-dashed p-6 text-center transition-colors hover:bg-muted",
+          "flex w-full flex-col items-center gap-3 rounded-lg border border-dashed p-8 text-center transition-colors hover:bg-muted",
           fileName && "border-success bg-muted",
         )}
       >
-        {upload.isPending ? (
-          <Loader2 className="size-6 animate-spin text-muted-foreground" />
-        ) : fileName ? (
-          <CheckCircle2 className="size-6 text-success" />
-        ) : (
-          <Upload className="size-6 text-muted-foreground" />
-        )}
-        <span className="text-sm font-medium">{label}</span>
+        <span className="flex size-12 items-center justify-center rounded-full bg-muted">
+          {upload.isPending ? (
+            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+          ) : fileName ? (
+            <CheckCircle2 className="size-6 text-success" />
+          ) : (
+            <UploadCloud className="size-6 text-muted-foreground" />
+          )}
+        </span>
+        <span className="text-base font-semibold">{label}</span>
         <span className="text-xs text-muted-foreground">
           {upload.isPending
             ? "Uploading…"

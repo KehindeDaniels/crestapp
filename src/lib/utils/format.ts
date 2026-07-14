@@ -23,3 +23,10 @@ export function formatDate(
   if (Number.isNaN(date.getTime())) return "—";
   return new Intl.DateTimeFormat(locale, opts).format(date);
 }
+
+/** e.g. 137216 -> "134kb" — matches the Figma KYC upload status rows' format. */
+export function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes}b`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)}kb`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)}mb`;
+}

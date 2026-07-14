@@ -208,6 +208,11 @@ Per product decision, the fix was to **relocate role selection into the registra
 
 **Verified:** `pnpm typecheck`, `pnpm build` (19 routes now: `/register/role` and `/welcome` both present, `ƒ Proxy (Middleware)` present), `pnpm lint` — all clean. **Not yet done:** no live browser walkthrough of the full register→role→password→login→welcome→kyc chain (same caveat as every phase before it — see "Immediate next step" below, already tracked as outstanding).
 
+### Phase 3 (KYC) — selfie step: file picker replaced with live camera capture
+Ahead of the KYC pixel-perfect pass, changed the selfie step's mechanism per explicit request: new screenshots (`docs/design/screenshots/kyc/Take a Selfie.png`, `Scanning.png`) confirmed Figma shows a real in-app camera viewfinder, not a file picker. New `SelfieCapture` component (`src/features/kyc/components/selfie-capture.tsx`, exported from `src/features/kyc/index.ts`) replaces `FileUploadField` on `kyc/selfie/page.tsx`: live `getUserMedia` video preview (front camera, CSS-mirrored preview only — the captured frame itself is unmirrored) → Capture → frozen preview with Retake/Use Photo → uploads via the same pre-existing `useUploadFile()` mutation (no API/backend changes). Falls back to the original `FileUploadField` only for unsupported browsers or a denied/failed `getUserMedia` call, per explicit scope. Full reasoning and tradeoffs: `docs/design-vs-backend-gaps.md` (Phase 3 — KYC selfie section). The Figma "Scanning" state's corner-bracket/scan-line/progress animation is not built — deliberately deferred to the KYC pixel-perfect pass.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` (20 routes, unchanged route list — this only touched a component, no new routes) all clean. **Not yet done:** no live browser test of camera permission grant/deny/unsupported paths (would need real device/browser testing, not something verifiable via `curl` or a build check).
+
 ## Immediate next step
 **Phase 3 — Public property surface (RSC)** per the blueprint roadmap: property search with filters (URL state) and listing detail, rendered via Server Components hitting `publicFetch` (unauthenticated `/api/properties/search`) — this is the first real test of the RSC/public-vs-authed hard line described in architectural decision #2. Figma: Home, Search Property, Listing for sale.
 

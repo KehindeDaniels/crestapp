@@ -1,5 +1,7 @@
 import { apiClient } from "@/lib/api/client";
 import { KYC_STATUSES, type KycStatus } from "@/config/constants";
+import { env } from "@/config/env";
+import { getToken } from "@/lib/auth/token";
 import type { ID } from "@/types/api";
 import type {
   FileUploadResponse,
@@ -58,11 +60,34 @@ export const kycApi = {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("purpose", purpose);
-    const response = await apiClient<FileUploadResponse>("/api/platform/files/upload", {
-      method: "POST",
-      body: formData,
-    });
-    return parseUploadUrl(response);
+    try {
+      const response = await apiClient<FileUploadResponse>(
+        "/api/platform/files/upload",
+        { method: "POST", body: formData },
+      );
+      return parseUploadUrl(response);
+    } catch (err) {
+      // If the normal client path failed, attempt a raw fetch to capture the
+      // server's actual response body for debugging (useful when the server
+      // returns non-JSON or an unexpected shape). This runs only in the
+      // browser and is intended as a narrow diagnostic aid.
+      try {
+        const base = env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
+        const url = `${base}/api/platform/files/upload`;
+        const token = getToken();
+        const headers: Record<string, string> = {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+        const rawRes = await fetch(url, { method: "POST", body: formData, headers });
+        const text = await rawRes.text();
+        // Surface a clearer error message including status and body.
+        throw new Error(
+          `Upload failed (status ${rawRes.status}). Server response: ${text}`,
+        );
+      } catch (inner) {
+        // If the diagnostic fetch also fails, rethrow the original error.
+        throw err;
+      }
+    }
   },
 
   submit: (payload: KycSubmitPayload) =>

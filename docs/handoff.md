@@ -222,6 +222,13 @@ Root cause: `(onboarding)/kyc/layout.tsx`'s "block re-entry once submitted" gate
 
 **Verified:** `pnpm typecheck` (after clearing the stale `.next/types` cache — same gotcha as every prior route-structure change this session), `pnpm lint`, `pnpm build` — all clean, route list unchanged. **Still open**: whether `/api/documents/upload`'s raw `download_url` is really a bare number or a full URL wasn't independently confirmed — the hardened validation will now throw loudly and surface this clearly the next time it's tested live, rather than silently corrupting a submission.
 
+### Phase 3 (KYC) — submission state moved to the store, not just a routing fix
+The routing fix above (moving gated screens into `kyc/(wizard)/`) turned out to be necessary but not sufficient — a follow-up live test hit the exact same "request completed, no UI" symptom via a genuine `400`, not the duplicate-submission case the routing fix addressed. Root cause was architectural, not a single bug: `kyc/processing/page.tsx` relied on `useSubmitKyc()`'s local, component-scoped `isPending`/`isSuccess`/`isError` — if the component unmounts for *any* reason while the request is in flight (confirmed one other trigger: `AuthGuard` in `(onboarding)/layout.tsx` renders `null` whenever `useAuth()`'s `isLoading`/`isAuthenticated` flips, even transiently, e.g. during a background `/api/user` refetch), the request still completes on the network but nothing is left mounted to render the outcome.
+
+Rather than chase down every possible unmount trigger individually, moved the submission outcome into `useKycWizardStore` (`submissionStatus`, `submissionError` — see the store's updated doc comment for the full reasoning). The mutation's `onSuccess`/`onError` write directly into the store, which lives outside the React tree, so the outcome survives regardless of which component instance (if any) is still mounted when the response arrives. `kyc/processing/page.tsx` renders purely from `wizard.submissionStatus` now — a fresh remount just reads whatever's already there instead of starting a stuck spinner. Full writeup: `docs/design-vs-backend-gaps.md` (Phase 3, "Follow-up" under the KYC processing gate bug section).
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, route list unchanged.
+
 ## Immediate next step
 **Phase 3 — Public property surface (RSC)** per the blueprint roadmap: property search with filters (URL state) and listing detail, rendered via Server Components hitting `publicFetch` (unauthenticated `/api/properties/search`) — this is the first real test of the RSC/public-vs-authed hard line described in architectural decision #2. Figma: Home, Search Property, Listing for sale.
 

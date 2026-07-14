@@ -11,9 +11,9 @@ import { AuthMarketingPanel } from "@/features/auth";
  */
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen lg:h-screen lg:overflow-hidden">
       <AuthMarketingPanel />
-      <div className="flex flex-1 items-start justify-center px-4 py-10 sm:px-8 lg:px-12 lg:py-16 xl:py-29.5">
+      <div className="flex flex-1 items-start justify-center px-4 py-10 sm:px-8 lg:h-full lg:overflow-y-auto lg:px-12 lg:py-16 xl:py-29.5">
         <div className="flex w-full max-w-94.75 flex-col gap-10">
           <Image
             src="/images/auth/shared/logo-lockup.png"

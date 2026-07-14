@@ -16,10 +16,30 @@ The fix at the time was to export the *entire* panel (background + headline + ho
 Current approach (`src/features/auth/components/auth-marketing-panel.tsx`):
 - Navy base (`bg-[#061d52]`) + a radial-gradient glow + two blurred, rotated `linear-gradient` bars approximate the original's ~15-shape blend-mode composition. This is a **visual approximation, not pixel-identical** — reproducing that many overlapping blurred/rotated/blend-mode shapes in live CSS was exactly the problem the original "flatten it" call was trying to avoid. Revisit with a closer CSS reproduction (or ask for more shapes to be exported as reference) if the current approximation looks too far off in a live visual check.
 - Headline/subheading are live text again (DM Sans Bold / Inter Regular via the existing `--font-heading` token), restoring both accessibility and the ability to actually vary copy per slide later.
-- The 3-dot indicator is live CSS, static (not an animated carousel) — the dots imply a 3-slide design, but only slide 1 has ever had a real Figma pull; the other two headlines were surfaced during earlier general research with no confirmed subheading copy. Revisit as a real carousel only once slides 2/3 have actual Figma nodes.
+
+### Per-screen slides, confirmed (not a carousel — no timer, no auto-rotation)
+The 3-dot indicator isn't decorative or animated — it reflects **which screen you're on**, confirmed by reading the user-exported screenshots for every auth screen (`docs/design/screenshots/`). Each screen statically shows one of 3 slides; `src/features/auth/components/auth-marketing-panel.tsx` picks the slide from `usePathname()` via a `SLIDE_INDEX_BY_PATH` map. Confirmed mapping:
+
+| Route | Slide | Headline | Illustration |
+|---|---|---|---|
+| `/login` | 0 | "A safer way To Rent Or Buy Homes" | `login/house-illustration.png` |
+| `/register` | 1 | "Connect Directly With Landlords" | `register/landlord-illustration.png` |
+| `/register/verify-email` | 2 | "Your Safety Comes First" | `login/key-lock.svg` |
+| `/register/phone` | 0 | (same as login) | (same as login) |
+| `/register/verify-phone` | 0 | (same as login) | (same as login) |
+| `/register/password` (all 5 password-strength states checked) | 0 | (same as login) | (same as login) |
+
+This is **not** a clean repeating 0-1-2-0-1-2 cycle — screens 4-6 (phone, verify-phone, password) all show slide 0, not continuing the cycle. That's what every exported screenshot for those screens actually shows, so it's reproduced as-is rather than "corrected" into an idealized pattern. `forgot-password`, `reset-password`, and the not-yet-built `register/success` aren't in Figma yet and fall back to slide 0.
+
+The slide-1 illustration (`register/landlord-illustration.png`, a landlord pointing at a house) came from a fresh `get_design_context` pull on node `1398:6180` — it wasn't among the two SVGs exported directly (`key-lock.svg`, used for slide 2; the user's re-exported house SVG was left unused since the already-working `house-illustration.png` PNG, pulled from the same original Figma asset, made re-wiring it pure churn for no fidelity gain).
 
 ### Layout: fixed absolute offsets replaced with flex distribution
 The Figma frame positions everything with fixed pixel offsets against a 708×1024 canvas (headline at `top:115px`, house frame at `top:365px` height `404px`, dots at `top:835px`). Ported literally, this overflows vertically on real desktop viewports shorter than ~860px — the dot indicator (the bottom-most element) gets pushed below the fold and clipped, which is exactly the "scrolling and a cut bottom" bug the user caught. Replaced with a `flex flex-col justify-between` layout: headline block, then a `flex-1 min-h-0` region holding the house illustration (sized via `aspect-ratio` + `height: 100%` so it shrinks proportionally instead of overflowing, capped at the original 404px on tall viewports), then the dot indicator — so everything compresses together on short viewports instead of one element going off-screen.
+
+### Page-level scroll bug (`/register` specifically, but the fix is general)
+`(auth)/layout.tsx` was `flex min-h-screen` — a `min-height`, not a fixed height, so when a screen's form content (e.g. `/register`'s three fields + terms text) was taller than the viewport, the *whole flex row* grew past 100vh, and the document scrolled. The marketing panel has its own fixed `h-screen`, so during that scroll it didn't stay pinned — it visually "scrolled away" while the still-too-tall form kept going, which read as a broken layout, not just a long page. Other screens never hit this because their content happened to be short enough to fit.
+
+Fixed generally, not just for `/register`: at `lg`+, the outer container is now `h-screen overflow-hidden` (a hard cap, not a minimum) and the form column is `h-full overflow-y-auto` — so the page itself never scrolls and the marketing panel never moves, and if any screen's content is ever taller than the viewport, only the form column scrolls internally, contained within the white area. Below `lg` (mobile, where the marketing panel is hidden anyway) the layout reverts to normal document scrolling — there's no split-panel to keep pinned there.
 
 ### Inferred / unconfirmed
 - **Mobile breakpoint**: Figma only has a 1440px desktop frame for this screen. The marketing panel is hidden below Tailwind's `lg` breakpoint (1024px) — an inferred choice, not a designed one. Revisit if/when a mobile frame is provided.

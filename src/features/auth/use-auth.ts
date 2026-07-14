@@ -33,14 +33,10 @@ export function useAuth() {
   return {
     user,
     isAuthenticated: status === "authenticated",
-    // `isPending` (query has no data/error yet) rather than `!isFetched &&
-    // isFetching` — the latter has a real gap on the very first render,
-    // before TanStack Query's internal effect has actually started the
-    // fetch, where isFetching is momentarily false. AuthGuard's redirect
-    // effect could win that race and fire before /api/user is even called,
-    // sending an authenticated user to /login (which proxy.ts then bounces
-    // to /home, since the real cookie is still present) — a false "not
-    // logged in" redirect discovered via live testing on /kyc.
-    isLoading: hasToken && isPending,
+    // Keep the auth guard waiting while the session is still uninitialized
+    // and a token exists. This avoids a false redirect when the user is
+    // already authenticated and the cached /api/user result has not yet been
+    // reflected in the local session store.
+    isLoading: hasToken && (status === "idle" || isPending),
   };
 }

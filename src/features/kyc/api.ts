@@ -14,13 +14,22 @@ import type {
  * Document example shows it as `null`. Throws loudly if missing — kyc/submit
  * requires real URLs, so silently passing an empty value would corrupt a KYC
  * submission. See docs/design-vs-backend-gaps.md (Phase 2.5).
+ *
+ * Also validates *shape*, not just truthiness — a live test showed
+ * `kyc/submit`'s response echoing back bare numeric strings ("96"/"97"/"98",
+ * matching `document_id`, not a URL) for the front/back/selfie image fields.
+ * Whether that's `download_url` itself returning a non-URL value, or the
+ * backend's `kyc/submit` echo being unreliable, is unconfirmed — but either
+ * way, silently accepting a non-URL-shaped "URL" here is exactly the kind of
+ * corruption this function already exists to prevent. See
+ * docs/design-vs-backend-gaps.md (Phase 3 — KYC processing gate bug).
  */
 function parseDocumentUrl(response: DocumentUploadResponse): string {
   const url = response.data?.download_url;
-  if (!url) {
+  if (!url || !/^https?:\/\//.test(url)) {
     throw new Error(
       "POST /api/documents/upload did not return a usable download_url " +
-        "(confirmed absent/null in the one documented Postman example). " +
+        `(got ${JSON.stringify(url ?? null)}, expected an absolute http(s) URL). ` +
         `document_id=${response.data?.document_id}, document_uuid=${response.data?.document_uuid} — ` +
         "may need a follow-up call (e.g. GET /api/documents/{id}) or a backend " +
         "fix to actually populate this field.",

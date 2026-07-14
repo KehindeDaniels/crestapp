@@ -6,13 +6,27 @@ import { Loader2 } from "lucide-react";
 import { useMyKycStatus } from "@/features/kyc";
 
 /**
- * Blocks re-entry into the KYC wizard once a submission already exists.
- * Confirmed via a live 422 ("You already have a pending KYC submission")
- * AND via the Postman collection: `POST /api/admin/kyc/{id}/request-resubmission`
- * exists as a distinct ADMIN action, meaning resubmission is meant to be
- * admin-mediated, not freely user-triggered. Without this gate, a user could
- * burn time re-uploading three files just to hit that error at the final
- * submit step — this gate catches it up front instead.
+ * Blocks re-entry into the KYC wizard's INPUT steps (intro, upload ID,
+ * selfie — everything under this `(wizard)` route group) once a submission
+ * already exists. Confirmed via a live 422 ("You already have a pending KYC
+ * submission") AND via the Postman collection: `POST
+ * /api/admin/kyc/{id}/request-resubmission` exists as a distinct ADMIN
+ * action, meaning resubmission is meant to be admin-mediated, not freely
+ * user-triggered. Without this gate, a user could burn time re-uploading
+ * three files just to hit that error at the final submit step — this gate
+ * catches it up front instead.
+ *
+ * Deliberately does NOT wrap `/kyc/processing` (a sibling outside this route
+ * group, not nested under it) — that page is what actually CREATES the
+ * "pending" status, so gating it too caused a real bug: the instant
+ * submission succeeded and this status query refetched (e.g. on window
+ * refocus) and picked up the new "pending" status, this layout would swap
+ * the processing page's success UI out for the generic "Verification in
+ * progress" screen mid-render, unmounting the in-flight mutation's UI and
+ * losing the success confirmation. If the user then navigated back to
+ * `/kyc/processing`, it would remount fresh (a new `hasSubmitted` ref) and
+ * fire a second, now-duplicate submit. See docs/design-vs-backend-gaps.md
+ * (Phase 3 — KYC processing gate bug) for the full writeup.
  *
  * "rejected" is treated as allowed-to-resubmit (a reasonable default for any
  * KYC flow), but this is NOT explicitly confirmed — the collection also has

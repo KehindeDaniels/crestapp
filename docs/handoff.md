@@ -213,6 +213,15 @@ Ahead of the KYC pixel-perfect pass, changed the selfie step's mechanism per exp
 
 **Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` (20 routes, unchanged route list — this only touched a component, no new routes) all clean. **Not yet done:** no live browser test of camera permission grant/deny/unsupported paths (would need real device/browser testing, not something verifiable via `curl` or a build check).
 
+### Phase 3 (KYC) — processing-page gate bug, found via the first fully-working live submit
+The camera-capture change above led to the first-ever live end-to-end test of `kyc/submit` — it actually succeeded (`201`, real `kyc_id: 7` created). But the UI got stuck on "Hold still, we are processing" forever, and a second `kyc/submit` call then 400'd.
+
+Root cause: `(onboarding)/kyc/layout.tsx`'s "block re-entry once submitted" gate was wrapping `/kyc/processing` too — the one page that's *supposed* to show right after a successful submission. Once the submission succeeded and the gate's status query refetched (picking up the new real `"pending"` status), it swapped the processing page's success UI out for its own "Verification in progress" screen mid-render, killing the mutation's UI state. Navigating back then remounted the processing page fresh, re-firing the submit and hitting the real "already pending" rejection.
+
+**Fix**: restructured `src/app/(onboarding)/kyc/` — moved the gated screens (intro, upload ID, selfie) into a new `(wizard)` route group with the gate's `layout.tsx`; `/kyc/processing` now sits outside it, ungated. URLs unchanged (route groups don't affect paths) — confirmed via `pnpm build`'s route list. Also hardened `parseDocumentUrl()` (`src/features/kyc/api.ts`) to validate the uploaded document URL actually looks like a URL, not just that it's truthy — the same live test showed `"96"`/`"97"`/`"98"` (looks like bare `document_id`s) echoed back where real URLs were expected, previously would have passed through silently. And `useSubmitKyc()` now invalidates `["kyc","mine"]` on success so `KycReminderCard` doesn't show stale "not verified" for up to 60s. Full writeup: `docs/design-vs-backend-gaps.md` (Phase 3 — KYC processing gate bug).
+
+**Verified:** `pnpm typecheck` (after clearing the stale `.next/types` cache — same gotcha as every prior route-structure change this session), `pnpm lint`, `pnpm build` — all clean, route list unchanged. **Still open**: whether `/api/documents/upload`'s raw `download_url` is really a bare number or a full URL wasn't independently confirmed — the hardened validation will now throw loudly and surface this clearly the next time it's tested live, rather than silently corrupting a submission.
+
 ## Immediate next step
 **Phase 3 — Public property surface (RSC)** per the blueprint roadmap: property search with filters (URL state) and listing detail, rendered via Server Components hitting `publicFetch` (unauthenticated `/api/properties/search`) — this is the first real test of the RSC/public-vs-authed hard line described in architectural decision #2. Figma: Home, Search Property, Listing for sale.
 

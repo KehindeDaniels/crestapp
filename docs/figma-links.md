@@ -45,7 +45,7 @@ File key for these is still the canonical one (`MSrs3Woe4rF8yM8PVYRYSa`) — **n
 | Screen                          | Status                                                            | Link                                                                                                |
 | ------------------------------- | ------------------------------------------------------------------| ---------------------------------------------------------------------------------------------------|
 | KYC                              | ✅ Built (Phase 2, pixel-perfect pass done Phase 3 — see below)  | [node 1398-7021](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1398-7021)  |
-| Home                             | 🚧 Placeholder only (Phase 3 scope)                              | [node 1411-2864](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1411-2864)  |
+| Home                             | ✅ Built (Phase 4, real API data — data plan: `docs/design/home-page-data-plan.md`) | [node 1411-2864](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1411-2864)  |
 | Search Property                  | ⬜ Not started (Phase 3)                                          | [node 1417-5223](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1417-5223)  |
 | Listing Welcome                  | ⬜ Not started (Phase 3/4)                                        | [node 1465-6444](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-6444)  |
 | Listing for Sale (apartment)     | ⬜ Not started (Phase 4)                                          | [node 1422-6880](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1422-6880)  |
@@ -66,6 +66,17 @@ File key for these is still the canonical one (`MSrs3Woe4rF8yM8PVYRYSa`) — **n
 | Take a Selfie                        | `1411-2496` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2496 |
 | Scanning / Capture guidance          | `1453-2052` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1453-2052 |
 | Additional selfie/capture screen     | `1411-2805` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2805 |
+
+### Home — working-copy links (use `aDI3HOS6NVQWnLdIx5Zvif`) — Phase 4, built around real API data per `docs/design/home-page-data-plan.md`
+
+Confirmed pixel-identical across all three purpose variants except the listing-card type badge label (verified via both `get_design_context` and the user-provided screenshots) — only pulled `Home-Buy` in full.
+
+| Screen                               |        Node | Link                                                                                   |
+| ------------------------------------ | ----------: | -------------------------------------------------------------------------------------- |
+| Home (root)                          | `1411-2864` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2864 |
+| Home-Buy                             | `1411-2865` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2865 |
+| Home-Rent                            | `1417-4689` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-4689 |
+| Home-Airbnb                          | `1417-4944` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-4944 |
 
 ## Other Figma pages (not yet linked individually)
 

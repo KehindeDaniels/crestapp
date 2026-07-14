@@ -61,3 +61,5 @@ https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=141
 
 Home airbnb
 https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-4944&t=EH7m7ry4RVtHR8C5-1
+
+{{base_url}}/api/properties/search

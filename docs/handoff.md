@@ -1,4 +1,4 @@
-# Handoff — Crest App Frontend (Phase 0 + 1 + 2 complete, Phase 2.6 + 2.7 in progress → Phase 3 next)
+# Handoff — Crest App Frontend (Phase 0 + 1 + 2 complete, Phase 4 (Home) in progress)
 
 > Written for a fresh agent (e.g. Codex) picking up this repo with no prior conversation context. Read this, then `docs/frontend-blueprint.md` (architecture) and `docs/design-vs-backend-gaps.md` (Figma-vs-API mismatches) before writing code.
 
@@ -248,8 +248,35 @@ Caught and fixed one real bug mid-implementation: the first draft of the corner-
 
 **Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, route list unchanged.
 
-## Immediate next step
-**Phase 3 — Public property surface (RSC)** per the blueprint roadmap: property search with filters (URL state) and listing detail, rendered via Server Components hitting `publicFetch` (unauthenticated `/api/properties/search`) — this is the first real test of the RSC/public-vs-authed hard line described in architectural decision #2. Figma: Home, Search Property, Listing for sale.
+## Phase 4 — Home page: real properties/profile/notifications data, no more placeholder
+Real, production-backed rebuild of `/home` — not a mockup, per explicit instruction. Full component/API dependency analysis happened **before** any code: `docs/design/home-page-data-plan.md` (component inventory, API mapping, confirmed live response shapes from real `curl` tests against seeded data, parallel-loading strategy). Gaps found there are logged in `docs/design-vs-backend-gaps.md`'s Phase 4 section — read that before touching this code again.
+
+**Three new feature folders**, all following the same `types/api/hooks/index` shape as `auth`/`kyc`, plus a new `models.ts` in two of them:
+- `src/features/properties/` — `types.ts` (raw `ApiProperty` shape, confirmed live), `models.ts` (`PropertyCardModel` + `toPropertyCardModel()`), `config.ts` (`PROPERTY_PURPOSE_TABS`, `PRICE_RANGE_BUCKETS`), `api.ts`, `hooks.ts` (`usePropertySearch`), `components/` (`PropertyCard`, `FilterDropdown`, `PropertyFeatureFilter`).
+- `src/features/profile/` — `types.ts`, `models.ts` (`ProfileViewModel` + `toProfileViewModel()`), `api.ts`, `hooks.ts` (`useProfile`).
+- `src/features/notifications/` — `types.ts`, `api.ts`, `hooks.ts` (`useHasUnreadNotifications` — a boolean for the bell's dot, not a full inbox; no inbox screen exists yet).
+
+**View-model / mapping-layer architecture** (explicit instruction, new pattern for this codebase): components never bind directly to raw API responses. `toPropertyCardModel()`/`toProfileViewModel()` are the only code that touches the messy raw shape (string prices, relative media paths needing the API origin prefixed, nested `owner.profile.*`, `0`/`1` instead of booleans) — everything downstream renders the clean model. A backend shape change only requires updating the mapper. Deliberately not retrofitted onto `auth`/`kyc` (those hooks return raw-ish parsed data directly, unchanged) — worth applying to future list-rendering features though.
+
+**New `src/components/app-shell/`** — the real sidebar + topbar shell `(client)/layout.tsx` has been deferring since Phase 0 ("real AppShell lands with the property features"). `NAV_ITEMS` (`nav-config.ts`) and the topbar's icon list are both data-driven arrays, not hardcoded JSX — this matters because most sidebar destinations (Search Property, List Property, Messages, History, Profile) don't have pages built yet and render disabled/non-clickable rather than as dead links; extending the enabled set later is additive.
+
+**Three design elements explicitly hidden or stubbed, all confirmed to have zero backend support** (grepped the whole Postman collection, checked real live data):
+- **Airbnb tab** — hidden entirely, no `purpose` value exists for it.
+- **Favorites** (topbar heart, per-card heart, "Saved Property" nav) — hidden entirely, no endpoint exists anywhere.
+- **"Property Feature" filter** — kept visible but disabled/"Coming Soon" (different treatment from the two above, per explicit instruction — it's a prominent part of the search bar's visual layout).
+
+**Real bug found during verification, isolated to one route**: `POST /api/properties/search` returns a raw `500` with a full Laravel debug stack trace (leaking server file paths) when unauthenticated, instead of a clean `401`. Retested `GET /api/profile` and `GET /api/notifications` — both fail correctly. Not systemic; almost certainly this one route isn't wired through `auth:sanctum` like the rest of the API. Not yet added to `docs/bug-report-csrf-and-otp-leak.md` — offered, awaiting confirmation.
+
+**A real bug caught during self-review before shipping**: `PRICE_RANGE_BUCKETS[Number(filters.priceRangeIndex)]` — `Number("")` evaluates to `0` in JS, so the unselected/default filter state was silently selecting the *first* bucket (`max_price: 500,000`) instead of applying no price filter at all, which would have hidden most of the real seeded listings (up to ₦100M) on initial page load. Fixed with an explicit `=== ""` guard before the `Number()` cast (`src/app/(client)/home/home-content.tsx`).
+
+**Corrects an earlier architectural assumption in this doc**: the old "Immediate next step" note below (now superseded) assumed `properties/search` was public and RSC-fetchable. **Confirmed live it requires Bearer auth** (unauthenticated requests error, see the bug above) — Home fetches it entirely client-side via TanStack Query, matching the existing hard rule (RSC only for genuinely public endpoints).
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, route list unchanged (still 20 routes, Home was already a route, no new pages added this phase — App Shell/features are all internal restructuring plus the Home page's own content).
+
+**Not yet done:** no live browser test of the actual rendered Home page (no browser tool available in this environment, same limitation as every design pass this session) — worth a manual check, particularly the listing feed against real seeded properties and the price-range filter behavior given the bug just fixed above.
+
+## Immediate next step (superseded above where it conflicts — kept for the rest of the roadmap)
+**Phase 3/5 — Public property surface, Search Property + listing detail screens** per the blueprint roadmap. **Note**: originally planned as RSC/`publicFetch` — now known to be wrong, `properties/search` requires auth (see Phase 4 above). Build via the same client-side `usePropertySearch()` pattern Home now uses, with URL-synced filter state for a real search-results page. Figma: Search Property, Listing for sale.
 
 **Before starting, two things worth doing:**
 1. A full live browser walkthrough of register → verify → login → KYC → `/home` (none of it has been end-to-end browser-verified yet — only individual pieces via `curl`).

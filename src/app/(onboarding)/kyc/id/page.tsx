@@ -107,7 +107,7 @@ export default function KycIdUploadPage() {
           <div className="space-y-4">
             <FileUploadField
               label="Upload Front ID Card"
-              purpose="kyc_document"
+              purpose="kyc_document_front"
               fileName={frontFileName}
               onUploaded={(url, name) => {
                 setFrontFileUrl(url);
@@ -116,7 +116,7 @@ export default function KycIdUploadPage() {
             />
             <FileUploadField
               label="Upload Back ID Card"
-              purpose="kyc_document"
+              purpose="kyc_document_back"
               fileName={backFileName}
               onUploaded={(url, name) => {
                 setBackFileUrl(url);

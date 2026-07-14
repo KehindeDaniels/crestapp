@@ -1,40 +1,40 @@
 import { apiClient } from "@/lib/api/client";
 import { KYC_STATUSES, type KycStatus } from "@/config/constants";
-import { env } from "@/config/env";
-import { getToken } from "@/lib/auth/token";
 import type { ID } from "@/types/api";
 import type {
-  FileUploadResponse,
+  DocumentUploadResponse,
   KycFindSingleResponse,
   KycSubmitPayload,
   KycSubmitResponse,
 } from "./types";
 
 /**
- * Extracts the uploaded file's URL from an undocumented response shape (the
- * Postman collection has no example for POST /api/platform/files/upload).
- * Throws loudly instead of guessing wrong silently — update this in one place
- * once the real shape is confirmed.
+ * Extracts the uploaded document's download URL. CONFIRMED risk: the Upload
+ * Document Postman example has no download_url at all, and the separate Get
+ * Document example shows it as `null`. Throws loudly if missing — kyc/submit
+ * requires real URLs, so silently passing an empty value would corrupt a KYC
+ * submission. See docs/design-vs-backend-gaps.md (Phase 2.5).
  */
-function parseUploadUrl(response: FileUploadResponse): string {
-  const url =
-    response.url ??
-    response.file_url ??
-    response.path ??
-    response.data?.url ??
-    response.data?.file_url ??
-    response.data?.path;
-
+function parseDocumentUrl(response: DocumentUploadResponse): string {
+  const url = response.data?.download_url;
   if (!url) {
     throw new Error(
-      "Unexpected upload response shape from /api/platform/files/upload — " +
-        "expected one of url/file_url/path (optionally nested under `data`). " +
-        "Got: " +
-        JSON.stringify(response),
+      "POST /api/documents/upload did not return a usable download_url " +
+        "(confirmed absent/null in the one documented Postman example). " +
+        `document_id=${response.data?.document_id}, document_uuid=${response.data?.document_uuid} — ` +
+        "may need a follow-up call (e.g. GET /api/documents/{id}) or a backend " +
+        "fix to actually populate this field.",
     );
   }
   return url;
 }
+
+/** Humanized title per upload purpose — shown to whoever reviews these documents later. */
+const PURPOSE_TITLES: Record<string, string> = {
+  kyc_document_front: "KYC Document - Front",
+  kyc_document_back: "KYC Document - Back",
+  kyc_selfie: "KYC Selfie",
+};
 
 /**
  * Extracts a KYC status from the (undocumented, likely absent) `kyc` field of
@@ -64,43 +64,32 @@ export function parseKycStatus(
 }
 
 export const kycApi = {
-  /** Uploads a single file and returns its resolved URL. `purpose` mirrors the Postman example's "property_document" convention. */
+  /**
+   * Uploads a file via the Legal Documents system and returns its download
+   * URL. Switched from POST /api/platform/files/upload (confirmed dead by
+   * the backend dev: returns 200 with a completely empty body, Content-Type
+   * text/html — see docs/design-vs-backend-gaps.md, Phase 2.5) to
+   * POST /api/documents/upload on the project owner's direction.
+   *
+   * `document_type: "certificate"` is a deliberate, flagged inference — the
+   * required enum (agreement/contract/disclosure/certificate/report) has no
+   * value that cleanly means "government ID" or "selfie". Confirm with the
+   * backend/product owner if a better fit exists before this ships.
+   */
   async uploadFile(file: File, purpose: string): Promise<string> {
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("purpose", purpose);
-    try {
-      const response = await apiClient<FileUploadResponse>(
-        "/api/platform/files/upload",
-        { method: "POST", body: formData },
-      );
-      return parseUploadUrl(response);
-    } catch (err) {
-      // If the normal client path failed, attempt a raw fetch to capture the
-      // server's actual response body for debugging (useful when the server
-      // returns non-JSON or an unexpected shape). This runs only in the
-      // browser and is intended as a narrow diagnostic aid.
-      try {
-        const base = env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
-        const url = `${base}/api/platform/files/upload`;
-        const token = getToken();
-        const headers: Record<string, string> = {};
-        if (token) headers.Authorization = `Bearer ${token}`;
-        const rawRes = await fetch(url, {
-          method: "POST",
-          body: formData,
-          headers,
-        });
-        const text = await rawRes.text();
-        // Surface a clearer error message including status and body.
-        throw new Error(
-          `Upload failed (status ${rawRes.status}). Server response: ${text}`,
-        );
-      } catch (inner) {
-        // If the diagnostic fetch also fails, rethrow the original error.
-        throw err;
-      }
-    }
+    formData.append("document_file", file);
+    formData.append("title", PURPOSE_TITLES[purpose] ?? purpose);
+    formData.append("document_type", "certificate");
+    formData.append(
+      "description",
+      "Identity verification document uploaded during KYC.",
+    );
+    const response = await apiClient<DocumentUploadResponse>(
+      "/api/documents/upload",
+      { method: "POST", body: formData },
+    );
+    return parseDocumentUrl(response);
   },
 
   submit: (payload: KycSubmitPayload) =>

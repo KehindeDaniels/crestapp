@@ -6,11 +6,13 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { isApiError } from "@/lib/api/errors";
 import { useKycWizardStore, useSubmitKyc } from "@/features/kyc";
+import { useSessionStore } from "@/features/auth";
 
 export default function KycProcessingPage() {
   const router = useRouter();
   const wizard = useKycWizardStore();
   const submitKyc = useSubmitKyc();
+  const userId = useSessionStore((s) => s.user?.user_id);
   const hasSubmitted = useRef(false);
 
   useEffect(() => {
@@ -18,19 +20,23 @@ export default function KycProcessingPage() {
       router.replace("/kyc/selfie");
       return;
     }
-    if (hasSubmitted.current) return;
+    if (hasSubmitted.current || !userId) return;
     hasSubmitted.current = true;
 
     submitKyc.mutate({
+      requester_id: userId,
       document_type: wizard.documentType,
       document_number: wizard.documentNumber,
       document_front_url: wizard.frontFileUrl,
       document_back_url: wizard.backFileUrl,
       selfie_url: wizard.selfieFileUrl,
     });
-    // Intentionally run once on mount with the wizard snapshot at that time.
+    // `userId` is a real dependency, not a mount-only guard: session hydration
+    // can resolve after this page mounts, so the effect must re-run once it's
+    // available (the `!userId` check above no-ops until then). `hasSubmitted`
+    // still prevents a second submission once it has fired.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userId]);
 
   if (!wizard.selfieFileUrl) return null;
 
@@ -60,9 +66,12 @@ export default function KycProcessingPage() {
               : "Something went wrong submitting your verification."}
           </p>
           <Button
+            disabled={!userId}
             onClick={() => {
+              if (!userId) return;
               hasSubmitted.current = false;
               submitKyc.mutate({
+                requester_id: userId,
                 document_type: wizard.documentType,
                 document_number: wizard.documentNumber,
                 document_front_url: wizard.frontFileUrl,

@@ -116,6 +116,26 @@ After deploying the above, the user reported: clicking into KYC (or typing `/kyc
 
 **Verified:** `pnpm typecheck`, `pnpm build`, `pnpm lint` all clean after every fix in this chain. The user reported Copilot's second fix "worked once" in manual testing — promising, but not yet confirmed via the same rigorous Network-tab method used earlier in this debugging session. Re-verify with that method before fully trusting it, and specifically retest the same flow more than once (a fix that works "once" needs to be confirmed as reliably reproducible, not just non-failing on a single attempt).
 
+### Phase 2.5c — File upload endpoint switched: `/api/platform/files/upload` → `/api/documents/upload`
+Live-tested via `curl -i`: `POST /api/platform/files/upload` returns `200 OK` with a **completely empty body** (`Content-Length: 0`, `Content-Type: text/html` — not JSON). Confirmed by the backend dev as broken. Checking the Postman collection programmatically showed **every** endpoint in the "File Storage" section has an empty `"response": []` — none were ever actually exercised by whoever built the collection.
+
+Per the project owner's direction, KYC uploads now go through the Legal Documents system instead: `POST /api/documents/upload` (fields: `document_file`, `title`, `document_type`, `description` — all required except `title`/`description` per validation, different shape entirely from the old `file`/`purpose` fields). This endpoint **does** have a real, confirmed Postman example (`201 Created`, real JSON body).
+
+**Two things deliberately flagged as inferences, not silently guessed:**
+1. **`document_type: "certificate"`** — the required enum (`agreement/contract/disclosure/certificate/report`) has no value that means "government ID" or "selfie". Used for all three KYC uploads (front/back/selfie) as the least-bad fit. Confirm with backend/product before shipping.
+2. **The response has no URL field in the documented example.** `data: { document_id, document_uuid, document_type, title, status, uploaded_at, file_size }` — no `url`. The separate `GET /api/documents/{id}` response does have `download_url`, but it's `null` in the one example available. **UPDATE — resolved via live testing**: all three KYC uploads (front/back/selfie) returned real, working `download_url`s in practice (visible directly in the `kyc/submit` request payload: `https://api.crestapp.ng/api/download/...`). The stale Postman example was misleading; `parseDocumentUrl()`'s throw-loudly path never fired. No longer an open risk.
+
+Also fixed in passing: the KYC ID page previously passed `purpose="kyc_document"` for **both** front and back uploads (no distinction) — now `kyc_document_front`/`kyc_document_back`, so the derived `title` sent to the backend is actually meaningful.
+
+**Verified:** `pnpm typecheck`, `pnpm build`, `pnpm lint` all clean.
+
+### Phase 2.5d — `kyc/submit` also needs an undocumented `requester_id` field
+Once uploads were confirmed working, the actual `POST /api/kyc/submit` call still failed: `422 { "errors": { "requester_id": ["The requester id field is required."] } }`. The Postman collection's example payload for this endpoint has no `requester_id` at all — same undocumented-field pattern as everywhere else with this backend. Mirrors `kyc/find-single`'s `requester_id`, which means "the authenticated user's own `user_id`" for self-submission.
+
+**Fix:** added `requester_id: ID` to `KycSubmitPayload` (`src/features/kyc/types.ts`). `src/app/(onboarding)/kyc/processing/page.tsx` now reads `user_id` from `useSessionStore` and includes it in both the initial submit call and the "Try again" retry button. The submit effect's dependency array changed from mount-only (`[]`) to `[userId]`, since session hydration can resolve after this page mounts — this is a genuine dependency, not the same class of race fixed in Phase 2.5b (no `reset()`-triggered re-fire risk here, since `hasSubmitted` still guards against a second real submission).
+
+**Verified:** `pnpm typecheck`, `pnpm build`, `pnpm lint` all clean. **Not yet confirmed** whether this was the *last* undocumented required field — worth watching for another `422` on the next full live test before assuming the KYC submission flow is fully working end-to-end.
+
 ## Verified Next.js 16.2.10 / React 19.2.4 facts (checked against `node_modules/next/dist/docs`, re-verify if the installed version changes)
 - `middleware.ts` → **`proxy.ts`**, exported function name `proxy`, Node runtime only. **Must live in `src/` if `app` is in `src/`.**
 - `cookies()`, `headers()`, `params`, `searchParams` are **async** — always `await`.

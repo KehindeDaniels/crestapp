@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   useRegister,
   useRegisterWizardStore,
@@ -89,24 +89,26 @@ export default function RegisterPasswordPage() {
   if (!wizard.phoneVerified) return null;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="space-y-1 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Create Password</h1>
-        <p className="text-sm text-muted-foreground">
+    <div className="flex flex-col gap-10">
+      <div className="space-y-2">
+        <h1 className="text-2xl font-semibold text-auth-heading">Create Password</h1>
+        <p className="text-sm text-[#585d65]">
           Choose a strong password to keep your account secure
         </p>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
+              <FormItem className="gap-3">
+                <FormLabel className="text-base font-medium text-foreground">
+                  Password
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter" type="password" {...field} />
+                  <PasswordInput placeholder="Enter" className="h-12" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,10 +118,12 @@ export default function RegisterPasswordPage() {
             control={form.control}
             name="password_confirmation"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+              <FormItem className="gap-3">
+                <FormLabel className="text-base font-medium text-foreground">
+                  Confirm Password
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter" type="password" {...field} />
+                  <PasswordInput placeholder="Enter" className="h-12" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,7 +134,12 @@ export default function RegisterPasswordPage() {
 
           {formError && <p className="text-sm text-destructive">{formError}</p>}
 
-          <Button type="submit" className="w-full" disabled={register.isPending}>
+          <Button
+            type="submit"
+            size="xl"
+            className="w-full"
+            disabled={register.isPending}
+          >
             {register.isPending ? "Creating account…" : "Create Account"}
           </Button>
         </form>

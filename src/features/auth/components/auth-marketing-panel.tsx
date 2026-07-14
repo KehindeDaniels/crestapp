@@ -48,10 +48,31 @@ const SLIDE_INDEX_BY_PATH: Record<string, number> = {
   "/register/password": 0,
 }
 
+// The dot indicator tracks two different things depending on where you are:
+// on a standalone screen (login) it's the 3-slide marketing rotation above;
+// inside the register wizard it's *step progress* — one dot per actual step,
+// not a fixed 3. Figma's own exports show all 5 wizard screens with the same
+// 3 dots (an artifact of the marketing slides being reused across steps, see
+// docs/design-fidelity-notes.md), which reads as broken progress feedback
+// once the dots move with the user rather than sitting static in a
+// screenshot — so this deliberately diverges from the literal Figma export.
+const WIZARD_STEPS = [
+  "/register",
+  "/register/verify-email",
+  "/register/phone",
+  "/register/verify-phone",
+  "/register/password",
+]
+
 function AuthMarketingPanel() {
   const pathname = usePathname()
   const activeIndex = SLIDE_INDEX_BY_PATH[pathname] ?? 0
   const slide = SLIDES[activeIndex]
+
+  const wizardStepIndex = WIZARD_STEPS.indexOf(pathname)
+  const isWizardStep = wizardStepIndex !== -1
+  const dotCount = isWizardStep ? WIZARD_STEPS.length : SLIDES.length
+  const activeDotIndex = isWizardStep ? wizardStepIndex : activeIndex
 
   return (
     <div className="relative hidden h-screen shrink-0 overflow-hidden bg-[#061d52] lg:flex lg:w-[clamp(360px,49vw,708px)] lg:flex-col">
@@ -89,12 +110,12 @@ function AuthMarketingPanel() {
         </div>
 
         <div className="flex items-center justify-center gap-2">
-          {SLIDES.map((s, i) => (
+          {Array.from({ length: dotCount }, (_, i) => (
             <span
-              key={s.headline}
+              key={i}
               className={cn(
                 "h-1.25 rounded-full transition-all",
-                i === activeIndex ? "w-8.75 bg-white" : "w-2 bg-[#a9a9a9]"
+                i === activeDotIndex ? "w-8.75 bg-white" : "w-2 bg-[#a9a9a9]"
               )}
             />
           ))}

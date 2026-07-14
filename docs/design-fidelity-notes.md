@@ -54,7 +54,20 @@ Fixed generally, not just for `/register`: at `lg`+, the outer container is now 
 - Google button background `rgba(0,0,0,0.06)` is single-use so far — implemented as an arbitrary-opacity Tailwind utility (`bg-black/[0.06]`) rather than a new token; promote to a token only if it recurs on another screen.
 
 ### Functional addition riding along with the visual pass
-- **Real password show/hide toggle** (`src/components/ui/password-input.tsx`): the Figma mockup shows a static "hide" (eye-slash) icon with no toggled-open state — password fields had zero toggle behavior before this pass. The "hidden" state uses the real exported Figma icon (`icon-hide.svg`) for exact fidelity; the "shown" state falls back to `lucide-react`'s `Eye` icon since Figma never designed that state.
+- **Real password show/hide toggle** (`src/components/ui/password-input.tsx`): the Figma mockup shows a static "hide" (eye-slash) icon with no toggled-open state — password fields had zero toggle behavior before this pass. The "hidden" state uses the real exported Figma icon (`icon-hide.svg`) for exact fidelity; the "shown" state falls back to `lucide-react`'s `Eye` icon since Figma never designed that state. Now used on both Login and Create Password.
+
+## Create Password screen (`aDI3HOS6NVQWnLdIx5Zvif`, nodes `1398:7558` / `1398:6568`)
+
+### Password strength bar + checklist
+Confirmed from both node pulls (both landed on the 0%-empty variant, not the colored states): track `#edecef`, neutral/empty fill `#605d67`, unmet-checklist-circle border `#9d9aa4`, 16px circle, checklist text `#666`. **Not confirmed**: the exact Weak/Fair/Strong fill colors and the "(Weak)"/"(Fair)"/"(Strong)" label — those were only visible in the user-exported screenshots (`docs/design/screenshots/Onboarding Screen-AC-Create Password{3,-4,-5}.png`), not in any pulled node data. Approximated with the app's existing `--destructive` (Weak) and `--success` (Strong) tokens; "Fair" has no existing token so uses a one-off amber (`#f59e0b`) — promote to a token only if amber recurs elsewhere. Bar width is a continuous `metCount/4` rather than the 3 discrete widths eyeballed from the screenshots (~33/66/100%) — more proportionate across all 4 requirements and close enough to the screenshots to not be worth hardcoding three magic-number breakpoints.
+
+### Confirmed screen-specific sizing that differs from Login
+- **Inputs are 48px tall here** (`h-[48px]` in both node pulls), not the 54px used on Login/other screens. Confirmed twice, not a one-off — implemented as `<PasswordInput className="h-12" />`, overriding the shared `size="xl"` (54px) variant's height via `tailwind-merge` rather than adding a new global input size for one screen.
+- **Subheading uses `#585d65` at 14px**, not Login's `#666` at 16px. Single-use so far — arbitrary Tailwind value, not a new token.
+- The submit button stays 54px (`size="xl"`, unmodified) even though the inputs above it are 48px — this is what both node pulls literally show, not an inconsistency introduced here.
+
+### Wizard step dots diverge from the literal Figma export, deliberately
+Every register-wizard screenshot (Create Account through Create Password) shows the same 3 marketing dots — Figma reuses the login-screen carousel indicator across all of them rather than giving the wizard its own progress UI. Reproduced literally, this means dots stop moving in a functioning progress sense (phone/verify-phone/password all "look like step 1"), which reads as broken once the dots respond to real navigation instead of sitting static in a screenshot. Per explicit product direction, the register wizard now gets its own dot count matching its actual step count (5, one per `WIZARD_STEPS` in `auth-marketing-panel.tsx`) with the active dot tracking the current step — `/login` (not part of the wizard) keeps the original 3-dot marketing-slide indicator.
 
 ## Asset expiry
-All Figma CDN asset URLs pulled 2026-07-14 expire ~7 days out. Everything referenced above has already been downloaded to `public/images/auth/{shared,login}/` and is served locally — none of the shipped code references a live `figma.com/api/mcp/asset/...` URL.
+All Figma CDN asset URLs pulled 2026-07-14 expire ~7 days out. Everything referenced above has already been downloaded to `public/images/auth/{shared,login,register}/` and is served locally — none of the shipped code references a live `figma.com/api/mcp/asset/...` URL.

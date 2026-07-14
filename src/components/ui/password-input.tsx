@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { Eye } from "lucide-react"
 
 import { cn } from "@/lib/utils/index"
@@ -34,9 +35,11 @@ function PasswordInput({
         {visible ? (
           <Eye className="size-6" />
         ) : (
-          <img
+          <Image
             src="/images/auth/shared/icon-hide.svg"
             alt=""
+            width={24}
+            height={24}
             className="size-6"
           />
         )}

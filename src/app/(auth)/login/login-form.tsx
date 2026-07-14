@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -127,16 +128,15 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
         </Form>
 
         <div className="flex flex-col gap-3">
-          <div
-            className="relative flex h-[17px] items-center justify-center"
-            style={{
-              backgroundImage: "url(/images/auth/shared/divider-line.svg)",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-              backgroundSize: "100% 1px",
-            }}
-          >
-            <span className="bg-background px-2.5 text-xs font-medium tracking-[0.5px] text-foreground">
+          <div className="relative flex h-[17px] items-center justify-center">
+            <Image
+              src="/images/auth/shared/divider-line.svg"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-fill"
+            />
+            <span className="relative bg-background px-2.5 text-xs font-medium tracking-[0.5px] text-foreground">
               Or login with
             </span>
           </div>
@@ -147,9 +147,11 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
             disabled
             className="flex h-13.5 w-full items-center justify-center gap-2 rounded-xl bg-black/[0.06] text-base text-foreground disabled:opacity-50"
           >
-            <img
+            <Image
               src="/images/auth/shared/icon-google.svg"
               alt=""
+              width={28}
+              height={27}
               className="size-[27px]"
             />
             Log In with Google

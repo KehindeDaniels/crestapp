@@ -32,12 +32,13 @@ export default function RegisterPasswordPage() {
 
   useEffect(() => {
     if (!wizard.phoneVerified) router.replace("/register");
+    else if (!wizard.role) router.replace("/register/role");
     // Mount-only guard: checked once when this step is entered. Deliberately
-    // NOT reactive to wizard.phoneVerified — onSuccess below calls
-    // wizard.reset() (which flips phoneVerified back to false) in the same
-    // render pass as router.push("/login"); a reactive effect here would
-    // re-fire on that reset and race router.replace("/register") against the
-    // intended navigation. Mirrors the identical mount-only pattern in
+    // NOT reactive to wizard.phoneVerified/role — onSuccess below calls
+    // wizard.reset() (which flips them back) in the same render pass as
+    // router.push("/login"); a reactive effect here would re-fire on that
+    // reset and race router.replace("/register") against the intended
+    // navigation. Mirrors the identical mount-only pattern in
     // src/app/(onboarding)/kyc/processing/page.tsx. See
     // docs/design-vs-backend-gaps.md (Phase 2.5) for the full writeup.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,6 +51,7 @@ export default function RegisterPasswordPage() {
   const password = useWatch({ control: form.control, name: "password" });
 
   function onSubmit(values: RegisterPasswordInput) {
+    if (!wizard.role) return;
     setFormError(null);
     register.mutate(
       {
@@ -59,14 +61,18 @@ export default function RegisterPasswordPage() {
         phone_number: wizard.phoneNumber,
         password: values.password,
         password_confirmation: values.password_confirmation,
-        // TODO(product): no role-selection screen exists in the provided Figma
-        // flow, but POST /api/auth/register requires one. Defaulting to
-        // "tenant" until a role picker is designed.
-        role: "tenant",
+        role: wizard.role,
       },
       {
         onSuccess: () => {
           wizard.reset();
+          // Consumed by login-form.tsx: routes the very next successful
+          // login to /welcome instead of the normal next/home target. No
+          // backend "onboarding_completed" flag exists to key off instead
+          // (see docs/design-vs-backend-gaps.md) — sessionStorage is a
+          // same-tab-only heuristic for "just registered," not a durable
+          // server-tracked state.
+          sessionStorage.setItem("crest:just-registered", "1");
           toast.success("Account created — please log in.");
           router.push("/login");
         },
@@ -86,7 +92,7 @@ export default function RegisterPasswordPage() {
     );
   }
 
-  if (!wizard.phoneVerified) return null;
+  if (!wizard.phoneVerified || !wizard.role) return null;
 
   return (
     <div className="flex flex-col gap-10">

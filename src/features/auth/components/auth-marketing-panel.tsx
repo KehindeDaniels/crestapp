@@ -45,6 +45,7 @@ const SLIDE_INDEX_BY_PATH: Record<string, number> = {
   "/register/verify-email": 2,
   "/register/phone": 0,
   "/register/verify-phone": 0,
+  "/register/role": 0,
   "/register/password": 0,
 }
 
@@ -61,6 +62,7 @@ const WIZARD_STEPS = [
   "/register/verify-email",
   "/register/phone",
   "/register/verify-phone",
+  "/register/role",
   "/register/password",
 ]
 

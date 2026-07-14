@@ -36,6 +36,15 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
     login.mutate(values, {
       onSuccess: () => {
         toast.success("Welcome back");
+        // Consumed once: set by register/password/page.tsx right before its
+        // redirect to /login. No backend "onboarding_completed" flag exists
+        // to key off instead — see docs/design-vs-backend-gaps.md.
+        const justRegistered = sessionStorage.getItem("crest:just-registered");
+        if (justRegistered) {
+          sessionStorage.removeItem("crest:just-registered");
+          router.replace("/welcome");
+          return;
+        }
         router.replace(nextPath);
       },
       onError: (error) => {

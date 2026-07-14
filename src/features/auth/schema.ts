@@ -54,11 +54,11 @@ export const registerPasswordSchema = z
 export type RegisterPasswordInput = z.infer<typeof registerPasswordSchema>;
 
 /**
- * Full payload sent to POST /api/auth/register. `role` has no corresponding
- * screen in the provided Figma flow — defaulted to "tenant".
- * TODO(product): confirm how/where the user picks their role (tenant, landlord,
- * seller, buyer, lawyer, surveyor) — no role-selection screen exists in the
- * Account Creation frames handed over so far.
+ * Full payload sent to POST /api/auth/register. `role` is picked by the user
+ * on /register/role (relocated there from the post-login "After Account
+ * Creation" screen's role picker — no backend endpoint exists for a user to
+ * set their own role after registration, so it has to happen here, before
+ * the register POST). See docs/design-vs-backend-gaps.md.
  */
 export const registerPayloadSchema = registerPersonalInfoSchema
   .extend(registerPhoneSchema.shape)

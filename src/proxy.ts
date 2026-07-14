@@ -16,6 +16,7 @@ const GUEST_ONLY = [
 ];
 const PROTECTED_PREFIXES = [
   "/home",
+  "/welcome",
   "/kyc",
   "/properties/new",
   "/properties/mine",

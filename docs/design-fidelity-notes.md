@@ -2,6 +2,11 @@
 
 > Scope: pure visual-fidelity decisions made while rebuilding screens pixel-perfect against Figma — flattening choices, inferred breakpoints, token splits, and copy that wasn't confirmed by a design pull. **Not** for design-vs-backend API mismatches (see `docs/design-vs-backend-gaps.md`) and **not** for implementation bugs (see `docs/bug-report-csrf-and-otp-leak.md`).
 
+## `/welcome` and `/register/role` — no Figma node available, built from a screenshot
+Both screens trace back to `docs/design/screenshots/after account creation.png`, which has no accessible node ID or link (only the raw image). Full flow-level reasoning (why role selection moved into registration, the sessionStorage first-login heuristic) is in `docs/design-vs-backend-gaps.md`'s Phase 3 section — this entry is scoped to the visual decisions only:
+- **`/welcome`**: colors approximated using existing tokens read against the screenshot (`--primary` navy for the congrats banner, `--success` green for the "done" checkmark) rather than exact hex values sampled from the image pixels. The checkmark icon on the banner is a `lucide-react` `BadgeCheck`, not the real asset (which wasn't exported) — a reasonable stand-in, not a confirmed match.
+- **`/register/role`**: has no Figma frame of its own at all — the checkbox UI only exists inside the post-login screen's design, never as a standalone registration step. Styled to match its still-generic, not-yet-pixel-perfect sibling steps (`/register`, `/register/phone`) rather than inventing a pixel-perfect layout with nothing to verify it against.
+
 ## Login / Welcome screen (`aDI3HOS6NVQWnLdIx5Zvif`, node `1395:1540`)
 
 ### Flattened assets (user-approved, see `docs/design/account-creation-pixel-perfect-plan.md`) — revised, see below

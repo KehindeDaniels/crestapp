@@ -30,3 +30,21 @@ Onboarding Screen-Account Creating- after creating
 https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-9807&t=EH7m7ry4RVtHR8C5-1
 
 Onboarding Screen-Account Creating
+
+now pls update the kyc link
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-7021&t=EH7m7ry4RVtHR8C5-1
+sub link under kyc
+kyc
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-7022&t=EH7m7ry4RVtHR8C5-1
+Upload Identification Card
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1404-1759&t=EH7m7ry4RVtHR8C5-1
+
+Upload Identification Card2
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2496&t=EH7m7ry4RVtHR8C5-1
+Take a Selfie
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2496&t=EH7m7ry4RVtHR8C5-1
+Scanning
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1453-2052&t=EH7m7ry4RVtHR8C5-1
+
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2805&t=EH7m7ry4RVtHR8C5-1
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2805&t=EH7m7ry4RVtHR8C5-1

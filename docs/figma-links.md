@@ -28,6 +28,7 @@ Screen-by-screen breakdown, in flow order. Status column tracks the pixel-perfec
 | Create Password | `1398-7558` | 🚧 Built (Phase 1, placeholder styling) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-7558) |
 | Create Password (flow/variant states) | `1398-6568` | 🚧 Built (Phase 1, placeholder styling) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6568) |
 | After Creating (previously missed) | `1398-9807` | ⬜ Not built (Phase 3 scope, not yet pulled) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-9807) |
+| After Account Creation (post-login, distinct from "After Creating" above) | unknown — no node link available, only a screenshot | ✅ Built (Phase 2.7, approximated from screenshot, not a node pull) — `/welcome`, `src/app/(onboarding)/welcome/page.tsx` | screenshot only: `docs/design/screenshots/after account creation.png` |
 
 `node-id=0-1` was also included but is very likely just the page/canvas root, not a distinct screen — not listed as a screen here, flagging in case it turns out to matter.
 

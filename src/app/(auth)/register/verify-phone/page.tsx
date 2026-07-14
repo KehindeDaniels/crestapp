@@ -22,7 +22,7 @@ export default function VerifyPhonePage() {
       title="Verify Phone Number"
       onVerified={() => {
         markPhoneVerified();
-        router.push("/register/password");
+        router.push("/register/role");
       }}
     />
   );

@@ -18,14 +18,19 @@ import type {
  */
 function parseUploadUrl(response: FileUploadResponse): string {
   const url =
-    response.url ?? response.file_url ?? response.path ??
-    response.data?.url ?? response.data?.file_url ?? response.data?.path;
+    response.url ??
+    response.file_url ??
+    response.path ??
+    response.data?.url ??
+    response.data?.file_url ??
+    response.data?.path;
 
   if (!url) {
     throw new Error(
       "Unexpected upload response shape from /api/platform/files/upload — " +
         "expected one of url/file_url/path (optionally nested under `data`). " +
-        "Got: " + JSON.stringify(response),
+        "Got: " +
+        JSON.stringify(response),
     );
   }
   return url;
@@ -43,10 +48,14 @@ function parseUploadUrl(response: FileUploadResponse): string {
  * resolving with `undefined` (throws "Query data cannot be undefined",
  * confirmed live via console error on ["kyc","mine"]). `null` is valid data.
  */
-export function parseKycStatus(response: KycFindSingleResponse): KycStatus | null {
+export function parseKycStatus(
+  response: KycFindSingleResponse,
+): KycStatus | null {
   const status =
-    response.kyc?.kyc_status ?? response.kyc?.status ??
-    response.data?.kyc?.kyc_status ?? response.data?.kyc?.status ??
+    response.kyc?.kyc_status ??
+    response.kyc?.status ??
+    response.data?.kyc?.kyc_status ??
+    response.data?.kyc?.status ??
     response.kyc_status;
 
   return (KYC_STATUSES as readonly string[]).includes(status ?? "")
@@ -77,7 +86,11 @@ export const kycApi = {
         const token = getToken();
         const headers: Record<string, string> = {};
         if (token) headers.Authorization = `Bearer ${token}`;
-        const rawRes = await fetch(url, { method: "POST", body: formData, headers });
+        const rawRes = await fetch(url, {
+          method: "POST",
+          body: formData,
+          headers,
+        });
         const text = await rawRes.text();
         // Surface a clearer error message including status and body.
         throw new Error(

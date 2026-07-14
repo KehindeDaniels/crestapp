@@ -49,10 +49,18 @@
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
 
-  /* TODO(design): border/input hairline inferred as gray-200 */
+  /* TODO(design): border hairline inferred as gray-200 (no non-auth field observed yet) */
   --border: #e5e7eb;
-  --input: #e5e7eb;
+  --input: rgba(102, 102, 102, 0.16); /* confirmed via Login screen Figma pull */
   --ring: #061d52;
+
+  /* Auth screens (Login/Register/KYC-adjacent) — confirmed via Login Figma pull (node 1395:1540).
+     Scoped narrowly rather than overwriting --foreground/--muted-foreground, which were inferred
+     from mixed sources and already back other shipped screens. */
+  --auth-heading: #141a33;
+  --input-background: #f9fafb;
+  --input-placeholder: rgba(102, 102, 102, 0.5);
+  --button-border: rgba(6, 29, 82, 0.16);
 }
 
 .dark {
@@ -103,7 +111,13 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  --color-auth-heading: var(--auth-heading);
+  --color-input-background: var(--input-background);
+  --color-input-placeholder: var(--input-placeholder);
+  --color-button-border: var(--button-border);
+
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-dm-sans), var(--font-inter), ui-sans-serif, sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

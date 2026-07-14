@@ -1,4 +1,4 @@
-# Handoff — Crest App Frontend (Phase 0 + 1 + 2 complete → Phase 3 next)
+# Handoff — Crest App Frontend (Phase 0 + 1 + 2 complete, Phase 2.6 in progress → Phase 3 next)
 
 > Written for a fresh agent (e.g. Codex) picking up this repo with no prior conversation context. Read this, then `docs/frontend-blueprint.md` (architecture) and `docs/design-vs-backend-gaps.md` (Figma-vs-API mismatches) before writing code.
 
@@ -142,6 +142,23 @@ Once uploads were confirmed working, the actual `POST /api/kyc/submit` call stil
 3. **Major discovery, not yet acted on**: this Postman export also added a full **"Admin Panel" section** (~80 endpoints: user management, property moderation, a real admin dashboard, disputes, payments, fraud reports, admin auth) that resolves most of what `docs/frontend-blueprint.md` §17 previously flagged as missing for Phase 7. Every endpoint in it has an empty Postman example though — routes likely exist, behavior is completely unverified. Don't build against it without live-testing each one first, same discipline as everything else this session. Full detail in `docs/design-vs-backend-gaps.md`.
 
 **Verified:** `pnpm typecheck`, `pnpm build`, `pnpm lint` all clean (note: hit the same stale `.next/dev/types` issue as the original `proxy.ts` gotcha when adding the new nested layout — `rm -rf .next/types` resolved it; if a new layout/page ever causes a phantom typecheck error referencing `.next/dev/types/validator.ts`, this is why).
+
+### Phase 2.6 — Auth UI polish (pixel-perfect pass, in progress)
+The auth screens (login + 5-step register wizard) were functionally correct but generically styled since Phase 1 — a deliberate "functionality first, then one polish pass" tradeoff. This pass rebuilds them **pixel-perfect** against real Figma data (file `aDI3HOS6NVQWnLdIx5Zvif`), starting with Login/Welcome since it's the shared-infrastructure screen every other auth screen will consume. Full blueprint: `docs/design/account-creation-pixel-perfect-plan.md`. Visual-fidelity decisions (flattened assets, inferred breakpoints, token splits): `docs/design-fidelity-notes.md`.
+
+**Done so far:**
+1. **Assets** downloaded permanently to `public/images/auth/{shared,login}/` (logo lockup + background, both flattened to single images per user-approved decisions; house illustration, hide icon, Google icon, divider line) — no code references the expiring Figma CDN.
+2. **DM Sans** added (`src/app/layout.tsx`, weight 700 only) alongside the existing Inter, exposed as `--font-heading`.
+3. **New design tokens** in `globals.css`: `--auth-heading` (scoped, doesn't touch `--foreground`), `--input-background`, `--input-placeholder`, `--button-border`; `--input` corrected from a placeholder gray to the confirmed `rgba(102,102,102,0.16)` (global change, not auth-scoped).
+4. **`size="xl"`** (54px) added to `button.tsx` and a new `cva`-based `input.tsx` (previously a plain function, no variants).
+5. **New `src/components/ui/password-input.tsx`** — real show/hide toggle, a functional addition riding along with the visual pass (previous password fields had none). Real Figma icon for the "hidden" state, `lucide-react` fallback for "shown" (no matching asset was designed).
+6. **New `src/features/auth/components/auth-marketing-panel.tsx`** — the navy left panel: flattened background image, house illustration, 3-slide auto-rotating headline/subheading carousel (local `useState`/`setInterval`, no new dependency), 3-dot indicator. Slide 1 copy confirmed via Figma; slides 2/3 subheadings are placeholders pending a real design pull — flagged in `docs/design-fidelity-notes.md`.
+7. **`(auth)/layout.tsx`** restructured from a centered card to the real split-screen shell (marketing panel + 379px form column + shared logo lockup) — applies to every guest-only auth route including `forgot-password`/`reset-password`, which haven't been pixel-verified individually yet.
+8. **`login-form.tsx`** rebuilt against the confirmed Figma spec: heading/subtext copy and colors, `size="xl"` fields, real password toggle, forgot-password link repositioned below the button (matches Figma's grouping, not the old next-to-label placement), pixel-matched divider using the real exported line SVG, disabled Google button styled to spec.
+
+**Verified:** `pnpm typecheck`, `pnpm build`, `pnpm lint` all clean (lint has 4 pre-existing-pattern `<img>`-vs-`next/image` warnings on the new files, not errors — acceptable for static local assets, not fixed). **Not yet done:** a live visual side-by-side against the Figma screenshot — no browser/screenshot tool is available in this environment to self-verify pixel fidelity; needs a manual check at `/login` in a real browser before calling this screen done.
+
+**Not yet started (see the plan doc's rollout order):** `VerifyCodeForm` restyle, Create Account, Phone Number, Create Password (+ `PasswordInput` integration), new "After Creating" confirmation screen (replaces the current silent toast+redirect in `register/password/page.tsx`), then a `forgot-password`/`reset-password` follow-on pass. Also explicitly out of scope for this pass: a "Complete Profile / Select Role" post-login step — a real functional gap discovered via Postman (`POST /api/auth/register` returns no access token, so any profile/role step must happen after login, not immediately after registration) but no Figma design exists for it yet.
 
 ## Verified Next.js 16.2.10 / React 19.2.4 facts (checked against `node_modules/next/dist/docs`, re-verify if the installed version changes)
 - `middleware.ts` → **`proxy.ts`**, exported function name `proxy`, Node runtime only. **Must live in `src/` if `app` is in `src/`.**

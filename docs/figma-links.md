@@ -16,18 +16,18 @@ Once `MSrs3Woe4rF8yM8PVYRYSa` is shared with `kehindedaniels501@gmail.com` (even
 ---
 
 ## Account Creation — sub-screens (confirmed accessible, `aDI3HOS6NVQWnLdIx5Zvif`)
-Status: ✅ Built (Phase 1). Screen-by-screen breakdown, in flow order:
+Screen-by-screen breakdown, in flow order. Status column tracks the pixel-perfect rebuild pass (`docs/design/account-creation-pixel-perfect-plan.md`), not just functional completeness:
 
-| Screen | Node | Link |
-|---|---|---|
-| Welcome / Login | `1395-1540` | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1395-1540) |
-| Create Account (name/email) | `1398-6180` | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6180) |
-| Verify Email | `1398-6371` | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6371) |
-| Phone Number | `1398-6492` | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6492) |
-| Verify Phone | `1453-1567` | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1453-1567) |
-| Create Password | `1398-7558` | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-7558) |
-| Create Password (flow/variant states) | `1398-6568` | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6568) |
-| After Creating (previously missed) | `1398-9807` | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-9807) |
+| Screen | Node | Status | Link |
+|---|---|---|---|
+| Welcome / Login | `1395-1540` | ✅ Built (Phase 3, pixel-perfect) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1395-1540) |
+| Create Account (name/email) | `1398-6180` | 🚧 Built (Phase 1, placeholder styling) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6180) |
+| Verify Email | `1398-6371` | 🚧 Built (Phase 1, placeholder styling) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6371) |
+| Phone Number | `1398-6492` | 🚧 Built (Phase 1, placeholder styling) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6492) |
+| Verify Phone | `1453-1567` | 🚧 Built (Phase 1, placeholder styling) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1453-1567) |
+| Create Password | `1398-7558` | 🚧 Built (Phase 1, placeholder styling) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-7558) |
+| Create Password (flow/variant states) | `1398-6568` | 🚧 Built (Phase 1, placeholder styling) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-6568) |
+| After Creating (previously missed) | `1398-9807` | ⬜ Not built (Phase 3 scope, not yet pulled) | [link](https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1398-9807) |
 
 `node-id=0-1` was also included but is very likely just the page/canvas root, not a distinct screen — not listed as a screen here, flagging in case it turns out to matter.
 

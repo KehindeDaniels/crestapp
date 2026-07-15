@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useMyKycStatus } from "../hooks";
 
 /**
@@ -9,13 +12,9 @@ import { useMyKycStatus } from "../hooks";
  * stays `undefined` — falls through to "show the reminder": the safe default,
  * since an unnecessary reminder is far lower-risk than hiding a needed one.
  *
- * Styling mirrors KycGuard's existing fallback CTA for visual consistency —
- * neither has a confirmed pixel-accurate Figma pull yet (the Home frame,
- * node 1411-2864, hasn't been inspected for a dedicated reminder-banner
- * design). See docs/design-vs-backend-gaps.md (Phase 2.5).
- *
- * TODO(Phase 3 AppShell): once the shared AppShell lands, this likely belongs
- * hoisted into its topbar/shell chrome rather than duplicated per-page.
+ * Styling matches the real "Complete your KYC" banner from the Home Figma
+ * pull (docs/design/screenshots/home/) — a shield-check icon, heading, body
+ * copy, and a right-aligned "Get Started" button on a muted panel.
  */
 export function KycReminderCard() {
   const { data: status, isLoading } = useMyKycStatus();
@@ -23,11 +22,22 @@ export function KycReminderCard() {
   if (isLoading || status === "approved") return null;
 
   return (
-    <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-      Verify your identity to unlock all features.{" "}
-      <a href="/kyc" className="font-medium text-primary underline">
-        Start KYC
-      </a>
+    <div className="flex flex-col items-start gap-3 rounded-2xl bg-muted p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-3">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent">
+          <ShieldCheck className="size-5 text-primary" />
+        </span>
+        <div>
+          <p className="text-sm font-semibold">Complete your KYC</p>
+          <p className="text-sm text-muted-foreground">
+            This helps keep Crest safe and ensures you&apos;re connecting
+            with real people and real properties.
+          </p>
+        </div>
+      </div>
+      <Button asChild variant="outline" size="sm" className="w-full shrink-0 bg-background sm:w-auto">
+        <Link href="/kyc">Get Started</Link>
+      </Button>
     </div>
   );
 }

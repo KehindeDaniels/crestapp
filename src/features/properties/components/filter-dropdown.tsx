@@ -17,7 +17,7 @@ export function FilterDropdown({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-12 w-full appearance-none rounded-lg border bg-transparent px-3.5 pr-9 text-sm text-foreground outline-none focus-visible:border-ring"
+        className="h-12 w-full appearance-none rounded-lg border-transparent bg-muted px-3.5 pr-9 text-sm text-foreground outline-none focus-visible:border focus-visible:border-ring"
       >
         <option value="">{label}</option>
         {options.map((opt) => (

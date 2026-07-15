@@ -10,7 +10,7 @@ import { ChevronDown } from "lucide-react";
 export function PropertyFeatureFilter() {
   return (
     <div
-      className="relative flex h-12 flex-1 cursor-not-allowed items-center rounded-lg border bg-transparent px-3.5 pr-9 text-sm text-muted-foreground/60"
+      className="relative flex h-12 flex-1 cursor-not-allowed items-center rounded-lg bg-muted px-3.5 pr-9 text-sm text-muted-foreground/60"
       title="Coming soon"
     >
       Property Feature

@@ -136,6 +136,24 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Custom scrollbar — a thin, always-visible bar instead of the OS's overlay
+   scrollbar (which appears/disappears on top of content, e.g. macOS). Used
+   on horizontally-scrolling rows like Home's listing feed. */
+.scrollbar-thin-custom {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+.scrollbar-thin-custom::-webkit-scrollbar {
+  height: 6px;
+}
+.scrollbar-thin-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin-custom::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+}
+
 /* KYC "Scanning" state (docs/design/screenshots/kyc/Scanning.png) — a line
    sweeping down the captured selfie while kyc/submit is in flight. */
 @keyframes scan {

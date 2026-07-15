@@ -18,7 +18,7 @@ export function Topbar() {
   const isVerified = kycStatus === "approved";
 
   return (
-    <header className="flex h-20.5 items-center justify-end gap-4 border-b px-6 lg:px-10">
+    <header className="sticky top-0 z-10 flex h-20.5 items-center justify-end gap-4 border-b bg-background px-6 lg:px-10">
       <button
         type="button"
         className="relative flex size-11 items-center justify-center rounded-full bg-muted"

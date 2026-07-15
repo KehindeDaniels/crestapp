@@ -26,8 +26,8 @@ export function SearchPanel({
   onChange: (filters: SearchFilters) => void;
 }) {
   return (
-    <div className="rounded-2xl bg-muted p-4.5">
-      <div className="mb-4.5 flex gap-8 border-b pb-4.5">
+    <div className="rounded-2xl border bg-background p-4">
+      <div className="mb-4 flex gap-8 border-b pb-3.5">
         {PROPERTY_PURPOSE_TABS.map((tab) => (
           <button
             key={tab.value}
@@ -52,7 +52,7 @@ export function SearchPanel({
             value={filters.search}
             onChange={(e) => onChange({ ...filters, search: e.target.value })}
             placeholder="Search by location, price or type"
-            className="h-12 border-transparent bg-background pl-9.5"
+            className="h-12 border-transparent bg-muted pl-9.5"
           />
         </div>
 
@@ -80,7 +80,7 @@ export function SearchPanel({
 
         <button
           type="button"
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border bg-background"
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted"
           aria-label="More filters"
         >
           <SlidersHorizontal className="size-4.5 text-muted-foreground" />

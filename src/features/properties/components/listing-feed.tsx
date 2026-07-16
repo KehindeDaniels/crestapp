@@ -1,24 +1,31 @@
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { PropertyCard, type PropertyCardModel } from "@/features/properties";
+import { PropertyCard } from "./property-card";
+import type { PropertyCardModel } from "../models";
 
 export function ListingFeed({
+  title = "Recent Listing",
   properties,
   isLoading,
   isError,
+  showSeeAll = true,
 }: {
+  title?: string;
   properties: PropertyCardModel[] | undefined;
   isLoading: boolean;
   isError: boolean;
+  /** Search Property reuses this component for its own "Recent Listing" section at the bottom — no point linking to itself. */
+  showSeeAll?: boolean;
 }) {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Recent Listing</h2>
-        {/* Real pagination lives on the Search Property results page (Phase 3), not here. */}
-        <Link href="/search" className="text-sm font-medium text-primary">
-          See all
-        </Link>
+        <h2 className="text-lg font-semibold">{title}</h2>
+        {showSeeAll && (
+          <Link href="/search" className="text-sm font-medium text-primary">
+            See all
+          </Link>
+        )}
       </div>
 
       {isLoading && (

@@ -3,13 +3,10 @@
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils/cn";
-import {
-  FilterDropdown,
-  PropertyFeatureFilter,
-  PRICE_RANGE_BUCKETS,
-  PROPERTY_PURPOSE_TABS,
-} from "@/features/properties";
 import { PROPERTY_TYPES, type PropertyPurpose } from "@/config/constants";
+import { FilterDropdown } from "./filter-dropdown";
+import { PropertyFeatureFilter } from "./property-feature-filter";
+import { PRICE_RANGE_BUCKETS, PROPERTY_PURPOSE_TABS } from "../config";
 
 export interface SearchFilters {
   purpose: PropertyPurpose;
@@ -18,6 +15,7 @@ export interface SearchFilters {
   priceRangeIndex: string;
 }
 
+/** Shared between Home (local state) and Search Property (URL-synced state) — same `filters`/`onChange` contract either way. */
 export function SearchPanel({
   filters,
   onChange,

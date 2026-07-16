@@ -14,6 +14,7 @@ import type { ID } from "@/types/api";
  * see docs/design-vs-backend-gaps.md (Phase 4).
  */
 export interface PropertySearchParams {
+  id?: number;
   search?: string;
   property_type?: PropertyType;
   purpose?: PropertyPurpose;

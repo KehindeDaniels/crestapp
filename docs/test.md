@@ -63,3 +63,21 @@ Home airbnb
 https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-4944&t=EH7m7ry4RVtHR8C5-1
 
 {{base_url}}/api/properties/search
+
+search
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-5224&t=EH7m7ry4RVtHR8C5-1
+
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1432-1491&t=EH7m7ry4RVtHR8C5-1
+
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1432-2263&t=EH7m7ry4RVtHR8C5-1
+
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1432-3874&t=EH7m7ry4RVtHR8C5-1
+
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1438-5668&t=EH7m7ry4RVtHR8C5-1
+
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1451-1555&t=EH7m7ry4RVtHR8C5-1
+
+-- processed into docs/figma-links.md (Search Property + Listing Detail working-copy links), Phase 5 --
+
+Make an Offer (not built yet, out of scope for Phase 5 — see docs/design-vs-backend-gaps.md)
+https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1478-4228&t=EH7m7ry4RVtHR8C5-1

@@ -1,4 +1,4 @@
-# Handoff — Crest App Frontend (Phase 0 + 1 + 2 complete, Phase 4 (Home) in progress)
+# Handoff — Crest App Frontend (Phase 0 + 1 + 2 + 4 (Home) complete, Phase 5 (Search + Listing Detail) done)
 
 > Written for a fresh agent (e.g. Codex) picking up this repo with no prior conversation context. Read this, then `docs/frontend-blueprint.md` (architecture) and `docs/design-vs-backend-gaps.md` (Figma-vs-API mismatches) before writing code.
 
@@ -275,9 +275,31 @@ Real, production-backed rebuild of `/home` — not a mockup, per explicit instru
 
 **Not yet done:** no live browser test of the actual rendered Home page (no browser tool available in this environment, same limitation as every design pass this session) — worth a manual check, particularly the listing feed against real seeded properties and the price-range filter behavior given the bug just fixed above.
 
-## Immediate next step (superseded above where it conflicts — kept for the rest of the roadmap)
-**Phase 3/5 — Public property surface, Search Property + listing detail screens** per the blueprint roadmap. **Note**: originally planned as RSC/`publicFetch` — now known to be wrong, `properties/search` requires auth (see Phase 4 above). Build via the same client-side `usePropertySearch()` pattern Home now uses, with URL-synced filter state for a real search-results page. Figma: Search Property, Listing for sale.
+## Phase 5 — Search Property + Listing Detail
+Two new pages, both reusing Phase 4's `properties` feature almost entirely rather than introducing new endpoints. Full analysis: `docs/design/search-and-listing-detail-plan.md`. Gap/decision detail: `docs/design-vs-backend-gaps.md` (Phase 5).
 
-**Before starting, two things worth doing:**
-1. A full live browser walkthrough of register → verify → login → KYC → `/home` (none of it has been end-to-end browser-verified yet — only individual pieces via `curl`).
+- **`src/app/(client)/search/`** — `page.tsx` (Suspense-wrapped, `useSearchParams` requires it) + `search-content.tsx`. Filter/page state lives entirely in the URL (`?purpose=&q=&type=&price=&page=`), not component state — the one real behavioral difference from Home's `SearchPanel` usage, so a shared search URL reproduces the same results. 3-column grid via new `PropertySearchResultCard`, real pagination via new `Pagination` component, both driven by `usePropertySearch()` (extended this phase to return `{properties, pagination}` instead of just the array — Home's usage updated accordingly).
+- **`src/app/(client)/properties/[id]/`** — `page.tsx` (async params, Next 16) + `listing-detail-content.tsx` + `photo-gallery-modal.tsx`. New `usePropertyDetail(id)` hook and `PropertyDetailModel`/`toPropertyDetailModel()` (extends `PropertyCardModel`, same view-model pattern as Phase 4). No dedicated single-property endpoint exists — reuses `properties/search` with an `id` filter, per the already-documented schema.
+- **New `src/components/ui/dialog.tsx`** — shadcn-style wrapper around `radix-ui`'s `Dialog`, needed for both the gallery modal and the new message-compose UI.
+- **New `src/features/messaging/`** — `useSendMessage()` only (`POST /api/communication/messages/send`). Wired into a new shared `MessageOwnerButton` component (compose dialog, used on both the search grid cards and Listing Detail) — real send, no inbox to view replies in yet, per explicit decision.
+- **`SearchPanel` and `ListingFeed` relocated** from `(client)/home/` to `src/features/properties/components/` — both now shared between Home and Search Property.
+- **"Make Offer" is a static, disabled button** — `POST /api/contracts/quick-create` turned out to immediately create *and auto-accept* a binding contract with a payment link in one call, not a negotiable offer. Not wired this phase; a separate Figma link (node `1478-4228`) exists for a future dedicated flow.
+- **"Seller Verification" and "Property Features" (beyond bed/bath) render disabled/"Coming Soon"** — no confirmed backend support for either.
+- Nav: "Search Property" flipped to `enabled: true` in `src/components/app-shell/nav-config.ts`; `PropertyCard` (Home's card) and `PropertySearchResultCard` (Search's grid card) both now link to `/properties/[id]`.
+
+**Two real bugs caught in self-review before shipping** (full detail in the gaps doc): `PropertySearchResultCard` initially sent a property's own ID as the message recipient instead of the owner's actual user ID (fixed by adding `ownerId` to the base `PropertyCardModel`); and Search Property's bottom "Recent Listing" section was reading its loading/error state from the wrong query (the main filtered/paginated one, not its own separate unfiltered one).
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, 21 routes (added `/search` and `/properties/[id]`).
+
+**Not yet done:** no live browser test (no browser tool in this environment, same limitation every phase this session) — worth checking the URL-synced filter state (especially browser back/forward behavior) and the gallery modal's category tabs against real multi-image listings.
+
+## Immediate next step
+Search Property + Listing Detail (Phase 5, above) are done — the "public property surface" item this section used to point to. Remaining disabled sidebar nav items, roughly in order of how directly they continue what's already built:
+1. **List Property** (`/properties/new`) — create-listing flow. Backend request schemas for `POST /api/properties/rental`/`sale` are fully documented (title/description/property_type/price/currency/location/bedrooms/bathrooms/square_meters), plus a separate `POST /api/properties/{id}/media` upload step — neither has a documented example *response* yet, worth a live test before building, same discipline as every prior phase.
+2. **Messages** (`/messages`) — a minimal inbox/thread UI. `useSendMessage()` already exists and is live-wired from `MessageOwnerButton`; this phase would add the missing "view what was sent/received" half (`GET /api/communication/messages/search`, conversations, unread count — all real endpoints per the Postman collection, none tested live yet).
+3. **Profile** (`/profile`) — view/edit page. `useProfile()`/`ProfileViewModel` already exist and are confirmed live (built for Home's greeting) — this is mostly a form around `PUT /api/profile`, which already has its full request schema documented.
+4. **"Make Offer"** dedicated flow — currently a static, disabled button on Listing Detail. A Figma link exists for this (node `1478-4228`, not yet pulled) — needs its own plan given `POST /api/contracts/quick-create` immediately creates and auto-accepts a binding contract + payment link, not a negotiable offer.
+
+**Still outstanding from earlier phases, not yet done:**
+1. A full live browser walkthrough of register → verify → login → KYC → `/home` → search → listing detail (none of it has been end-to-end browser-verified yet — only individual pieces via `curl`, and no browser tool is available in this environment).
 2. `curl` `POST /api/kyc/find-single` with a real non-admin Bearer token to resolve the two open Phase 2.5 risks (real `kyc` field shape, self-lookup authorization) — update `parseKycStatus()` and `docs/design-vs-backend-gaps.md` with whatever is found.

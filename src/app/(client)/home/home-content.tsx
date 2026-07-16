@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useProfile } from "@/features/profile";
-import { usePropertySearch, PRICE_RANGE_BUCKETS } from "@/features/properties";
+import {
+  usePropertySearch,
+  PRICE_RANGE_BUCKETS,
+  SearchPanel,
+  ListingFeed,
+  type SearchFilters,
+} from "@/features/properties";
 import { KycReminderCard } from "@/features/kyc";
 import type { PropertyType } from "@/config/constants";
-import { SearchPanel, type SearchFilters } from "./search-panel";
-import { ListingFeed } from "./listing-feed";
 import { ListPropertiesBanner } from "./list-properties-banner";
 
 const DEFAULT_FILTERS: SearchFilters = {
@@ -33,7 +37,7 @@ export function HomeContent() {
       ? undefined
       : PRICE_RANGE_BUCKETS[Number(filters.priceRangeIndex)];
 
-  const { data: properties, isPending, isError } = usePropertySearch({
+  const { data, isPending, isError } = usePropertySearch({
     purpose: filters.purpose,
     search: debouncedSearch || undefined,
     property_type: (filters.propertyType || undefined) as PropertyType | undefined,
@@ -55,7 +59,11 @@ export function HomeContent() {
 
       <SearchPanel filters={filters} onChange={setFilters} />
 
-      <ListingFeed properties={properties} isLoading={isPending} isError={isError} />
+      <ListingFeed
+        properties={data?.properties}
+        isLoading={isPending}
+        isError={isError}
+      />
 
       <KycReminderCard />
 

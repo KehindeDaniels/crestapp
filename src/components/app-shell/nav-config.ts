@@ -27,7 +27,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/home", icon: LayoutGrid, enabled: true },
-  { label: "Search Property", href: "/search", icon: Search, enabled: false },
+  { label: "Search Property", href: "/search", icon: Search, enabled: true },
   { label: "List Property", href: "/properties/new", icon: PlusSquare, enabled: false },
   { label: "Messages", href: "/messages", icon: MessageCircle, enabled: false },
   { label: "History", href: "/history", icon: History, enabled: false },

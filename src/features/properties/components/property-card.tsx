@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import { BadgeCheck } from "lucide-react";
 import type { PropertyCardModel } from "../models";
 
 /** Renders a `PropertyCardModel` (the view model) — never touches the raw API shape. */
 export function PropertyCard({ property }: { property: PropertyCardModel }) {
   return (
-    <div className="w-84.25 shrink-0">
+    <Link href={`/properties/${property.id}`} className="block w-84.25 shrink-0">
       <div className="mb-3 flex items-center gap-3">
         <div className="relative size-10.5 shrink-0 overflow-hidden rounded-full bg-muted">
           {property.ownerAvatarUrl && (
@@ -26,7 +27,7 @@ export function PropertyCard({ property }: { property: PropertyCardModel }) {
         </div>
       </div>
 
-      <div className="relative aspect-[337/217] overflow-hidden rounded-2xl bg-muted">
+      <div className="relative aspect-337/217 overflow-hidden rounded-2xl bg-muted">
         {property.imageUrl && (
           <Image
             src={property.imageUrl}
@@ -52,6 +53,6 @@ export function PropertyCard({ property }: { property: PropertyCardModel }) {
           <p className="truncate text-xs">{property.address}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

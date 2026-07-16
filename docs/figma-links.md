@@ -46,7 +46,8 @@ File key for these is still the canonical one (`MSrs3Woe4rF8yM8PVYRYSa`) — **n
 | ------------------------------- | ------------------------------------------------------------------| ---------------------------------------------------------------------------------------------------|
 | KYC                              | ✅ Built (Phase 2, pixel-perfect pass done Phase 3 — see below)  | [node 1398-7021](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1398-7021)  |
 | Home                             | ✅ Built (Phase 4, real API data — data plan: `docs/design/home-page-data-plan.md`) | [node 1411-2864](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1411-2864)  |
-| Search Property                  | ⬜ Not started (Phase 3)                                          | [node 1417-5223](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1417-5223)  |
+| Search Property                  | ✅ Built (Phase 5, real API data — plan: `docs/design/search-and-listing-detail-plan.md`) | [node 1417-5223](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1417-5223)  |
+| Listing Detail                   | ✅ Built (Phase 5, real API data — see Search Property working-copy links below) | no canonical-file link captured yet |
 | Listing Welcome                  | ⬜ Not started (Phase 3/4)                                        | [node 1465-6444](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-6444)  |
 | Listing for Sale (apartment)     | ⬜ Not started (Phase 4)                                          | [node 1422-6880](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1422-6880)  |
 | Listing for Rent (apartment)     | ⬜ Not started (Phase 4)                                          | [node 1465-3206](https://www.figma.com/design/MSrs3Woe4rF8yM8PVYRYSa/Crest-App?node-id=1465-3206)  |
@@ -77,6 +78,21 @@ Confirmed pixel-identical across all three purpose variants except the listing-c
 | Home-Buy                             | `1411-2865` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1411-2865 |
 | Home-Rent                            | `1417-4689` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-4689 |
 | Home-Airbnb                          | `1417-4944` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-4944 |
+
+### Search Property + Listing Detail — working-copy links (use `aDI3HOS6NVQWnLdIx5Zvif`) — Phase 5, worked from screenshots in `docs/design/screenshots/search/`
+
+The 6 links provided cover **two screens**: Search Property (results grid) and Listing Detail (single property + its "Property Details" photo-gallery modal) — see `docs/design/search-and-listing-detail-plan.md` for the full breakdown of which is which.
+
+| Screen                                    |        Node | Link                                                                                   |
+| ------------------------------------------ | ----------: | -------------------------------------------------------------------------------------- |
+| Search Property (results grid)             | `1417-5224` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1417-5224 |
+| Search Property / Listing Detail (variant)  | `1432-1491` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1432-1491 |
+| Search Property / Listing Detail (variant)  | `1432-2263` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1432-2263 |
+| Listing Detail                              | `1432-3874` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1432-3874 |
+| Listing Detail — "Property Details" gallery modal (All view) | `1438-5668` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1438-5668 |
+| Listing Detail — "Property Details" gallery modal (category-filtered) | `1451-1555` | https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1451-1555 |
+
+**Not yet pulled**: a separate dedicated "Make an Offer" flow — node `1478-4228`, provided but out of scope for this phase (see Phase 5 in `docs/design-vs-backend-gaps.md` for why "Make Offer" is a static button for now).
 
 ## Other Figma pages (not yet linked individually)
 

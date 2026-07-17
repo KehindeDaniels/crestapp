@@ -24,17 +24,17 @@ export function usePropertySearch(params: PropertySearchParams) {
 /**
  * A single property, for the Listing Detail page. There's no dedicated
  * `GET /properties/{id}` endpoint — per the confirmed search schema, a
- * single property is fetched via `properties/search` with an `id` filter
- * (same endpoint Home/Search Property already use).
+ * single property is fetched via `properties/search` with an `id` filter,
+ * but that returns a genuinely different response shape than the list
+ * search (confirmed live — `data` is the property object directly, not
+ * `{ properties: [...] }`), hence the separate `propertiesApi.get()`.
  */
 export function usePropertyDetail(propertyId: number) {
   return useQuery({
     queryKey: queryKeys.properties.detail(propertyId),
     queryFn: async () => {
-      const response = await propertiesApi.search({ id: propertyId, per_page: 1 });
-      const [property] = response.data.properties;
-      if (!property) return null;
-      return toPropertyDetailModel(property);
+      const response = await propertiesApi.get(propertyId);
+      return toPropertyDetailModel(response.data);
     },
   });
 }

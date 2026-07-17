@@ -1,5 +1,9 @@
 import { apiClient } from "@/lib/api/client";
-import type { PropertySearchParams, PropertySearchResponse } from "./types";
+import type {
+  PropertySearchParams,
+  PropertySearchResponse,
+  PropertyDetailResponse,
+} from "./types";
 
 export const propertiesApi = {
   /**
@@ -11,5 +15,17 @@ export const propertiesApi = {
     apiClient<PropertySearchResponse>("/api/properties/search", {
       method: "POST",
       body: params,
+    }),
+
+  /**
+   * Same endpoint as `search`, but confirmed live to return a genuinely
+   * different response shape when `id` is passed — `data` is the property
+   * object directly, not `{ properties: [...] }`. Kept as its own typed
+   * method rather than overloading `search`'s return type.
+   */
+  get: (id: number) =>
+    apiClient<PropertyDetailResponse>("/api/properties/search", {
+      method: "POST",
+      body: { id, per_page: 1 },
     }),
 };

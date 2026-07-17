@@ -98,3 +98,18 @@ export interface PropertySearchResponse {
     };
   };
 }
+
+/**
+ * Response shape when `properties/search` is called WITH an `id` filter —
+ * confirmed live to be a genuinely different shape, not the list response
+ * with a one-item array. `data` IS the property object directly (message
+ * even says "Property details retrieved successfully" vs. "Properties
+ * retrieved successfully" for the list case). Also includes a few fields
+ * not seen on the list response (`latitude`, `longitude`, `year_built`,
+ * `updated_at`) — not modeled here since nothing consumes them yet.
+ */
+export interface PropertyDetailResponse {
+  success: boolean;
+  message: string;
+  data: ApiProperty;
+}

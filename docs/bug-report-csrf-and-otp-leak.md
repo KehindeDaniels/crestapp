@@ -15,6 +15,32 @@ This suggests the stateful-domains fix was applied to some routes/middleware gro
 
 ---
 
+## ⚠️ Second update — `POST /api/auth/login` itself is affected, and it's isolated to `localhost:3000` specifically
+
+This is more severe than the previous two instances: **login itself** (`POST /api/auth/login`) is failing with the same `419 CSRF token mismatch` from a real browser — meaning no one can log in through the actual frontend UI while this is unfixed, only via a token obtained some other way (e.g. Postman).
+
+Pinpointed the exact trigger via `curl` with different `Origin` headers:
+
+```bash
+# Origin: http://localhost:3000  →  419, HTML "Page Expired" page (not even JSON)
+curl -X POST https://api.crestapp.ng/api/auth/login \
+  -H "Content-Type: application/json" -H "Origin: http://localhost:3000" \
+  -d '{"email":"nonexistent@example.com","password":"wrongpassword"}'
+
+# Origin: http://localhost:3001  →  200-shaped, normal {"message":"Invalid email or password."}
+# Origin: http://localhost:3002  →  same, normal JSON
+# Origin: http://localhost:3003  →  same, normal JSON
+# Origin: https://crestapp.vercel.app (deployed frontend)  →  same, normal JSON
+```
+
+**`localhost:3000` specifically is still on `SANCTUM_STATEFUL_DOMAINS`** — every other origin tested (other local dev ports, the deployed Vercel domain) is clean. This confirms the fix has been applied inconsistently, is per-domain, and `localhost:3000` — very likely the very first dev URL anyone configured for this project — was missed or never included in whatever fix already landed for the domains above.
+
+**Frontend workaround in the meantime**: run the local dev server on a port other than 3000 (e.g. `pnpm dev -- -p 3001`) to unblock local testing. Not a real fix — just avoids the specific broken origin.
+
+**Backend fix needed**: remove `localhost:3000` from `SANCTUM_STATEFUL_DOMAINS` (same fix as the original issue, just apparently missed for this one specific origin). Worth double-checking the *entire* stateful-domains list directly rather than fixing origins one at a time as they're individually reported — this is now the third distinct instance of the identical root cause.
+
+---
+
 ## Issue 1: CSRF error blocks every request from the frontend (Blocker)
 
 ### What's happening
@@ -105,7 +131,7 @@ Run the first `curl` command from Issue 1 above (the one that returns `200 OK`).
 
 | Issue | Where | Fix | Priority |
 |---|---|---|---|
-| CSRF blocks all frontend requests | `config/sanctum.php` / `.env` → `SANCTUM_STATEFUL_DOMAINS` | Remove the frontend's domain(s) from the stateful list | Blocker — nothing works from the browser until this is fixed |
+| CSRF blocks all frontend requests | `config/sanctum.php` / `.env` → `SANCTUM_STATEFUL_DOMAINS` | Remove the frontend's domain(s) from the stateful list — confirmed still broken for `localhost:3000` on `/api/auth/login` as of this update, after being "fixed" for other domains/routes twice already | Blocker — login itself is unusable from `localhost:3000` until this is fixed |
 | OTP code returned in response | `verification/send` response (and check `verify`/password-reset too) | Remove the `code` field from the JSON response | Security — must not reach production like this |
 
 Both are backend-only changes. The frontend needs no changes for either issue.

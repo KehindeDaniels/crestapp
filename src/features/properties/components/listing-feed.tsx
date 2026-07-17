@@ -20,13 +20,13 @@ export function ListingFeed({
   return (
     <div>
       <div className="mb-3 flex items-center justify-between sm:mb-4">
-        <h2 className="text-sm font-semibold text-black sm:text-lg sm:text-foreground">
+        <h2 className="sm:text-foreground text-sm font-semibold text-black sm:text-lg">
           {title}
         </h2>
         {showSeeAll && (
           <Link
             href="/search"
-            className="text-xs font-normal text-muted-foreground sm:text-sm sm:font-medium sm:text-primary"
+            className="text-muted-foreground sm:text-primary text-xs font-normal sm:text-sm sm:font-medium"
           >
             See all
           </Link>
@@ -35,24 +35,25 @@ export function ListingFeed({
 
       {isLoading && (
         <div className="flex h-54.25 items-center justify-center">
-          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+          <Loader2 className="text-muted-foreground size-6 animate-spin" />
         </div>
       )}
 
       {isError && (
-        <p className="text-sm text-destructive">
+        <p className="text-destructive text-sm">
           Couldn&apos;t load listings right now.
         </p>
       )}
 
       {properties && properties.length === 0 && (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           No properties match these filters yet.
         </p>
       )}
 
       {properties && properties.length > 0 && (
-        <div className="scrollbar-thin-custom grid grid-cols-2 gap-3 sm:flex sm:gap-6 sm:overflow-x-auto sm:pb-3">
+        // <div className="scrollbar-thin-custom grid grid-cols-2 gap-3 bg-red-500 sm:flex sm:gap-6 sm:overflow-x-auto sm:pb-3">
+        <div className="scrollbar-thin-custom flex w-130 gap-4 overflow-x-auto pb-3 sm:w-full sm:gap-6">
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}

@@ -293,6 +293,15 @@ Two new pages, both reusing Phase 4's `properties` feature almost entirely rathe
 
 **Not yet done:** no live browser test (no browser tool in this environment, same limitation every phase this session) — worth checking the URL-synced filter state (especially browser back/forward behavior) and the gallery modal's category tabs against real multi-image listings.
 
+### Responsiveness pass (post Phase 5)
+There was genuinely no way to navigate below 1024px — `Sidebar` is `hidden lg:flex` with no fallback. Fixed:
+- New `NavList` (extracted shared nav-item rendering) + `MobileNav` (hamburger trigger + slide-in drawer built on the existing `Dialog` primitive, not a new "Sheet" primitive). `Topbar` restructured to `justify-between`, hamburger left (mobile-only), notifications/profile right.
+- Two real overflow bugs on Search Property: a fixed `w-72` search input sitting next to a button in a non-stacking row, and `Pagination` rendering up to 10 fixed-size buttons in one row with no wrap/scroll handling (now collapses to "Page X of Y" below `sm`).
+- The shared `Dialog` primitive had no horizontal margin (`w-full` touches both screen edges on mobile) and no `max-height`/scroll handling at all (the photo gallery modal could overflow a short viewport with nothing scrollable) — both fixed in the one base component, benefiting all three current dialog usages.
+- **Home specifically was rebuilt against a real Figma mobile frame** (not inferred) once the user shared it — this revealed actual design differences, not just spacing fixes: `SearchPanel`'s tabs are a pill/segmented control on mobile (underline tabs desktop-only), the Property Type/Price Range/Property Feature/more-filters row is hidden entirely on mobile, `PropertyCard` drops the owner row and moves price/beds/baths/address off the image overlay into a plain block below on mobile (desktop keeps the overlay), `ListingFeed` renders a 2-column grid on mobile instead of horizontal scroll, and the "Welcome back" heading hides on mobile (tagline only). Also added a **decorative, non-functional heart icon** to `PropertyCard` — the real mobile mockup shows one despite the earlier "hide favorites entirely" decision; kept visually present but not wired to anything, same treatment as Property Feature.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` all clean after each round of fixes.
+
 ## Immediate next step
 Search Property + Listing Detail (Phase 5, above) are done — the "public property surface" item this section used to point to. Remaining disabled sidebar nav items, roughly in order of how directly they continue what's already built:
 1. **List Property** (`/properties/new`) — create-listing flow. Backend request schemas for `POST /api/properties/rental`/`sale` are fully documented (title/description/property_type/price/currency/location/bedrooms/bathrooms/square_meters), plus a separate `POST /api/properties/{id}/media` upload step — neither has a documented example *response* yet, worth a live test before building, same discipline as every prior phase.

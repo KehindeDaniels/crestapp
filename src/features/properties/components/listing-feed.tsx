@@ -19,10 +19,15 @@ export function ListingFeed({
 }) {
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">{title}</h2>
+      <div className="mb-3 flex items-center justify-between sm:mb-4">
+        <h2 className="text-sm font-semibold text-black sm:text-lg sm:text-foreground">
+          {title}
+        </h2>
         {showSeeAll && (
-          <Link href="/search" className="text-sm font-medium text-primary">
+          <Link
+            href="/search"
+            className="text-xs font-normal text-muted-foreground sm:text-sm sm:font-medium sm:text-primary"
+          >
             See all
           </Link>
         )}
@@ -47,7 +52,7 @@ export function ListingFeed({
       )}
 
       {properties && properties.length > 0 && (
-        <div className="scrollbar-thin-custom flex gap-6 overflow-x-auto pb-3">
+        <div className="scrollbar-thin-custom grid grid-cols-2 gap-3 sm:flex sm:gap-6 sm:overflow-x-auto sm:pb-3">
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}

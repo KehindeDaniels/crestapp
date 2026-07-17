@@ -55,7 +55,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.address)}`;
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 p-6 lg:p-10">
+    <div className="mx-auto max-w-6xl space-y-5 p-4 sm:space-y-6 sm:p-6 lg:p-10">
       <div className="flex items-center justify-between">
         <Link
           href="/search"

@@ -12,6 +12,7 @@ import {
 import { KycReminderCard } from "@/features/kyc";
 import type { PropertyType } from "@/config/constants";
 import { ListPropertiesBanner } from "./list-properties-banner";
+import { MobileHomeHeader } from "./mobile-header";
 
 const DEFAULT_FILTERS: SearchFilters = {
   purpose: "sale",
@@ -47,8 +48,11 @@ export function HomeContent() {
   });
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 p-6 lg:p-10">
-      <div>
+    <div className="mx-auto max-w-6xl space-y-5 p-4 sm:space-y-6 sm:p-6 lg:p-10">
+      <MobileHomeHeader />
+
+      {/* Desktop only — mobile uses MobileHomeHeader instead (real Figma pull, different layout, not just a restyle). */}
+      <div className="hidden sm:block">
         <h1 className="text-2xl font-semibold tracking-tight">
           Welcome back{profile ? `, ${profile.firstName}` : ""}
         </h1>

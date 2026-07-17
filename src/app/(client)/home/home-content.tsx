@@ -48,7 +48,7 @@ export function HomeContent() {
   });
 
   return (
-    <div className="mx-auto max-w-6xl space-y-5 p-4 sm:space-y-6 sm:p-6 lg:p-10">
+    <div className="max-w-6xl space-y-5 p-4 sm:space-y-6 sm:p-6 lg:p-10">
       <MobileHomeHeader />
 
       {/* Desktop only — mobile uses MobileHomeHeader instead (real Figma pull, different layout, not just a restyle). */}

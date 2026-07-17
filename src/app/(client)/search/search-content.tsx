@@ -102,7 +102,7 @@ export function SearchContent() {
   );
 
   return (
-    <div className="mx-auto max-w-6xl space-y-5 p-4 sm:space-y-6 sm:p-6 lg:p-10">
+    <div className="max-w-6xl space-y-5 p-4 sm:space-y-6 sm:p-6 lg:p-10">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">

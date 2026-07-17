@@ -58,7 +58,7 @@ export function PropertyCard({ property }: { property: PropertyCardModel }) {
             src={property.imageUrl}
             alt={property.title}
             fill
-            sizes="(min-width: 640px) 337px, 50vw"
+            sizes="(min-width: 640px) 337px, 320px"
             className="object-cover"
           />
         )}

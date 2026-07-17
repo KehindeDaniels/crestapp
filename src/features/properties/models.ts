@@ -90,7 +90,15 @@ export interface PropertyDetailModel extends PropertyCardModel {
   allImages: PropertyDetailImage[];
   /** Same images grouped by category, for the "Property Details" modal's room tabs. */
   imagesByCategory: PropertyDetailCategory[];
+  /**
+   * Derived from the real `created_at` timestamp, not fabricated — computed
+   * here (not at render time) since `Date.now()` is an impure call and this
+   * mapper layer is the one place raw API data is allowed to be touched.
+   */
+  isRecentlyAdded: boolean;
 }
+
+const RECENTLY_ADDED_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
 export function toPropertyDetailModel(property: ApiProperty): PropertyDetailModel {
   const card = toPropertyCardModel(property);
@@ -120,5 +128,7 @@ export function toPropertyDetailModel(property: ApiProperty): PropertyDetailMode
       category,
       images,
     })),
+    isRecentlyAdded:
+      Date.now() - new Date(property.created_at).getTime() < RECENTLY_ADDED_WINDOW_MS,
   };
 }

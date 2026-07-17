@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button, type buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils/cn";
 import {
   Dialog,
   DialogContent,
@@ -27,12 +28,16 @@ export function MessageOwnerButton({
   ownerName,
   label = "Message Owner",
   variant = "outline",
+  size,
+  className,
 }: {
   ownerId: ID;
   propertyId: ID;
   ownerName: string;
   label?: string;
   variant?: VariantProps<typeof buttonVariants>["variant"];
+  size?: VariantProps<typeof buttonVariants>["size"];
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState("");
@@ -63,6 +68,8 @@ export function MessageOwnerButton({
       <Button
         type="button"
         variant={variant}
+        size={size}
+        className={cn(className)}
         onClick={(e) => {
           e.preventDefault();
           setOpen(true);

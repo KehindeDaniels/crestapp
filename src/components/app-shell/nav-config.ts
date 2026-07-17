@@ -14,8 +14,8 @@ export interface NavItem {
   href: string;
   icon: LucideIcon;
   /**
-   * Only "Home" has a real destination right now. The rest render disabled
-   * (per Figma, but non-clickable) rather than linking to a 404 — same
+   * Screens without a real destination yet render disabled (per Figma, but
+   * non-clickable) rather than linking to a 404 — same
    * "visible but not wired" treatment as the Property Feature filter, not a
    * new pattern invented for nav. Flip to `true` as each screen ships.
    * "Saved Property" is intentionally absent — hidden entirely per the
@@ -28,7 +28,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/home", icon: LayoutGrid, enabled: true },
   { label: "Search Property", href: "/search", icon: Search, enabled: true },
-  { label: "List Property", href: "/properties/new", icon: PlusSquare, enabled: false },
+  { label: "List Property", href: "/properties/new", icon: PlusSquare, enabled: true },
   { label: "Messages", href: "/messages", icon: MessageCircle, enabled: false },
   { label: "History", href: "/history", icon: History, enabled: false },
   { label: "Profile", href: "/profile", icon: User, enabled: false },

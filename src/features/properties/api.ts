@@ -1,8 +1,12 @@
 import { apiClient } from "@/lib/api/client";
+import type { ID } from "@/types/api";
 import type {
   PropertySearchParams,
   PropertySearchResponse,
   PropertyDetailResponse,
+  CreatePropertyPayload,
+  CreatePropertyResponse,
+  UploadMediaResponse,
 } from "./types";
 
 export const propertiesApi = {
@@ -27,5 +31,24 @@ export const propertiesApi = {
     apiClient<PropertyDetailResponse>("/api/properties/search", {
       method: "POST",
       body: { id, per_page: 1 },
+    }),
+
+  createRental: (payload: CreatePropertyPayload) =>
+    apiClient<CreatePropertyResponse>("/api/properties/rental", {
+      method: "POST",
+      body: payload,
+    }),
+
+  createSale: (payload: CreatePropertyPayload) =>
+    apiClient<CreatePropertyResponse>("/api/properties/sale", {
+      method: "POST",
+      body: payload,
+    }),
+
+  /** Multipart — `apiClient` skips JSON serialization for `FormData` and lets the browser set the boundary. */
+  uploadMedia: (propertyId: ID, formData: FormData) =>
+    apiClient<UploadMediaResponse>(`/api/properties/${propertyId}/media`, {
+      method: "POST",
+      body: formData,
     }),
 };

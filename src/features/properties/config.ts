@@ -1,4 +1,4 @@
-import type { PropertyPurpose } from "@/config/constants";
+import type { PropertyPurpose, PropertyType } from "@/config/constants";
 
 /**
  * Home's search-panel tabs. Deliberately excludes "airbnb" — no matching
@@ -24,6 +24,28 @@ export interface PriceRangeBucket {
   minPrice?: number;
   maxPrice?: number;
 }
+
+/**
+ * List Property wizard's purpose selector — "Sale"/"Rent" (seller-facing
+ * wording, distinct from Home's "Buy"/"Rent" buyer-facing tabs above).
+ * Excludes "lease": the value exists on the read-side `PropertyPurpose`
+ * enum, but there's no `/api/properties/lease` creation endpoint (confirmed
+ * against the Postman collection) — see docs/design-vs-backend-gaps.md.
+ */
+export const LIST_PROPERTY_PURPOSES: { value: PropertyPurpose; label: string }[] = [
+  { value: "sale", label: "Sale" },
+  { value: "rent", label: "Rent" },
+];
+
+/**
+ * List Property wizard's property-type options — scoped to the two types
+ * with a real Figma design. "house"/"commercial"/"industrial" are real
+ * backend enum values with no design yet; see docs/design-vs-backend-gaps.md.
+ */
+export const LIST_PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
+  { value: "apartment", label: "Apartment" },
+  { value: "land", label: "Land" },
+];
 
 export const PRICE_RANGE_BUCKETS: PriceRangeBucket[] = [
   { label: "Under ₦500k", maxPrice: 500_000 },

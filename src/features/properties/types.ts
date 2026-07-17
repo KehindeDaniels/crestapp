@@ -4,7 +4,7 @@ import type {
   PropertyType,
   VerificationStatus,
 } from "@/config/constants";
-import type { ID } from "@/types/api";
+import type { ApiEnvelope, ID } from "@/types/api";
 
 /**
  * POST /api/properties/search request body. Confirmed via the Postman
@@ -112,4 +112,50 @@ export interface PropertyDetailResponse {
   success: boolean;
   message: string;
   data: ApiProperty;
+}
+
+/**
+ * Body for `POST /api/properties/{rental,sale}` — confirmed against the
+ * Postman collection's example requests for both endpoints (identical
+ * shape, only the URL differs by purpose). `currency`/`country` are not
+ * user-facing — hardcoded to "NGN"/"Nigeria" by the caller. Deliberately
+ * excludes land size/plots, amenities, price-negotiable, and rent payment
+ * terms — none of those fields exist anywhere in the collection or in the
+ * live `ApiProperty` shape above. See docs/design-vs-backend-gaps.md.
+ */
+export interface CreatePropertyPayload {
+  title: string;
+  description: string;
+  property_type: PropertyType;
+  price: number;
+  currency: string;
+  location_address: string;
+  city: string;
+  state: string;
+  country: string;
+  bedrooms: number;
+  bathrooms: number;
+  square_meters: number;
+}
+
+/**
+ * The create endpoints have no saved response example in the Postman
+ * collection. `data` is typed as `ApiProperty` on the (reasonable, but
+ * unconfirmed) assumption that it mirrors every other property endpoint's
+ * envelope — the caller must still guard defensively against a missing
+ * `property_id` rather than trust this blindly.
+ */
+export type CreatePropertyResponse = ApiEnvelope<ApiProperty>;
+
+/**
+ * Response for `POST /api/properties/{id}/media` — confirmed live via the
+ * Postman collection's saved example response.
+ */
+export interface UploadMediaResponse {
+  success: boolean;
+  message: string;
+  data: {
+    uploaded_count: number;
+    media: ApiPropertyMedia[];
+  };
 }

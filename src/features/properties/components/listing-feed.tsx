@@ -52,8 +52,7 @@ export function ListingFeed({
       )}
 
       {properties && properties.length > 0 && (
-        // <div className="scrollbar-thin-custom grid grid-cols-2 gap-3 bg-red-500 sm:flex sm:gap-6 sm:overflow-x-auto sm:pb-3">
-        <div className="scrollbar-thin-custom flex w-130 gap-4 overflow-x-auto pb-3 sm:w-full sm:gap-6">
+        <div className="scrollbar-thin-custom flex gap-4 overflow-x-auto pb-3 sm:gap-6">
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}

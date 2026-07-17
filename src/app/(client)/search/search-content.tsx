@@ -112,14 +112,14 @@ export function SearchContent() {
             Search, rent, buy or list properties easily
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <div className="relative">
             <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search by location, price or type"
-              className="h-11 w-72 bg-muted pl-9.5"
+              className="h-11 w-full bg-muted pl-9.5 sm:w-72"
             />
           </div>
           <Button

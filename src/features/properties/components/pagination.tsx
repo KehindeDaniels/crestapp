@@ -8,6 +8,10 @@ import { cn } from "@/lib/utils/cn";
  * screenshot only shows this one truncation shape, no "ellipsis in the
  * middle around the current page" variant was in the design to confirm
  * against.
+ *
+ * Up to 10 fixed-size buttons in one row overflows any mobile viewport, so
+ * below `sm` this collapses to prev/next + a "Page X of Y" label instead of
+ * the full numbered row.
  */
 export function Pagination({
   currentPage,
@@ -30,53 +34,59 @@ export function Pagination({
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
         aria-label="Previous page"
-        className="flex size-9 items-center justify-center rounded-full border disabled:opacity-40"
+        className="flex size-9 shrink-0 items-center justify-center rounded-full border disabled:opacity-40"
       >
         <ChevronLeft className="size-4" />
       </button>
 
-      {visiblePages.map((page) => (
-        <button
-          key={page}
-          type="button"
-          onClick={() => onPageChange(page)}
-          aria-current={page === currentPage ? "page" : undefined}
-          className={cn(
-            "flex size-9 items-center justify-center rounded-full text-sm font-medium",
-            page === currentPage
-              ? "bg-primary text-primary-foreground"
-              : "text-foreground hover:bg-muted",
-          )}
-        >
-          {page}
-        </button>
-      ))}
+      <span className="text-sm font-medium sm:hidden">
+        Page {currentPage} of {lastPage}
+      </span>
 
-      {showTrailingEllipsis && (
-        <>
-          <span className="px-1 text-muted-foreground">…</span>
+      <div className="hidden items-center gap-2 sm:flex">
+        {visiblePages.map((page) => (
           <button
+            key={page}
             type="button"
-            onClick={() => onPageChange(lastPage)}
-            aria-current={lastPage === currentPage ? "page" : undefined}
+            onClick={() => onPageChange(page)}
+            aria-current={page === currentPage ? "page" : undefined}
             className={cn(
               "flex size-9 items-center justify-center rounded-full text-sm font-medium",
-              lastPage === currentPage
+              page === currentPage
                 ? "bg-primary text-primary-foreground"
                 : "text-foreground hover:bg-muted",
             )}
           >
-            {lastPage}
+            {page}
           </button>
-        </>
-      )}
+        ))}
+
+        {showTrailingEllipsis && (
+          <>
+            <span className="px-1 text-muted-foreground">…</span>
+            <button
+              type="button"
+              onClick={() => onPageChange(lastPage)}
+              aria-current={lastPage === currentPage ? "page" : undefined}
+              className={cn(
+                "flex size-9 items-center justify-center rounded-full text-sm font-medium",
+                lastPage === currentPage
+                  ? "bg-primary text-primary-foreground"
+                  : "text-foreground hover:bg-muted",
+              )}
+            >
+              {lastPage}
+            </button>
+          </>
+        )}
+      </div>
 
       <button
         type="button"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= lastPage}
         aria-label="Next page"
-        className="flex size-9 items-center justify-center rounded-full border disabled:opacity-40"
+        className="flex size-9 shrink-0 items-center justify-center rounded-full border disabled:opacity-40"
       >
         <ChevronRight className="size-4" />
       </button>

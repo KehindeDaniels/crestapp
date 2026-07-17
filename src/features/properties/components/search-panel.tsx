@@ -78,7 +78,7 @@ export function SearchPanel({
 
         <button
           type="button"
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted"
+          className="flex h-12 w-full shrink-0 items-center justify-center rounded-lg bg-muted lg:w-12"
           aria-label="More filters"
         >
           <SlidersHorizontal className="size-4.5 text-muted-foreground" />

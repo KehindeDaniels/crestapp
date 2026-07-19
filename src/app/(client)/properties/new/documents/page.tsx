@@ -25,7 +25,10 @@ import {
   DEFAULT_DOCUMENT_TYPE,
 } from "@/features/properties";
 
-const TYPE_LABEL: Record<string, string> = { apartment: "Apartment", land: "Land" };
+const TYPE_LABEL: Record<string, string> = {
+  apartment: "Apartment",
+  land: "Land",
+};
 
 /**
  * Step 4 of 4. Rebuilt against a real Figma pull (node 1473:3105 in file
@@ -51,7 +54,9 @@ export default function ListPropertyDocumentsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [documents, setDocuments] = useState<File[]>(wizard.documents);
   const [error, setError] = useState<string | null>(null);
-  const [confirmation, setConfirmation] = useState<{ propertyId: number } | null>(null);
+  const [confirmation, setConfirmation] = useState<{
+    propertyId: number;
+  } | null>(null);
 
   useEffect(() => {
     if (!wizard.mediaComplete) router.replace("/properties/new/review");
@@ -59,10 +64,16 @@ export default function ListPropertyDocumentsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!wizard.mediaComplete || !wizard.purpose || !wizard.propertyType) return null;
+  if (!wizard.mediaComplete || !wizard.purpose || !wizard.propertyType)
+    return null;
 
-  const isSubmitting = createProperty.isPending || uploadMedia.isPending || uploadDocument.isPending;
-  const firstImagePreview = wizard.images[0] ? URL.createObjectURL(wizard.images[0]) : null;
+  const isSubmitting =
+    createProperty.isPending ||
+    uploadMedia.isPending ||
+    uploadDocument.isPending;
+  const firstImagePreview = wizard.images[0]
+    ? URL.createObjectURL(wizard.images[0])
+    : null;
 
   function addDocuments(files: FileList | null) {
     if (!files) return;
@@ -111,12 +122,15 @@ export default function ListPropertyDocumentsPage() {
 
       if (wizard.images.length > 0) {
         const formData = new FormData();
-        for (const file of wizard.images) formData.append("media_files[]", file);
+        for (const file of wizard.images)
+          formData.append("media_files[]", file);
         formData.append("media_type", "image");
         try {
           await uploadMedia.mutateAsync({ propertyId, formData });
         } catch {
-          toast.warning("Listing created, but photo upload failed — add photos later.");
+          toast.warning(
+            "Listing created, but photo upload failed — add photos later.",
+          );
         }
       }
 
@@ -127,7 +141,10 @@ export default function ListPropertyDocumentsPage() {
             formData.append("title", file.name);
             formData.append("document_file", file);
             formData.append("document_type", DEFAULT_DOCUMENT_TYPE);
-            formData.append("description", `Supporting document for ${wizard.title}`);
+            formData.append(
+              "description",
+              `Supporting document for ${wizard.title}`,
+            );
             formData.append("entity_type", "property");
             formData.append("entity_id", String(propertyId));
             formData.append("association_type", "supporting");
@@ -138,12 +155,16 @@ export default function ListPropertyDocumentsPage() {
 
       setConfirmation({ propertyId });
     } catch (err) {
-      setError(isApiError(err) ? err.message : "Something went wrong. Please try again.");
+      setError(
+        isApiError(err)
+          ? err.message
+          : "Something went wrong. Please try again.",
+      );
     }
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
+    <div className="mx-auto max-w-8xl space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {LIST_PROPERTY_PURPOSE_CARDS.map((card) => {
           const Icon = card.icon;
@@ -151,14 +172,16 @@ export default function ListPropertyDocumentsPage() {
           return (
             <div
               key={card.value}
-              className={`flex items-start gap-3 rounded-xl border bg-background p-4 ${
+              className={`bg-background flex items-start gap-3 rounded-xl border p-4 ${
                 isSelected ? "shadow-md" : "border-border opacity-50"
               }`}
             >
-              <Icon className="size-8 shrink-0 text-muted-foreground" />
+              <Icon className="text-muted-foreground size-8 shrink-0" />
               <div>
                 <p className="text-sm font-semibold">{card.label}</p>
-                <p className="text-xs text-muted-foreground">{card.description}</p>
+                <p className="text-muted-foreground text-xs">
+                  {card.description}
+                </p>
               </div>
             </div>
           );
@@ -168,12 +191,12 @@ export default function ListPropertyDocumentsPage() {
       <div className="flex items-center justify-between">
         <Link
           href="/properties/new/review"
-          className="flex items-center gap-1 text-sm font-medium text-muted-foreground"
+          className="text-muted-foreground flex items-center gap-1 text-sm font-medium"
         >
           <ChevronLeft className="size-4" />
           Back
         </Link>
-        <p className="text-xs font-medium text-muted-foreground">Step 4 of 4</p>
+        <p className="text-muted-foreground text-xs font-medium">Step 4 of 4</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -182,32 +205,46 @@ export default function ListPropertyDocumentsPage() {
           title="Not confirmed — these fields only exist as commented-out validation hints on PUT /api/profile, never live-tested"
         >
           <div className="space-y-1">
-            <h2 className="text-base font-semibold">Set up your payout details</h2>
-            <p className="text-xs text-muted-foreground">
-              Receive payments directly into your bank account after successful transactions
+            <h2 className="text-base font-semibold">
+              Set up your payout details
+            </h2>
+            <p className="text-muted-foreground text-xs">
+              Receive payments directly into your bank account after successful
+              transactions
             </p>
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-muted-foreground/60">Bank Name</label>
+            <label className="text-muted-foreground/60 text-sm font-medium">
+              Bank Name
+            </label>
             <Select size="xl" disabled defaultValue="">
               <option value="">Enter</option>
             </Select>
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-muted-foreground/60">Account Number</label>
+            <label className="text-muted-foreground/60 text-sm font-medium">
+              Account Number
+            </label>
             <Input size="xl" disabled placeholder="Enter" />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-muted-foreground/60">Account Name</label>
-            <Input size="xl" disabled placeholder="Auto-verified from account number" />
+            <label className="text-muted-foreground/60 text-sm font-medium">
+              Account Name
+            </label>
+            <Input
+              size="xl"
+              disabled
+              placeholder="Auto-verified from account number"
+            />
           </div>
         </div>
 
         <div className="space-y-5 rounded-2xl border p-5">
           <div className="space-y-1">
             <h2 className="text-base font-semibold">Verify your documents</h2>
-            <p className="text-xs text-muted-foreground">
-              Upload documents that prove ownership or legal right to list this property
+            <p className="text-muted-foreground text-xs">
+              Upload documents that prove ownership or legal right to list this
+              property
             </p>
           </div>
 
@@ -226,7 +263,7 @@ export default function ListPropertyDocumentsPage() {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex w-full flex-col items-center gap-2 rounded-xl border border-dashed border-input bg-input-background py-8 text-sm text-muted-foreground"
+            className="border-input bg-input-background text-muted-foreground flex w-full flex-col items-center gap-2 rounded-xl border border-dashed py-8 text-sm"
           >
             <UploadCloud className="size-6" />
             Upload Files
@@ -238,18 +275,18 @@ export default function ListPropertyDocumentsPage() {
               {documents.map((file, i) => (
                 <li
                   key={`${file.name}-${i}`}
-                  className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-sm"
+                  className="bg-muted flex items-center gap-3 rounded-lg px-3 py-2 text-sm"
                 >
-                  <FileText className="size-4 shrink-0 text-muted-foreground" />
+                  <FileText className="text-muted-foreground size-4 shrink-0" />
                   <span className="min-w-0 flex-1 truncate">{file.name}</span>
-                  <span className="shrink-0 text-xs text-muted-foreground">
+                  <span className="text-muted-foreground shrink-0 text-xs">
                     {formatFileSize(file.size)}
                   </span>
                   <button
                     type="button"
                     onClick={() => removeDocument(i)}
                     aria-label={`Remove ${file.name}`}
-                    className="shrink-0 text-muted-foreground hover:text-destructive"
+                    className="text-muted-foreground hover:text-destructive shrink-0"
                   >
                     <X className="size-4" />
                   </button>
@@ -260,7 +297,7 @@ export default function ListPropertyDocumentsPage() {
         </div>
       </div>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-sm">{error}</p>}
 
       <Button
         type="button"
@@ -280,10 +317,13 @@ export default function ListPropertyDocumentsPage() {
       >
         <DialogContent className="max-w-md" showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle className="text-center text-xl">Listing Under Review</DialogTitle>
+            <DialogTitle className="text-center text-xl">
+              Listing Under Review
+            </DialogTitle>
           </DialogHeader>
-          <p className="text-center text-sm text-muted-foreground">
-            Our team is currently reviewing your documents, we will notify you once verified
+          <p className="text-muted-foreground text-center text-sm">
+            Our team is currently reviewing your documents, we will notify you
+            once verified
           </p>
 
           {firstImagePreview && (
@@ -296,16 +336,16 @@ export default function ListPropertyDocumentsPage() {
           )}
 
           <div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {wizard.purpose === "rent" ? "Rent" : "For Sale"}
             </p>
             <p className="text-xl font-bold">{formatCurrency(wizard.price)}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {wizard.propertyType === "apartment"
                 ? `${wizard.bedrooms} bd ${TYPE_LABEL[wizard.propertyType]}`
                 : TYPE_LABEL[wizard.propertyType ?? "apartment"]}
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {wizard.city}, {wizard.state}
             </p>
           </div>
@@ -316,7 +356,7 @@ export default function ListPropertyDocumentsPage() {
 
           <div className="flex items-start gap-2 rounded-lg bg-[#faae16]/5 p-3">
             <Info className="mt-0.5 size-4 shrink-0 text-[#faae16]" />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Listing without documents will not be marked as verified.
             </p>
           </div>

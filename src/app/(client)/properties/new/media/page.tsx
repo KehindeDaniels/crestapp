@@ -74,7 +74,7 @@ export default function ListPropertyMediaPage() {
   if (!wizard.detailsComplete) return null;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
+    <div className="max-w-8xl mx-auto space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
       {/* Persistent purpose row — read-only here, only step 1 lets you change it. */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {LIST_PROPERTY_PURPOSE_CARDS.map((card) => {
@@ -83,14 +83,16 @@ export default function ListPropertyMediaPage() {
           return (
             <div
               key={card.value}
-              className={`flex items-start gap-3 rounded-xl border bg-background p-4 ${
+              className={`bg-background flex items-start gap-3 rounded-xl border p-4 ${
                 isSelected ? "shadow-md" : "border-border opacity-50"
               }`}
             >
-              <Icon className="size-8 shrink-0 text-muted-foreground" />
+              <Icon className="text-muted-foreground size-8 shrink-0" />
               <div>
                 <p className="text-sm font-semibold">{card.label}</p>
-                <p className="text-xs text-muted-foreground">{card.description}</p>
+                <p className="text-muted-foreground text-xs">
+                  {card.description}
+                </p>
               </div>
             </div>
           );
@@ -100,12 +102,12 @@ export default function ListPropertyMediaPage() {
       <div className="flex items-center justify-between">
         <Link
           href="/properties/new/details"
-          className="flex items-center gap-1 text-sm font-medium text-muted-foreground"
+          className="text-muted-foreground flex items-center gap-1 text-sm font-medium"
         >
           <ChevronLeft className="size-4" />
           Back
         </Link>
-        <p className="text-xs font-medium text-muted-foreground">Step 2 of 4</p>
+        <p className="text-muted-foreground text-xs font-medium">Step 2 of 4</p>
       </div>
 
       <Form {...form}>
@@ -113,8 +115,10 @@ export default function ListPropertyMediaPage() {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div className="space-y-5 rounded-2xl border p-5">
               <div className="space-y-1">
-                <h2 className="text-base font-semibold">Price &amp; Location</h2>
-                <p className="text-xs text-muted-foreground">
+                <h2 className="text-base font-semibold">
+                  Price &amp; Location
+                </h2>
+                <p className="text-muted-foreground text-xs">
                   Choose the appropriate type that best matches your property
                 </p>
               </div>
@@ -126,7 +130,13 @@ export default function ListPropertyMediaPage() {
                   <FormItem className="gap-3">
                     <FormLabel>Price (₦)</FormLabel>
                     <FormControl>
-                      <Input size="xl" type="number" min={1} placeholder="Enter" {...field} />
+                      <Input
+                        size="xl"
+                        type="number"
+                        min={1}
+                        placeholder="Enter"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -141,17 +151,23 @@ export default function ListPropertyMediaPage() {
                       className="flex gap-4 border-b text-xs"
                       title="Not collected — no matching backend field on property creation"
                     >
-                      <span className="border-b-2 border-foreground pb-2 font-medium text-muted-foreground">
+                      <span className="border-foreground text-muted-foreground border-b-2 pb-2 font-medium">
                         Yearly payment
                       </span>
-                      <span className="pb-2 text-muted-foreground/60">Monthly payment</span>
+                      <span className="text-muted-foreground/60 pb-2">
+                        Monthly payment
+                      </span>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <p className="text-sm font-semibold">Additional Fees (Optional)</p>
+                    <p className="text-sm font-semibold">
+                      Additional Fees (Optional)
+                    </p>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-2">
-                        <FormLabel className="text-xs">Service Charge</FormLabel>
+                        <FormLabel className="text-xs">
+                          Service Charge
+                        </FormLabel>
                         <Input
                           size="xl"
                           disabled
@@ -160,7 +176,9 @@ export default function ListPropertyMediaPage() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <FormLabel className="text-xs">Security Deposit</FormLabel>
+                        <FormLabel className="text-xs">
+                          Security Deposit
+                        </FormLabel>
                         <Input
                           size="xl"
                           disabled
@@ -173,11 +191,13 @@ export default function ListPropertyMediaPage() {
                 </>
               ) : (
                 <div
-                  className="flex items-center justify-between rounded-xl bg-muted px-3 py-3"
+                  className="bg-muted flex items-center justify-between rounded-xl px-3 py-3"
                   title="Not collected — no matching backend field on property creation"
                 >
-                  <span className="text-sm text-muted-foreground">Price negotiable</span>
-                  <div className="h-5 w-9 shrink-0 rounded-full bg-foreground/20" />
+                  <span className="text-muted-foreground text-sm">
+                    Price negotiable
+                  </span>
+                  <div className="bg-foreground/20 h-5 w-9 shrink-0 rounded-full" />
                 </div>
               )}
 
@@ -188,7 +208,11 @@ export default function ListPropertyMediaPage() {
                   <FormItem className="gap-3">
                     <FormLabel>Address</FormLabel>
                     <FormControl>
-                      <Input size="xl" placeholder="e.g. 31 Mega Chicken Rd" {...field} />
+                      <Input
+                        size="xl"
+                        placeholder="e.g. 31 Mega Chicken Rd"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -280,13 +304,16 @@ export default function ListPropertyMediaPage() {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex aspect-video flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-input-background p-3 text-center text-xs text-muted-foreground"
+                      className="border-input bg-input-background text-muted-foreground flex aspect-video flex-col items-center justify-center gap-2 rounded-xl border border-dashed p-3 text-center text-xs"
                     >
                       <ImagePlus className="size-6" />
                       <span>
-                        Drag your image or <span className="text-primary">Browse</span>
+                        Drag your image or{" "}
+                        <span className="text-primary">Browse</span>
                       </span>
-                      <span className="text-[10px]">Max 5mb image size are allowed</span>
+                      <span className="text-[10px]">
+                        Max 5mb image size are allowed
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -295,13 +322,15 @@ export default function ListPropertyMediaPage() {
                   className="space-y-2"
                   title="Not built — the media endpoint's only confirmed media_type is 'image'"
                 >
-                  <p className="text-sm font-semibold text-muted-foreground/60">
+                  <p className="text-muted-foreground/60 text-sm font-semibold">
                     Video (up to 2)
                   </p>
-                  <div className="flex w-full cursor-not-allowed flex-col items-center gap-2 rounded-xl border border-dashed border-input bg-input-background py-8 text-sm text-muted-foreground/60">
+                  <div className="border-input bg-input-background text-muted-foreground/60 flex w-full cursor-not-allowed flex-col items-center gap-2 rounded-xl border border-dashed py-8 text-sm">
                     <Video className="size-6" />
                     Upload your video or Browse
-                    <span className="text-xs">Max 1min video size are allowed</span>
+                    <span className="text-xs">
+                      Max 1min video size are allowed
+                    </span>
                   </div>
                 </div>
               </div>
@@ -323,12 +352,18 @@ export default function ListPropertyMediaPage() {
  * flat list. Manages its own `URL.createObjectURL`/`revokeObjectURL` since
  * each tile owns exactly one file's preview.
  */
-function ImagePreviewTile({ file, onRemove }: { file: File; onRemove: () => void }) {
+function ImagePreviewTile({
+  file,
+  onRemove,
+}: {
+  file: File;
+  onRemove: () => void;
+}) {
   const [url] = useState(() => URL.createObjectURL(file));
   useEffect(() => () => URL.revokeObjectURL(url), [url]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-xl bg-muted">
+    <div className="bg-muted relative aspect-video overflow-hidden rounded-xl">
       {/* eslint-disable-next-line @next/next/no-img-element -- transient blob: URL, next/image can't optimize these anyway. */}
       <img src={url} alt="" className="size-full object-cover" />
       <button

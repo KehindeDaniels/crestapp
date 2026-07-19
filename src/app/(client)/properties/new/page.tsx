@@ -24,13 +24,13 @@ export default function ListPropertyIntroPage() {
   const canList = role === "landlord" || role === "seller";
 
   return (
-    <div className="mx-auto max-w-5xl p-4 sm:p-6 lg:p-10">
-      <div className="flex flex-col items-center gap-8 rounded-2xl border bg-muted/30 p-6 sm:flex-row sm:p-10">
+    <div className="max-w-8xl mx-auto p-4 sm:p-6 lg:p-10">
+      <div className="bg-muted/30 flex flex-col items-center gap-8 rounded-2xl border p-6 sm:flex-row sm:p-10">
         <div className="space-y-4 sm:flex-1">
           <h1 className="text-2xl font-bold sm:text-4xl">List your property</h1>
-          <p className="text-base text-muted-foreground sm:text-xl">
-            Connect directly with verified buyers and renters. Listings are reviewed before
-            approval.
+          <p className="text-muted-foreground text-base sm:text-xl">
+            Connect directly with verified buyers and renters. Listings are
+            reviewed before approval.
           </p>
 
           {canList ? (
@@ -38,13 +38,14 @@ export default function ListPropertyIntroPage() {
               <Link href="/properties/new/details">Get Started</Link>
             </Button>
           ) : (
-            <div className="space-y-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4">
-              <p className="text-sm font-medium text-destructive">
+            <div className="border-destructive/30 bg-destructive/5 space-y-3 rounded-xl border p-4">
+              <p className="text-destructive text-sm font-medium">
                 Only Landlord and Seller accounts can list properties.
               </p>
-              <p className="text-sm text-muted-foreground">
-                Your account is registered as {role ?? "unknown"}. There&apos;s no self-service
-                way to change this yet — contact support if you need your account updated.
+              <p className="text-muted-foreground text-sm">
+                Your account is registered as {role ?? "unknown"}. There&apos;s
+                no self-service way to change this yet — contact support if you
+                need your account updated.
               </p>
               <Button asChild variant="outline" size="sm">
                 <Link href="/home">Back to Home</Link>

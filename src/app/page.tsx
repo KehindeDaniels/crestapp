@@ -23,13 +23,13 @@ export default function LandingPage() {
 
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center gap-12 px-6 pb-16 lg:flex-row lg:justify-between lg:gap-8">
         <div className="flex max-w-lg flex-col items-center gap-6 text-center lg:items-start lg:text-left">
-          <h1 className="font-heading text-4xl leading-tight font-bold text-auth-heading lg:text-5xl">
+          <h1 className="font-heading text-auth-heading text-4xl leading-tight font-bold lg:text-5xl">
             A safer way to rent or buy homes
           </h1>
-          <p className="text-lg text-muted-foreground">
-            Find verified properties, connect directly with landlords, and
-            avoid scams — Crest checks every listing and every user before
-            you ever make contact.
+          <p className="text-muted-foreground text-lg">
+            Find verified properties, connect directly with landlords, and avoid
+            scams — Crest checks every listing and every user before you ever
+            make contact.
           </p>
 
           <div className="flex flex-col gap-3 sm:flex-row">

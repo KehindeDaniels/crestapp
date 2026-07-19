@@ -71,7 +71,10 @@ export default function ListPropertyDetailsPage() {
     },
   });
   const purpose = useWatch({ control: form.control, name: "purpose" });
-  const propertyType = useWatch({ control: form.control, name: "propertyType" });
+  const propertyType = useWatch({
+    control: form.control,
+    name: "propertyType",
+  });
   const isLand = propertyType === "land";
   const presetFeatures = isLand ? LAND_FEATURES : APARTMENT_FEATURES;
 
@@ -91,23 +94,25 @@ export default function ListPropertyDetailsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
+    <div className="max-w-8xl mx-auto space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
       <div className="flex items-center justify-between">
         <Link
           href="/home"
-          className="flex items-center gap-1 text-sm font-medium text-muted-foreground"
+          className="text-muted-foreground flex items-center gap-1 text-sm font-medium"
         >
           <ChevronLeft className="size-4" />
           Cancel
         </Link>
-        <p className="text-xs font-medium text-muted-foreground">Step 1 of 4</p>
+        <p className="text-muted-foreground text-xs font-medium">Step 1 of 4</p>
       </div>
 
       <div className="space-y-1">
-        <h1 className="text-xl font-semibold sm:text-2xl">List Your Property</h1>
-        <p className="text-sm text-muted-foreground">
-          Connect directly with verified buyers and renters. Listings are reviewed before
-          approval.
+        <h1 className="text-xl font-semibold sm:text-2xl">
+          List Your Property
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          Connect directly with verified buyers and renters. Listings are
+          reviewed before approval.
         </p>
       </div>
 
@@ -123,7 +128,8 @@ export default function ListPropertyDetailsPage() {
                     const Icon = card.icon;
                     const isSelected = purpose === card.value;
                     // Airbnb: no endpoint exists at all. Sale/Rent: gated by the account's own role.
-                    const isEnabled = card.enabled && card.value === allowedPurpose;
+                    const isEnabled =
+                      card.enabled && card.value === allowedPurpose;
                     const disabledReason = !card.enabled
                       ? `${card.label} — coming soon`
                       : `Your account (${role}) can't list a ${card.label.toLowerCase()}`;
@@ -133,17 +139,22 @@ export default function ListPropertyDetailsPage() {
                         type="button"
                         disabled={!isEnabled}
                         title={isEnabled ? undefined : disabledReason}
-                        onClick={() => isEnabled && field.onChange(card.value as typeof field.value)}
+                        onClick={() =>
+                          isEnabled &&
+                          field.onChange(card.value as typeof field.value)
+                        }
                         className={cn(
-                          "flex items-start gap-3 rounded-xl border bg-background p-4 text-left transition-shadow",
+                          "bg-background flex items-start gap-3 rounded-xl border p-4 text-left transition-shadow",
                           isSelected ? "shadow-md" : "border-border",
                           !isEnabled && "cursor-not-allowed opacity-50",
                         )}
                       >
-                        <Icon className="size-8 shrink-0 text-muted-foreground" />
+                        <Icon className="text-muted-foreground size-8 shrink-0" />
                         <div>
                           <p className="text-sm font-semibold">{card.label}</p>
-                          <p className="text-xs text-muted-foreground">{card.description}</p>
+                          <p className="text-muted-foreground text-xs">
+                            {card.description}
+                          </p>
                         </div>
                       </button>
                     );
@@ -158,8 +169,10 @@ export default function ListPropertyDetailsPage() {
             <div className="space-y-6">
               <div className="space-y-5 rounded-2xl border p-5">
                 <div className="space-y-1">
-                  <h2 className="text-base font-semibold">Select property type</h2>
-                  <p className="text-sm text-muted-foreground">
+                  <h2 className="text-base font-semibold">
+                    Select property type
+                  </h2>
+                  <p className="text-muted-foreground text-sm">
                     Choose the appropriate type that best matches your property
                   </p>
                 </div>
@@ -188,9 +201,9 @@ export default function ListPropertyDetailsPage() {
                   <h2 className="text-base font-semibold">
                     {isLand ? "Land Details" : "Properties Details"}
                   </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Provide accurate details to help {isLand ? "buyers" : "renters"} understand
-                    the property
+                  <p className="text-muted-foreground text-sm">
+                    Provide accurate details to help{" "}
+                    {isLand ? "buyers" : "renters"} understand the property
                   </p>
                 </div>
 
@@ -204,7 +217,13 @@ export default function ListPropertyDetailsPage() {
                         <FormItem className="gap-3">
                           <FormLabel>Bedroom</FormLabel>
                           <FormControl>
-                            <Input size="xl" type="number" min={0} placeholder="0" {...field} />
+                            <Input
+                              size="xl"
+                              type="number"
+                              min={0}
+                              placeholder="0"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -217,7 +236,13 @@ export default function ListPropertyDetailsPage() {
                         <FormItem className="gap-3">
                           <FormLabel>Bathroom</FormLabel>
                           <FormControl>
-                            <Input size="xl" type="number" min={0} placeholder="0" {...field} />
+                            <Input
+                              size="xl"
+                              type="number"
+                              min={0}
+                              placeholder="0"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -232,11 +257,21 @@ export default function ListPropertyDetailsPage() {
                   render={({ field }) => (
                     <FormItem className="gap-3">
                       <div className="flex items-center justify-between">
-                        <FormLabel>{isLand ? "Land Size" : "Property Size"}</FormLabel>
-                        <span className="text-xs text-muted-foreground">sqm</span>
+                        <FormLabel>
+                          {isLand ? "Land Size" : "Property Size"}
+                        </FormLabel>
+                        <span className="text-muted-foreground text-xs">
+                          sqm
+                        </span>
                       </div>
                       <FormControl>
-                        <Input size="xl" type="number" min={1} placeholder="e.g. 240" {...field} />
+                        <Input
+                          size="xl"
+                          type="number"
+                          min={1}
+                          placeholder="e.g. 240"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -273,7 +308,7 @@ export default function ListPropertyDetailsPage() {
                       />
                     </FormControl>
                     <div className="flex justify-end">
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {field.value.length}/200
                       </span>
                     </div>
@@ -307,10 +342,13 @@ function FeaturesPicker({ presetFeatures }: { presetFeatures: string[] }) {
   const [customFeature, setCustomFeature] = useState("");
 
   return (
-    <div className="space-y-3" title="No backend field exists for property features yet">
+    <div
+      className="space-y-3"
+      title="No backend field exists for property features yet"
+    >
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium">Property Features</p>
-        <span className="text-xs text-muted-foreground">Coming soon</span>
+        <span className="text-muted-foreground text-xs">Coming soon</span>
       </div>
 
       <Select size="xl" disabled defaultValue="">
@@ -339,7 +377,7 @@ function FeaturesPicker({ presetFeatures }: { presetFeatures: string[] }) {
         {presetFeatures.slice(0, 3).map((feature) => (
           <span
             key={feature}
-            className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs text-muted-foreground/60"
+            className="bg-muted text-muted-foreground/60 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs"
           >
             {feature}
             <X className="size-3" />

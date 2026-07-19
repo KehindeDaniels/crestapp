@@ -19,7 +19,7 @@ import { Topbar } from "./topbar";
  */
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-360 min-w-0">
+    <div className="mx-auto flex min-h-screen w-full max-w-560 min-w-0">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar />

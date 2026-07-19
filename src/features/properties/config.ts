@@ -96,22 +96,17 @@ export const LAND_FEATURES = [
 ];
 
 /**
- * Step 3's "Verify your documents" checklist. `documentType` maps each
- * labeled slot to the closest value in `documents/upload`'s real, confirmed
- * `document_type` enum (`agreement|contract|disclosure|certificate|report`)
- * — the backend only has these 5 generic buckets, not distinct categories
- * for property paperwork, so this mapping is an inferred approximation, not
- * a confirmed 1:1 match. Each slot still uploads for real via
- * `useUploadDocument`, with its own honest `title` — only the coarse
- * category bucket is approximate. See docs/design-vs-backend-gaps.md.
+ * Step 4's document upload — corrected after user testing: the real Figma
+ * pull (node 1473:3105) shows the 5 named rows (C of O, Deed of Assignment,
+ * etc.) as *examples* of what's been uploaded, not 5 fixed input slots —
+ * uploads accumulate into one plain stack, same interaction model as the
+ * image uploader in step 2. Each upload still needs a real `document_type`
+ * for `documents/upload`'s confirmed enum (`agreement|contract|disclosure|
+ * certificate|report`); since there's no per-category UI anymore, every
+ * upload is tagged with one reasonable default rather than asking the user
+ * to categorize each file.
  */
-export const DOCUMENT_SLOTS: { key: string; label: string; documentType: string }[] = [
-  { key: "c_of_o", label: "Certificate of Occupancy (C of O)", documentType: "certificate" },
-  { key: "deed_of_assignment", label: "Deed of Assignment", documentType: "contract" },
-  { key: "survey_plan", label: "Survey Plan", documentType: "report" },
-  { key: "purchase_receipt", label: "Purchase Receipt", documentType: "disclosure" },
-  { key: "authorization_letter", label: "Authorization Letter", documentType: "agreement" },
-];
+export const DEFAULT_DOCUMENT_TYPE = "certificate";
 
 /**
  * List Property wizard's property-type options — scoped to the two types

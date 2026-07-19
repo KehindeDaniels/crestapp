@@ -17,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { formatFileSize } from "@/lib/utils/format";
 import {
   useListPropertyWizardStore,
   listPropertyMediaSchema,
@@ -42,7 +41,7 @@ export default function ListPropertyMediaPage() {
   const isRent = wizard.purpose === "rent";
 
   useEffect(() => {
-    if (!wizard.detailsComplete) router.replace("/properties/new");
+    if (!wizard.detailsComplete) router.replace("/properties/new/details");
     // Mount-only guard — same pattern as the register wizard's step guards.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -69,7 +68,7 @@ export default function ListPropertyMediaPage() {
 
   function onSubmit(values: ListPropertyMediaInput) {
     wizard.setMedia({ ...values, price: Number(values.price), images });
-    router.push("/properties/new/documents");
+    router.push("/properties/new/review");
   }
 
   if (!wizard.detailsComplete) return null;
@@ -100,13 +99,13 @@ export default function ListPropertyMediaPage() {
 
       <div className="flex items-center justify-between">
         <Link
-          href="/properties/new"
+          href="/properties/new/details"
           className="flex items-center gap-1 text-sm font-medium text-muted-foreground"
         >
           <ChevronLeft className="size-4" />
           Back
         </Link>
-        <p className="text-xs font-medium text-muted-foreground">Step 2 of 3</p>
+        <p className="text-xs font-medium text-muted-foreground">Step 2 of 4</p>
       </div>
 
       <Form {...form}>
@@ -270,39 +269,26 @@ export default function ListPropertyMediaPage() {
                       e.target.value = "";
                     }}
                   />
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex w-full flex-col items-center gap-2 rounded-xl border border-dashed border-input bg-input-background py-8 text-sm text-muted-foreground"
-                  >
-                    <ImagePlus className="size-6" />
-                    Drag your image or Browse
-                    <span className="text-xs">Max 5mb image size are allowed</span>
-                  </button>
-
-                  {images.length > 0 && (
-                    <ul className="space-y-2">
-                      {images.map((file, i) => (
-                        <li
-                          key={`${file.name}-${i}`}
-                          className="flex items-center justify-between gap-3 rounded-lg bg-muted px-3 py-2 text-sm"
-                        >
-                          <span className="min-w-0 truncate">{file.name}</span>
-                          <span className="shrink-0 text-xs text-muted-foreground">
-                            {formatFileSize(file.size)}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => removeImage(i)}
-                            aria-label={`Remove ${file.name}`}
-                            className="shrink-0 text-muted-foreground hover:text-destructive"
-                          >
-                            <X className="size-4" />
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  <div className="grid grid-cols-2 gap-3">
+                    {images.map((file, i) => (
+                      <ImagePreviewTile
+                        key={`${file.name}-${i}`}
+                        file={file}
+                        onRemove={() => removeImage(i)}
+                      />
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex aspect-video flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input bg-input-background p-3 text-center text-xs text-muted-foreground"
+                    >
+                      <ImagePlus className="size-6" />
+                      <span>
+                        Drag your image or <span className="text-primary">Browse</span>
+                      </span>
+                      <span className="text-[10px]">Max 5mb image size are allowed</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div
@@ -327,6 +313,32 @@ export default function ListPropertyMediaPage() {
           </Button>
         </form>
       </Form>
+    </div>
+  );
+}
+
+/**
+ * Thumbnail preview grid tile — per feedback, uploaded images should show
+ * an actual preview (matching the Figma grid), not just a filename in a
+ * flat list. Manages its own `URL.createObjectURL`/`revokeObjectURL` since
+ * each tile owns exactly one file's preview.
+ */
+function ImagePreviewTile({ file, onRemove }: { file: File; onRemove: () => void }) {
+  const [url] = useState(() => URL.createObjectURL(file));
+  useEffect(() => () => URL.revokeObjectURL(url), [url]);
+
+  return (
+    <div className="relative aspect-video overflow-hidden rounded-xl bg-muted">
+      {/* eslint-disable-next-line @next/next/no-img-element -- transient blob: URL, next/image can't optimize these anyway. */}
+      <img src={url} alt="" className="size-full object-cover" />
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove ${file.name}`}
+        className="absolute top-1.5 right-1.5 flex size-6 items-center justify-center rounded-full bg-black/60 text-white"
+      >
+        <X className="size-3.5" />
+      </button>
     </div>
   );
 }

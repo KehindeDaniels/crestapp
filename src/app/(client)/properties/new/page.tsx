@@ -1,289 +1,66 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
-import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { cn } from "@/lib/utils/cn";
-import {
-  useListPropertyWizardStore,
-  listPropertyDetailsSchema,
-  LIST_PROPERTY_PURPOSE_CARDS,
-  LIST_PROPERTY_TYPES,
-  APARTMENT_FEATURES,
-  LAND_FEATURES,
-  type ListPropertyDetailsInput,
-} from "@/features/properties";
+import { useSessionStore } from "@/features/auth";
 
 /**
- * Step 1 of 3. Rebuilt against a real Figma pull (node 1422:6881 in file
- * `1jtfoprMGUFfoo3CBzhjMV`, "Listing-For Sale (Apartment)"), not screenshot
- * inference. Real layout: purpose is 3 large cards (not a segmented tab),
- * and Property Details / Description+Features are two separate cards
- * side by side, not one stacked form. The Figma "Continue" button sits
- * under the right column only — deliberately made full-width here instead,
- * better for mobile and no real UX reason to keep the asymmetry.
+ * List Property's entry point — the "empty state" intro screen (real Figma
+ * pull, node 1465:6445 in file `1jtfoprMGUFfoo3CBzhjMV`), missed entirely in
+ * the first pass which jumped straight into the step-1 form. Reuses the
+ * existing `list-property-illustration.png` asset (already downloaded for
+ * Home's banner, same "list your property" concept) rather than pulling a
+ * new one-off Figma illustration asset.
+ *
+ * Gated by role: only `landlord`/`seller` accounts can create a listing at
+ * all (confirmed live — a `landlord` account got a 403 trying to list a
+ * Sale property; the backend's real seeded data shows Sale-property owners
+ * have role `seller`, not `landlord`). Every other role sees a blocking
+ * message instead of "Get Started" — see docs/design-vs-backend-gaps.md.
  */
-export default function ListPropertyDetailsPage() {
-  const router = useRouter();
-  const wizard = useListPropertyWizardStore();
-
-  const form = useForm<ListPropertyDetailsInput>({
-    resolver: zodResolver(listPropertyDetailsSchema),
-    defaultValues: {
-      purpose: wizard.purpose ?? "sale",
-      propertyType: wizard.propertyType ?? "apartment",
-      bedrooms: wizard.bedrooms ? String(wizard.bedrooms) : "0",
-      bathrooms: wizard.bathrooms ? String(wizard.bathrooms) : "0",
-      squareMeters: wizard.squareMeters ? String(wizard.squareMeters) : "",
-      description: wizard.description,
-    },
-  });
-  const purpose = useWatch({ control: form.control, name: "purpose" });
-  const propertyType = useWatch({ control: form.control, name: "propertyType" });
-  const isLand = propertyType === "land";
-  const features = isLand ? LAND_FEATURES : APARTMENT_FEATURES;
-
-  function onSubmit(values: ListPropertyDetailsInput) {
-    wizard.setDetails({
-      purpose: values.purpose,
-      propertyType: values.propertyType,
-      description: values.description,
-      squareMeters: Number(values.squareMeters),
-      // Land has no bedroom/bathroom fields in the design — not collected, sent as 0.
-      bedrooms: isLand ? 0 : Number(values.bedrooms),
-      bathrooms: isLand ? 0 : Number(values.bathrooms),
-    });
-    router.push("/properties/new/media");
-  }
+export default function ListPropertyIntroPage() {
+  const role = useSessionStore((s) => s.user?.role);
+  const canList = role === "landlord" || role === "seller";
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
-      <div className="flex items-center justify-between">
-        <Link
-          href="/home"
-          className="flex items-center gap-1 text-sm font-medium text-muted-foreground"
-        >
-          <ChevronLeft className="size-4" />
-          Cancel
-        </Link>
-        <p className="text-xs font-medium text-muted-foreground">Step 1 of 3</p>
-      </div>
+    <div className="mx-auto max-w-5xl p-4 sm:p-6 lg:p-10">
+      <div className="flex flex-col items-center gap-8 rounded-2xl border bg-muted/30 p-6 sm:flex-row sm:p-10">
+        <div className="space-y-4 sm:flex-1">
+          <h1 className="text-2xl font-bold sm:text-4xl">List your property</h1>
+          <p className="text-base text-muted-foreground sm:text-xl">
+            Connect directly with verified buyers and renters. Listings are reviewed before
+            approval.
+          </p>
 
-      <div className="space-y-1">
-        <h1 className="text-xl font-semibold sm:text-2xl">List Your Property</h1>
-        <p className="text-sm text-muted-foreground">
-          Connect directly with verified buyers and renters. Listings are reviewed before
-          approval.
-        </p>
-      </div>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="purpose"
-            render={({ field }) => (
-              <FormItem className="gap-3">
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {LIST_PROPERTY_PURPOSE_CARDS.map((card) => {
-                    const Icon = card.icon;
-                    const isSelected = purpose === card.value;
-                    return (
-                      <button
-                        key={card.value}
-                        type="button"
-                        disabled={!card.enabled}
-                        title={card.enabled ? undefined : `${card.label} — coming soon`}
-                        onClick={() =>
-                          card.enabled && field.onChange(card.value as typeof field.value)
-                        }
-                        className={cn(
-                          "flex items-start gap-3 rounded-xl border bg-background p-4 text-left transition-shadow",
-                          isSelected ? "shadow-md" : "border-border",
-                          !card.enabled && "cursor-not-allowed opacity-50",
-                        )}
-                      >
-                        <Icon className="size-8 shrink-0 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm font-semibold">{card.label}</p>
-                          <p className="text-xs text-muted-foreground">{card.description}</p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <div className="space-y-6">
-              <div className="space-y-5 rounded-2xl border p-5">
-                <div className="space-y-1">
-                  <h2 className="text-base font-semibold">Select property type</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Choose the appropriate type that best matches your property
-                  </p>
-                </div>
-                <FormField
-                  control={form.control}
-                  name="propertyType"
-                  render={({ field }) => (
-                    <FormItem className="gap-3">
-                      <FormControl>
-                        <Select size="xl" {...field}>
-                          {LIST_PROPERTY_TYPES.map((opt) => (
-                            <option key={opt.value} value={opt.value}>
-                              {opt.label}
-                            </option>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="space-y-5 rounded-2xl border p-5">
-                <div className="space-y-1">
-                  <h2 className="text-base font-semibold">
-                    {isLand ? "Land Details" : "Properties Details"}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Provide accurate details to help {isLand ? "buyers" : "renters"} understand
-                    the property
-                  </p>
-                </div>
-
-                {!isLand && (
-                  <>
-                    <p className="text-sm font-semibold">Rooms</p>
-                    <FormField
-                      control={form.control}
-                      name="bedrooms"
-                      render={({ field }) => (
-                        <FormItem className="gap-3">
-                          <FormLabel>Bedroom</FormLabel>
-                          <FormControl>
-                            <Input size="xl" type="number" min={0} placeholder="0" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="bathrooms"
-                      render={({ field }) => (
-                        <FormItem className="gap-3">
-                          <FormLabel>Bathroom</FormLabel>
-                          <FormControl>
-                            <Input size="xl" type="number" min={0} placeholder="0" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-
-                <FormField
-                  control={form.control}
-                  name="squareMeters"
-                  render={({ field }) => (
-                    <FormItem className="gap-3">
-                      <div className="flex items-center justify-between">
-                        <FormLabel>{isLand ? "Land Size" : "Property Size"}</FormLabel>
-                        <span className="text-xs text-muted-foreground">sqm</span>
-                      </div>
-                      <FormControl>
-                        <Input size="xl" type="number" min={1} placeholder="e.g. 240" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {isLand && (
-                  <div className="space-y-3">
-                    <FormLabel>Number of Plots</FormLabel>
-                    <Input
-                      size="xl"
-                      disabled
-                      placeholder="0"
-                      title="Not collected — no matching backend field on property creation"
-                    />
-                  </div>
-                )}
-              </div>
+          {canList ? (
+            <Button asChild size="xl" className="w-full sm:w-auto">
+              <Link href="/properties/new/details">Get Started</Link>
+            </Button>
+          ) : (
+            <div className="space-y-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4">
+              <p className="text-sm font-medium text-destructive">
+                Only Landlord and Seller accounts can list properties.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Your account is registered as {role ?? "unknown"}. There&apos;s no self-service
+                way to change this yet — contact support if you need your account updated.
+              </p>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/home">Back to Home</Link>
+              </Button>
             </div>
+          )}
+        </div>
 
-            <div className="space-y-5 rounded-2xl border p-5">
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem className="gap-3">
-                    <FormLabel>Property Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Briefly describe property"
-                        rows={5}
-                        maxLength={200}
-                        {...field}
-                      />
-                    </FormControl>
-                    <div className="flex justify-end">
-                      <span className="text-xs text-muted-foreground">
-                        {field.value.length}/200
-                      </span>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="space-y-3">
-                <p className="text-sm font-medium">Property Features</p>
-                <p className="text-xs text-muted-foreground" title="No backend field exists for these yet">
-                  Shown to match the design — not collected yet (coming soon)
-                </p>
-                <div className="space-y-2">
-                  {features.map((feature) => (
-                    <label
-                      key={feature}
-                      className="flex items-center gap-2 text-sm text-muted-foreground/60"
-                    >
-                      <input type="checkbox" disabled className="size-4 rounded border-input" />
-                      {feature}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <Button type="submit" size="xl" className="w-full">
-            Continue
-          </Button>
-        </form>
-      </Form>
+        <Image
+          src="/images/home/list-property-illustration.png"
+          alt=""
+          width={420}
+          height={200}
+          className="w-full max-w-xs sm:max-w-sm"
+        />
+      </div>
     </div>
   );
 }

@@ -17,8 +17,17 @@ import { cn } from "@/lib/utils/index";
  *
  * Figma's options are Buyer/Renter/Property Owner/Short-Let; the backend's
  * actual role enum is landlord/tenant/seller/buyer/lawyer/surveyor/admin.
- * Mapped Buyer->buyer, Renter->tenant, Property Owner->landlord. "Short-Let"
- * has no backend equivalent and was dropped, not silently guessed.
+ * Mapped Buyer->buyer, Renter->tenant. "Short-Let" has no backend equivalent
+ * and was dropped, not silently guessed.
+ *
+ * "Property Owner" was originally mapped to `landlord` alone — confirmed
+ * live to be wrong: a real seeded example in the Postman collection shows a
+ * `purpose: "sale"` property's owner has role `"seller"`, not `"landlord"`,
+ * and there's no self-service role-change endpoint (only an admin-only
+ * `PUT /api/admin/users/{id}/role`). Anyone who registered as "Property
+ * Owner" got 403 the moment they tried to list a Sale property, with no way
+ * to fix it themselves. Split into two explicit options instead — see
+ * docs/design-vs-backend-gaps.md.
  *
  * Rendered as checkbox-style squares (matching the Figma visual) but with
  * radio (single-select) semantics/behavior, since `role` is a single enum
@@ -27,7 +36,8 @@ import { cn } from "@/lib/utils/index";
 const ROLE_OPTIONS: { label: string; value: UserRole }[] = [
   { label: "Buyer", value: "buyer" },
   { label: "Renter", value: "tenant" },
-  { label: "Property Owner", value: "landlord" },
+  { label: "Landlord — list properties for rent", value: "landlord" },
+  { label: "Seller — list properties for sale", value: "seller" },
 ];
 
 export default function RegisterRolePage() {

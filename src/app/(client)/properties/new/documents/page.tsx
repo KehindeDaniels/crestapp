@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ChevronLeft, FileText, CheckCircle2, Info } from "lucide-react";
+import { ChevronLeft, FileText, X, UploadCloud, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { formatCurrency } from "@/lib/utils/format";
+import { formatCurrency, formatFileSize } from "@/lib/utils/format";
 import { isApiError } from "@/lib/api/errors";
 import {
   useListPropertyWizardStore,
@@ -22,20 +22,25 @@ import {
   useUploadPropertyMedia,
   useUploadDocument,
   LIST_PROPERTY_PURPOSE_CARDS,
-  DOCUMENT_SLOTS,
+  DEFAULT_DOCUMENT_TYPE,
 } from "@/features/properties";
 
 const TYPE_LABEL: Record<string, string> = { apartment: "Apartment", land: "Land" };
 
 /**
- * Step 3 of 3. Rebuilt against a real Figma pull (node 1473:3105 in file
+ * Step 4 of 4. Rebuilt against a real Figma pull (node 1473:3105 in file
  * `1jtfoprMGUFfoo3CBzhjMV`) — this is genuinely the final step, not a
  * summary/review screen: it's "Set up your payout details" (shown,
  * disabled — the fields only exist as commented-out validation hints on
  * `PUT /api/profile`, never live-tested) + "Verify your documents" (real,
- * via `documents/upload`) and its button submits directly. On success, a
- * "Listing Under Review" confirmation modal matches the design's own
- * post-submit screen, rather than redirecting silently.
+ * via `documents/upload`) and its button submits directly.
+ *
+ * Document upload is a plain growing list, not 5 fixed named slots —
+ * corrected after user testing confirmed the Figma pull's 5 labeled rows
+ * (C of O, Deed of Assignment, etc.) are examples of already-uploaded
+ * files, not distinct input fields; same interaction model as the image
+ * uploader in step 2. On success, a "Listing Under Review" confirmation
+ * modal matches the design's own post-submit screen.
  */
 export default function ListPropertyDocumentsPage() {
   const router = useRouter();
@@ -44,12 +49,12 @@ export default function ListPropertyDocumentsPage() {
   const uploadMedia = useUploadPropertyMedia();
   const uploadDocument = useUploadDocument();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeSlotKey, setActiveSlotKey] = useState<string | null>(null);
+  const [documents, setDocuments] = useState<File[]>(wizard.documents);
   const [error, setError] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState<{ propertyId: number } | null>(null);
 
   useEffect(() => {
-    if (!wizard.mediaComplete) router.replace("/properties/new/media");
+    if (!wizard.mediaComplete) router.replace("/properties/new/review");
     // Mount-only guard — same pattern as the register wizard's step guards.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -59,14 +64,21 @@ export default function ListPropertyDocumentsPage() {
   const isSubmitting = createProperty.isPending || uploadMedia.isPending || uploadDocument.isPending;
   const firstImagePreview = wizard.images[0] ? URL.createObjectURL(wizard.images[0]) : null;
 
-  function openPickerFor(slotKey: string) {
-    setActiveSlotKey(slotKey);
-    fileInputRef.current?.click();
+  function addDocuments(files: FileList | null) {
+    if (!files) return;
+    setDocuments((prev) => {
+      const next = [...prev, ...Array.from(files)];
+      wizard.setDocuments(next);
+      return next;
+    });
   }
 
-  function handleFileChosen(file: File | null) {
-    if (activeSlotKey && file) wizard.setDocument(activeSlotKey, file);
-    setActiveSlotKey(null);
+  function removeDocument(index: number) {
+    setDocuments((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      wizard.setDocuments(next);
+      return next;
+    });
   }
 
   async function handleSubmit() {
@@ -108,16 +120,14 @@ export default function ListPropertyDocumentsPage() {
         }
       }
 
-      const stagedDocuments = DOCUMENT_SLOTS.filter((slot) => wizard.documents[slot.key]);
-      if (stagedDocuments.length > 0) {
+      if (documents.length > 0) {
         await Promise.allSettled(
-          stagedDocuments.map((slot) => {
-            const file = wizard.documents[slot.key]!;
+          documents.map((file) => {
             const formData = new FormData();
-            formData.append("title", slot.label);
+            formData.append("title", file.name);
             formData.append("document_file", file);
-            formData.append("document_type", slot.documentType);
-            formData.append("description", `${slot.label} for ${wizard.title}`);
+            formData.append("document_type", DEFAULT_DOCUMENT_TYPE);
+            formData.append("description", `Supporting document for ${wizard.title}`);
             formData.append("entity_type", "property");
             formData.append("entity_id", String(propertyId));
             formData.append("association_type", "supporting");
@@ -157,13 +167,13 @@ export default function ListPropertyDocumentsPage() {
 
       <div className="flex items-center justify-between">
         <Link
-          href="/properties/new/media"
+          href="/properties/new/review"
           className="flex items-center gap-1 text-sm font-medium text-muted-foreground"
         >
           <ChevronLeft className="size-4" />
           Back
         </Link>
-        <p className="text-xs font-medium text-muted-foreground">Step 3 of 3</p>
+        <p className="text-xs font-medium text-muted-foreground">Step 4 of 4</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -205,31 +215,48 @@ export default function ListPropertyDocumentsPage() {
             ref={fileInputRef}
             type="file"
             accept=".pdf,.jpg,.jpeg,.png"
+            multiple
             className="hidden"
-            onChange={(e) => handleFileChosen(e.target.files?.[0] ?? null)}
+            onChange={(e) => {
+              addDocuments(e.target.files);
+              e.target.value = "";
+            }}
           />
 
-          <div className="divide-y">
-            {DOCUMENT_SLOTS.map((slot) => {
-              const staged = wizard.documents[slot.key];
-              return (
-                <button
-                  key={slot.key}
-                  type="button"
-                  onClick={() => openPickerFor(slot.key)}
-                  className="flex w-full items-center gap-4 py-3 text-left"
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="flex w-full flex-col items-center gap-2 rounded-xl border border-dashed border-input bg-input-background py-8 text-sm text-muted-foreground"
+          >
+            <UploadCloud className="size-6" />
+            Upload Files
+            <span className="text-xs">Tap to upload PDF, JPG, or PNG</span>
+          </button>
+
+          {documents.length > 0 && (
+            <ul className="space-y-2">
+              {documents.map((file, i) => (
+                <li
+                  key={`${file.name}-${i}`}
+                  className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-sm"
                 >
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted">
-                    <FileText className="size-5 text-muted-foreground" />
+                  <FileText className="size-4 shrink-0 text-muted-foreground" />
+                  <span className="min-w-0 flex-1 truncate">{file.name}</span>
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {formatFileSize(file.size)}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                    {staged ? staged.name : slot.label}
-                  </span>
-                  {staged && <CheckCircle2 className="size-4 shrink-0 text-success" />}
-                </button>
-              );
-            })}
-          </div>
+                  <button
+                    type="button"
+                    onClick={() => removeDocument(i)}
+                    aria-label={`Remove ${file.name}`}
+                    className="shrink-0 text-muted-foreground hover:text-destructive"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 

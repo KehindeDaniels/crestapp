@@ -9,15 +9,19 @@ import { create } from "zustand";
 export type ListablePurpose = "sale" | "rent";
 export type ListablePropertyType = "apartment" | "land";
 
+/** One staged file per `DOCUMENT_SLOTS` entry (config.ts), keyed by slot `key`. */
+export type StagedDocuments = Record<string, File | null>;
+
 /**
  * Scratch state for the List Property wizard (Details -> Price/Location/Media
- * -> Review), mirroring `useRegisterWizardStore`'s shape: in-memory only (a
- * hard refresh restarts the wizard), each step page guards against being
- * opened directly without its prerequisite data.
+ * -> Payout & Documents), mirroring `useRegisterWizardStore`'s shape:
+ * in-memory only (a hard refresh restarts the wizard), each step page
+ * guards against being opened directly without its prerequisite data.
  *
- * `images` holds real `File` objects (fine for an in-memory-only store) —
- * the Review step builds previews from them directly via
- * `URL.createObjectURL`, nothing is persisted or serialized.
+ * `images`/`documents` hold real `File` objects (fine for an
+ * in-memory-only store) — nothing is persisted or serialized; both are
+ * only actually uploaded at final submit, after property creation returns
+ * a real `property_id` to attach them to.
  */
 interface ListPropertyWizardState {
   purpose: ListablePurpose | null;
@@ -32,6 +36,7 @@ interface ListPropertyWizardState {
   city: string;
   state: string;
   images: File[];
+  documents: StagedDocuments;
   detailsComplete: boolean;
   mediaComplete: boolean;
   setDetails: (data: {
@@ -50,6 +55,7 @@ interface ListPropertyWizardState {
     state: string;
     images: File[];
   }) => void;
+  setDocument: (key: string, file: File | null) => void;
   reset: () => void;
 }
 
@@ -66,13 +72,15 @@ const initialState = {
   city: "",
   state: "",
   images: [] as File[],
+  documents: {} as StagedDocuments,
   detailsComplete: false,
   mediaComplete: false,
 };
 
-export const useListPropertyWizardStore = create<ListPropertyWizardState>((set) => ({
+export const useListPropertyWizardStore = create<ListPropertyWizardState>((set, get) => ({
   ...initialState,
   setDetails: (data) => set({ ...data, detailsComplete: true }),
   setMedia: (data) => set({ ...data, mediaComplete: true }),
+  setDocument: (key, file) => set({ documents: { ...get().documents, [key]: file } }),
   reset: () => set(initialState),
 }));

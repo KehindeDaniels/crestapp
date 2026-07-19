@@ -7,6 +7,7 @@ import type {
   CreatePropertyPayload,
   CreatePropertyResponse,
   UploadMediaResponse,
+  UploadDocumentResponse,
 } from "./types";
 
 export const propertiesApi = {
@@ -48,6 +49,13 @@ export const propertiesApi = {
   /** Multipart — `apiClient` skips JSON serialization for `FormData` and lets the browser set the boundary. */
   uploadMedia: (propertyId: ID, formData: FormData) =>
     apiClient<UploadMediaResponse>(`/api/properties/${propertyId}/media`, {
+      method: "POST",
+      body: formData,
+    }),
+
+  /** Multipart — see `UploadDocumentResponse` for the confirmed real shape. */
+  uploadDocument: (formData: FormData) =>
+    apiClient<UploadDocumentResponse>("/api/documents/upload", {
       method: "POST",
       body: formData,
     }),

@@ -929,6 +929,34 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"kehindedaniels501@gmail.com\",\n  \"password\": \"Crest@2048\"\n}"
+            },
+            "url": {
+              "raw": "{{local_url}}/api/auth/login",
+              "host": [
+                "{{local_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -1020,7 +1048,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"+1234567890\",\n    \"profile_picture\": \"https://example.com/profile.jpg\"\n    //   'first_name' => 'sometimes|string|max:75',\n    //   'last_name' => 'sometimes|string|max:75',\n    //   'date_of_birth' => 'sometimes|date_format:Y-m-d',\n    //   'profile_picture_url' => 'sometimes|url|max:500',\n    //   'bio' => 'sometimes|string|max:1000',\n    //   'address' => 'sometimes|string|max:500',\n    //   'city' => 'sometimes|string|max:100',\n    //    'state' => 'sometimes|string|max:100',\n    //    'country' => 'sometimes|string|max:100'\n }"
+              "raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"+1234567890\",\n    \"profile_picture\": \"https://example.com/profile.jpg\"\n    //   'first_name' => 'sometimes|string|max:75',\n    //   'last_name' => 'sometimes|string|max:75',\n    //   'date_of_birth' => 'sometimes|date_format:Y-m-d',\n    //   'profile_picture_url' => 'sometimes|url|max:500',\n    //   'bio' => 'sometimes|string|max:1000',\n    //   'address' => 'sometimes|string|max:500',\n    //   'city' => 'sometimes|string|max:100',\n    //    'state' => 'sometimes|string|max:100',\n    //    'country' => 'sometimes|string|max:100',\n    //   \"bank_name\": \"GTBank\",\n    //   \"account_number\": \"0123456789\",\n    //   \"account_name\": \"John Doe\"\n\n }"
             },
             "url": {
               "raw": "{{base_url}}/api/profile",

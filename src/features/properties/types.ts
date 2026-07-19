@@ -159,3 +159,25 @@ export interface UploadMediaResponse {
     media: ApiPropertyMedia[];
   };
 }
+
+/**
+ * Body for `POST /api/documents/upload` (multipart) — confirmed live via
+ * the Postman collection's saved example response (Legal Documentation
+ * section). `entity_type`/`entity_id` link the document to a property.
+ * `document_type` is a generic enum (`agreement|contract|disclosure|
+ * certificate|report`), not the specific legal-document categories the
+ * List Property wizard's UI shows — see `DOCUMENT_SLOTS` in config.ts.
+ */
+export interface UploadDocumentResponse {
+  success: boolean;
+  message: string;
+  data: {
+    document_id: ID;
+    document_uuid: string;
+    document_type: string;
+    title: string;
+    status: string;
+    uploaded_at: string | null;
+    file_size: string;
+  };
+}

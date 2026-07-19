@@ -21,11 +21,22 @@ import { cn } from "@/lib/utils/cn";
 import {
   useListPropertyWizardStore,
   listPropertyDetailsSchema,
-  LIST_PROPERTY_PURPOSES,
+  LIST_PROPERTY_PURPOSE_CARDS,
   LIST_PROPERTY_TYPES,
+  APARTMENT_FEATURES,
+  LAND_FEATURES,
   type ListPropertyDetailsInput,
 } from "@/features/properties";
 
+/**
+ * Step 1 of 3. Rebuilt against a real Figma pull (node 1422:6881 in file
+ * `1jtfoprMGUFfoo3CBzhjMV`, "Listing-For Sale (Apartment)"), not screenshot
+ * inference. Real layout: purpose is 3 large cards (not a segmented tab),
+ * and Property Details / Description+Features are two separate cards
+ * side by side, not one stacked form. The Figma "Continue" button sits
+ * under the right column only — deliberately made full-width here instead,
+ * better for mobile and no real UX reason to keep the asymmetry.
+ */
 export default function ListPropertyDetailsPage() {
   const router = useRouter();
   const wizard = useListPropertyWizardStore();
@@ -44,6 +55,7 @@ export default function ListPropertyDetailsPage() {
   const purpose = useWatch({ control: form.control, name: "purpose" });
   const propertyType = useWatch({ control: form.control, name: "propertyType" });
   const isLand = propertyType === "land";
+  const features = isLand ? LAND_FEATURES : APARTMENT_FEATURES;
 
   function onSubmit(values: ListPropertyDetailsInput) {
     wizard.setDetails({
@@ -59,7 +71,7 @@ export default function ListPropertyDetailsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
+    <div className="mx-auto max-w-5xl space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-10">
       <div className="flex items-center justify-between">
         <Link
           href="/home"
@@ -72,9 +84,10 @@ export default function ListPropertyDetailsPage() {
       </div>
 
       <div className="space-y-1">
-        <h1 className="text-xl font-semibold sm:text-2xl">List your property</h1>
+        <h1 className="text-xl font-semibold sm:text-2xl">List Your Property</h1>
         <p className="text-sm text-muted-foreground">
-          Tell us what you&apos;re listing and its basic details.
+          Connect directly with verified buyers and renters. Listings are reviewed before
+          approval.
         </p>
       </div>
 
@@ -85,111 +98,186 @@ export default function ListPropertyDetailsPage() {
             name="purpose"
             render={({ field }) => (
               <FormItem className="gap-3">
-                <FormLabel>Purpose</FormLabel>
-                <div className="flex h-13.5 items-center gap-2 rounded-xl bg-muted p-1.5">
-                  {LIST_PROPERTY_PURPOSES.map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => field.onChange(opt.value)}
-                      className={cn(
-                        "flex-1 rounded-md py-2 text-sm font-medium transition-colors",
-                        purpose === opt.value
-                          ? "bg-background font-semibold text-foreground shadow-sm"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  {LIST_PROPERTY_PURPOSE_CARDS.map((card) => {
+                    const Icon = card.icon;
+                    const isSelected = purpose === card.value;
+                    return (
+                      <button
+                        key={card.value}
+                        type="button"
+                        disabled={!card.enabled}
+                        title={card.enabled ? undefined : `${card.label} — coming soon`}
+                        onClick={() =>
+                          card.enabled && field.onChange(card.value as typeof field.value)
+                        }
+                        className={cn(
+                          "flex items-start gap-3 rounded-xl border bg-background p-4 text-left transition-shadow",
+                          isSelected ? "shadow-md" : "border-border",
+                          !card.enabled && "cursor-not-allowed opacity-50",
+                        )}
+                      >
+                        <Icon className="size-8 shrink-0 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm font-semibold">{card.label}</p>
+                          <p className="text-xs text-muted-foreground">{card.description}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="propertyType"
-            render={({ field }) => (
-              <FormItem className="gap-3">
-                <FormLabel>Property Type</FormLabel>
-                <FormControl>
-                  <Select size="xl" {...field}>
-                    {LIST_PROPERTY_TYPES.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="space-y-6">
+              <div className="space-y-5 rounded-2xl border p-5">
+                <div className="space-y-1">
+                  <h2 className="text-base font-semibold">Select property type</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Choose the appropriate type that best matches your property
+                  </p>
+                </div>
+                <FormField
+                  control={form.control}
+                  name="propertyType"
+                  render={({ field }) => (
+                    <FormItem className="gap-3">
+                      <FormControl>
+                        <Select size="xl" {...field}>
+                          {LIST_PROPERTY_TYPES.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-          {!isLand && (
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="bedrooms"
-                render={({ field }) => (
-                  <FormItem className="gap-3">
-                    <FormLabel>Bedrooms</FormLabel>
-                    <FormControl>
-                      <Input size="xl" type="number" min={0} placeholder="0" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+              <div className="space-y-5 rounded-2xl border p-5">
+                <div className="space-y-1">
+                  <h2 className="text-base font-semibold">
+                    {isLand ? "Land Details" : "Properties Details"}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Provide accurate details to help {isLand ? "buyers" : "renters"} understand
+                    the property
+                  </p>
+                </div>
+
+                {!isLand && (
+                  <>
+                    <p className="text-sm font-semibold">Rooms</p>
+                    <FormField
+                      control={form.control}
+                      name="bedrooms"
+                      render={({ field }) => (
+                        <FormItem className="gap-3">
+                          <FormLabel>Bedroom</FormLabel>
+                          <FormControl>
+                            <Input size="xl" type="number" min={0} placeholder="0" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="bathrooms"
+                      render={({ field }) => (
+                        <FormItem className="gap-3">
+                          <FormLabel>Bathroom</FormLabel>
+                          <FormControl>
+                            <Input size="xl" type="number" min={0} placeholder="0" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="bathrooms"
-                render={({ field }) => (
-                  <FormItem className="gap-3">
-                    <FormLabel>Bathrooms</FormLabel>
-                    <FormControl>
-                      <Input size="xl" type="number" min={0} placeholder="0" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+
+                <FormField
+                  control={form.control}
+                  name="squareMeters"
+                  render={({ field }) => (
+                    <FormItem className="gap-3">
+                      <div className="flex items-center justify-between">
+                        <FormLabel>{isLand ? "Land Size" : "Property Size"}</FormLabel>
+                        <span className="text-xs text-muted-foreground">sqm</span>
+                      </div>
+                      <FormControl>
+                        <Input size="xl" type="number" min={1} placeholder="e.g. 240" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {isLand && (
+                  <div className="space-y-3">
+                    <FormLabel>Number of Plots</FormLabel>
+                    <Input
+                      size="xl"
+                      disabled
+                      placeholder="0"
+                      title="Not collected — no matching backend field on property creation"
+                    />
+                  </div>
                 )}
-              />
+              </div>
             </div>
-          )}
 
-          <FormField
-            control={form.control}
-            name="squareMeters"
-            render={({ field }) => (
-              <FormItem className="gap-3">
-                <FormLabel>{isLand ? "Land Size (sqm)" : "Property Size (sqm)"}</FormLabel>
-                <FormControl>
-                  <Input size="xl" type="number" min={1} placeholder="e.g. 240" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <div className="space-y-5 rounded-2xl border p-5">
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="gap-3">
+                    <FormLabel>Property Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Briefly describe property"
+                        rows={5}
+                        maxLength={200}
+                        {...field}
+                      />
+                    </FormControl>
+                    <div className="flex justify-end">
+                      <span className="text-xs text-muted-foreground">
+                        {field.value.length}/200
+                      </span>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem className="gap-3">
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe the property — features, condition, what makes it stand out…"
-                    rows={5}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <div className="space-y-3">
+                <p className="text-sm font-medium">Property Features</p>
+                <p className="text-xs text-muted-foreground" title="No backend field exists for these yet">
+                  Shown to match the design — not collected yet (coming soon)
+                </p>
+                <div className="space-y-2">
+                  {features.map((feature) => (
+                    <label
+                      key={feature}
+                      className="flex items-center gap-2 text-sm text-muted-foreground/60"
+                    >
+                      <input type="checkbox" disabled className="size-4 rounded border-input" />
+                      {feature}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
 
           <Button type="submit" size="xl" className="w-full">
             Continue

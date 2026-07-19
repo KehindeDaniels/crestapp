@@ -69,3 +69,9 @@ export function useUploadPropertyMedia() {
       propertiesApi.uploadMedia(propertyId, formData),
   });
 }
+
+export function useUploadDocument() {
+  return useMutation({
+    mutationFn: (formData: FormData) => propertiesApi.uploadDocument(formData),
+  });
+}

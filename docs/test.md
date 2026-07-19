@@ -81,3 +81,35 @@ https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=145
 
 Make an Offer (not built yet, out of scope for Phase 5 — see docs/design-vs-backend-gaps.md)
 https://www.figma.com/design/aDI3HOS6NVQWnLdIx5Zvif/Crest-App--Copy-?node-id=1478-4228&t=EH7m7ry4RVtHR8C5-1
+
+LISTING
+empty state
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1465-6445&t=eNPdX4MbvbS4nUfn-1
+
+Listing-For Sale (Apartment)
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1422-6881&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1458-1806&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1458-2429&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1473-3105&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1465-2785&t=eNPdX4MbvbS4nUfn-1
+
+Listing-For Rent (Apartment)
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1465-3207&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1465-3487&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1465-3779&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1465-4065&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1465-4393&t=eNPdX4MbvbS4nUfn-1
+
+Listing-For Sale (LAnd)
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-5553&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-5833&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-6125&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-6411&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-6739&t=eNPdX4MbvbS4nUfn-1
+
+Listing-For Rent(Land)
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-8338&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-8596&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-8888&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-9165&t=eNPdX4MbvbS4nUfn-1
+https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-9493&t=eNPdX4MbvbS4nUfn-1

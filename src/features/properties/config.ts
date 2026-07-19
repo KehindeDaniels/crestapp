@@ -1,3 +1,4 @@
+import { Home, Building2, Hotel, type LucideIcon } from "lucide-react";
 import type { PropertyPurpose, PropertyType } from "@/config/constants";
 
 /**
@@ -26,15 +27,90 @@ export interface PriceRangeBucket {
 }
 
 /**
- * List Property wizard's purpose selector — "Sale"/"Rent" (seller-facing
- * wording, distinct from Home's "Buy"/"Rent" buyer-facing tabs above).
- * Excludes "lease": the value exists on the read-side `PropertyPurpose`
- * enum, but there's no `/api/properties/lease` creation endpoint (confirmed
- * against the Postman collection) — see docs/design-vs-backend-gaps.md.
+ * Step 1's purpose selector — 3 large cards, not a segmented tab control
+ * (confirmed against the real Figma pull, node 1422:6881 in file
+ * `1jtfoprMGUFfoo3CBzhjMV`). Icons are `lucide-react` stand-ins for the
+ * Figma pull's emoji illustrations (emojione:house,
+ * emojione:house-with-garden, noto:house) — every other icon in this
+ * codebase is lucide, so matching that convention here rather than
+ * downloading and committing 3 one-off emoji PNGs. Airbnb is real UI (shown,
+ * matches design) but not selectable — no `/api/properties/airbnb` endpoint
+ * exists at all. See docs/design-vs-backend-gaps.md.
  */
-export const LIST_PROPERTY_PURPOSES: { value: PropertyPurpose; label: string }[] = [
-  { value: "sale", label: "Sale" },
-  { value: "rent", label: "Rent" },
+export const LIST_PROPERTY_PURPOSE_CARDS: {
+  /** "airbnb" isn't a real `PropertyPurpose` value — the card is disabled, so it's never actually submitted. */
+  value: PropertyPurpose | "airbnb";
+  label: string;
+  description: string;
+  icon: LucideIcon;
+  enabled: boolean;
+}[] = [
+  {
+    value: "sale",
+    label: "Property for Sale",
+    description: "New houses or land available for purchase",
+    icon: Home,
+    enabled: true,
+  },
+  {
+    value: "rent",
+    label: "Property for Rent",
+    description: "Long-term residential rentals",
+    icon: Building2,
+    enabled: true,
+  },
+  {
+    value: "airbnb",
+    label: "Airbnb / Short Stay",
+    description: "Furnished homes for short-term stays",
+    icon: Hotel,
+    enabled: false,
+  },
+];
+
+/**
+ * Step 1's "Property Features" checklist — shown per the design, but fully
+ * disabled/non-interactive: no backend field exists for any of these (see
+ * docs/design-vs-backend-gaps.md). Rendered so a review pass can see what
+ * the design specifies vs. what's actually wired up, per explicit
+ * instruction, rather than hidden outright.
+ */
+export const APARTMENT_FEATURES = [
+  "Running Water",
+  "Electricity",
+  "Parking Space",
+  "Security",
+  "Swimming Pool",
+  "Balcony",
+  "POP Ceiling",
+  "Kitchen cabinets",
+  "Gym",
+];
+
+export const LAND_FEATURES = [
+  "Fenced",
+  "Electricity Nearby",
+  "Government Allocation",
+  "Road Access",
+  "Gated Fenced",
+];
+
+/**
+ * Step 3's "Verify your documents" checklist. `documentType` maps each
+ * labeled slot to the closest value in `documents/upload`'s real, confirmed
+ * `document_type` enum (`agreement|contract|disclosure|certificate|report`)
+ * — the backend only has these 5 generic buckets, not distinct categories
+ * for property paperwork, so this mapping is an inferred approximation, not
+ * a confirmed 1:1 match. Each slot still uploads for real via
+ * `useUploadDocument`, with its own honest `title` — only the coarse
+ * category bucket is approximate. See docs/design-vs-backend-gaps.md.
+ */
+export const DOCUMENT_SLOTS: { key: string; label: string; documentType: string }[] = [
+  { key: "c_of_o", label: "Certificate of Occupancy (C of O)", documentType: "certificate" },
+  { key: "deed_of_assignment", label: "Deed of Assignment", documentType: "contract" },
+  { key: "survey_plan", label: "Survey Plan", documentType: "report" },
+  { key: "purchase_receipt", label: "Purchase Receipt", documentType: "disclosure" },
+  { key: "authorization_letter", label: "Authorization Letter", documentType: "agreement" },
 ];
 
 /**

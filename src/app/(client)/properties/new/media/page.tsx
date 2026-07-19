@@ -59,7 +59,13 @@ export default function ListPropertyMediaPage() {
 
   function addFiles(files: FileList | null) {
     if (!files) return;
-    setImages((prev) => [...prev, ...Array.from(files)]);
+    // Capture into a real array now — `files` is a live reference to the
+    // input's FileList, which the caller invalidates right after this call
+    // via `e.target.value = ""`. Reading it lazily inside the setState
+    // updater (which React runs after this function returns) would race
+    // against that reset and silently drop files past the first add.
+    const newFiles = Array.from(files);
+    setImages((prev) => [...prev, ...newFiles]);
   }
 
   function removeImage(index: number) {

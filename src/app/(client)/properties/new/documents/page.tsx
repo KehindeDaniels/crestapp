@@ -77,8 +77,14 @@ export default function ListPropertyDocumentsPage() {
 
   function addDocuments(files: FileList | null) {
     if (!files) return;
+    // Capture into a real array now — `files` is a live reference to the
+    // input's FileList, which the caller invalidates right after this call
+    // via `e.target.value = ""`. Reading it lazily inside the setState
+    // updater (which React runs after this function returns) would race
+    // against that reset and silently drop files past the first add.
+    const newFiles = Array.from(files);
     setDocuments((prev) => {
-      const next = [...prev, ...Array.from(files)];
+      const next = [...prev, ...newFiles];
       wizard.setDocuments(next);
       return next;
     });

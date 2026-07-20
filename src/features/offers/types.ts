@@ -127,3 +127,180 @@ export interface QuickCreateResponse {
     fee_breakdown: ApiFeeBreakdown;
   };
 }
+
+/**
+ * `GET /api/contracts/{id}` — confirmed shape, but from what looks like a
+ * hand-written docs example (round IDs like `1`/`123`/`456`, `2024-01-06`
+ * dates) rather than a live-captured one like `quick-create` above —
+ * monetary fields are typed loosely (`number | string`) since the live
+ * `quick-create` response serializes them as strings but this example shows
+ * plain numbers. Field NAMES are trustworthy either way.
+ */
+export interface ApiContractPartySummary {
+  user_id: ID;
+  email: string;
+  full_name: string;
+  role: string;
+}
+
+export interface ApiContractPropertySummary {
+  property_id: ID;
+  title: string;
+  description: string;
+  price: number | string;
+  currency: string;
+  status: string;
+}
+
+export interface ApiContractFee {
+  fee_id: ID;
+  contract_id: ID;
+  fee_type: string;
+  fee_name: string;
+  amount: number | string;
+  percentage: number;
+  calculated_amount: number | string;
+  created_at: string;
+}
+
+export interface ApiContractStatusHistoryEntry {
+  history_id: ID;
+  contract_id: ID;
+  old_status: string | null;
+  new_status: string;
+  changed_by_user_id: ID;
+  notes: string | null;
+  created_at: string;
+  changed_by: { user_id: ID; email: string; full_name: string };
+}
+
+export interface ApiContractDetail {
+  contract_id: ID;
+  contract_uuid: string;
+  property_id: ID;
+  owner_id: ID;
+  client_id: ID;
+  contract_type: string;
+  property_amount: number | string;
+  total_amount: number | string;
+  terms_conditions: string;
+  payment_schedule: string;
+  expiry_date: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  accepted_at: string | null;
+  completed_at: string | null;
+  cancelled_at: string | null;
+  cancellation_reason: string | null;
+  property: ApiContractPropertySummary;
+  owner: ApiContractPartySummary;
+  client: ApiContractPartySummary;
+  fees: ApiContractFee[];
+  status_history: ApiContractStatusHistoryEntry[];
+  /** Null until the contract has been accepted and a transaction created (e.g. a `sent`, not-yet-accepted contract). */
+  transaction: ApiOfferTransaction | null;
+}
+
+/**
+ * Deliberately loose — this backend's own docs show two different shapes for
+ * `fee_breakdown` depending on the endpoint (`quick-create`'s live example:
+ * keyed `platform_fee`/`legal_fee` objects; this endpoint's docs example:
+ * a `fees: [{type, ...}]` array). Assuming the first shape here crashed
+ * every real contract-detail fetch — see `extractFee()` in models.ts, which
+ * parses whichever shape is actually present rather than trusting one guess.
+ */
+export interface ApiContractFeeBreakdownLoose {
+  property_amount: number | string;
+  total_amount: number;
+  platform_fee?: ApiFeeLine;
+  legal_fee?: ApiFeeLine;
+  fees?: { type: string; percentage: number; calculated_amount: number | string; description: string }[];
+}
+
+export interface ContractDetailResponse {
+  success: boolean;
+  message: string;
+  data: {
+    contract: ApiContractDetail;
+    fee_breakdown: ApiContractFeeBreakdownLoose;
+    related_data: {
+      property: ApiContractPropertySummary;
+      owner: ApiContractPartySummary;
+      client: ApiContractPartySummary;
+      transaction: ApiOfferTransaction | null;
+      fees: ApiContractFee[];
+    };
+  };
+}
+
+/**
+ * `GET /api/contracts?property_id=&role=client` — confirmed real query
+ * params (`role: owner|client`, `status`, `property_id`, `per_page`, etc.),
+ * confirmed real paginated shape via the "List User Contracts" example.
+ * Used to detect "you already have an offer on this property" before
+ * showing the create-offer CTA — `quick-create` has no duplicate check of
+ * its own, so skipping this would let a second real contract be created.
+ */
+export interface ApiContractListItem {
+  contract_id: ID;
+  contract_uuid: string;
+  property_id: ID;
+  owner_id: ID;
+  client_id: ID;
+  contract_type: string;
+  property_amount: number | string;
+  total_amount: number | string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContractsListResponse {
+  success: boolean;
+  message: string;
+  data: {
+    contracts: {
+      current_page: number;
+      data: ApiContractListItem[];
+      last_page: number;
+      per_page: number;
+      total: number;
+    };
+    summary: Record<string, number>;
+    pagination: { current_page: number; last_page: number; per_page: number; total: number };
+  };
+}
+
+/** `POST /api/contracts/{id}/cancel` — confirmed real request/response shape. */
+export interface CancelContractPayload {
+  reason: string;
+}
+
+export interface CancelContractResponse {
+  success: boolean;
+  message: string;
+  data: {
+    contract: { contract_id: ID; status: string; cancelled_at: string; cancellation_reason: string };
+    cancellation_details: { reason: string; cancelled_at: string; cancelled_by: ID };
+  };
+}
+
+/**
+ * `POST /api/contracts/{id}/payment/generate-link` — real endpoint (used
+ * when the original one-time `payment_link` from `quick-create` is gone,
+ * e.g. the checkout tab was closed and the offer page itself was also
+ * reloaded/reopened later). Zero saved example of any kind — not even a
+ * real request body, just inline comments noting `contractId` is a path
+ * param and `gateway` an optional query param. Typed as loosely as possible;
+ * `toRegeneratedPaymentLink()` in models.ts only trusts a `payment_link`
+ * string if one is actually present, rather than assuming this shape.
+ */
+export interface RegenerateLinkResponse {
+  success?: boolean;
+  message?: string;
+  data?: {
+    payment_link?: string;
+    payment_details?: { gateway?: string; expires_at?: string };
+  };
+}

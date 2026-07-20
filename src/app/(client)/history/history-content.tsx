@@ -18,6 +18,18 @@ const TABS: { value: TransactionBucket | "all"; label: string }[] = [
 ];
 
 /**
+ * Confirmed live (real 422, `error: INVALID_TRANSACTION_STATE`) — `GET
+ * /api/transactions/{id}` refuses to return detail for a transaction still
+ * in `pending_payment`, listing `process_payment`/`check_payment_status`/
+ * `cancel_transaction` as the only allowed actions instead. `initiated` is
+ * treated the same way (an even earlier stage, never independently
+ * confirmed but reasonably assumed to be blocked too). Rather than let
+ * "View" open a modal that's guaranteed to 422, these rows show plain
+ * "Pending" text — no dead click, no error dialog.
+ */
+const UNVIEWABLE_STATUSES = new Set(["initiated", "pending_payment"]);
+
+/**
  * Built from real screenshots (docs/design/screenshots/history/), not a
  * live Figma pull. `GET /api/transactions` is real and confirmed (full
  * saved example response) but only accepts ONE exact `status` value, not a
@@ -68,7 +80,19 @@ export function HistoryContent() {
     router.push(`/history?${params.toString()}`);
   }
 
-  const hasAnyTransactions = (data?.summary.total_transactions ?? 0) > 0;
+  /**
+   * `data.summary.total_transactions` reflects whatever filter is active
+   * (the tab's `status` param is sent server-side) — NOT the user's true
+   * grand total. Using it directly meant clicking "Completed"/"Cancelled"
+   * with zero matches there collapsed the whole page (tabs, search, table)
+   * into the full-page "No activities yet" onboarding empty state, even
+   * when the user had plenty of activity under other tabs. Only the
+   * unfiltered "All" tab's summary is trustworthy as a real "has this user
+   * ever had any activity at all" signal — every other tab's zero-match
+   * case is handled by the smaller inline "No transactions match these
+   * filters" message further down instead.
+   */
+  const hasAnyTransactions = tab !== "all" || (data?.summary.total_transactions ?? 0) > 0;
 
   if (!isPending && !hasAnyTransactions) {
     return (
@@ -177,13 +201,22 @@ export function HistoryContent() {
                       })}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedId(transaction.id)}
-                        className="text-sm font-medium text-primary underline"
-                      >
-                        View
-                      </button>
+                      {UNVIEWABLE_STATUSES.has(transaction.status) ? (
+                        <span
+                          className="text-sm text-muted-foreground"
+                          title="Not viewable until payment is received — confirmed via a real 422 INVALID_TRANSACTION_STATE response from GET /api/transactions/{id} for pending transactions"
+                        >
+                          Pending
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedId(transaction.id)}
+                          className="text-sm font-medium text-primary underline"
+                        >
+                          View
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils/format";
+import { isApiError } from "@/lib/api/errors";
 import { useSessionStore } from "@/features/auth";
 import { usePropertyDetail, MessageOwnerButton } from "@/features/properties";
 import {
@@ -42,7 +43,7 @@ export function TransactionDetailModal({
   onOpenChange: (open: boolean) => void;
 }) {
   const currentUserId = useSessionStore((s) => s.user?.user_id);
-  const { data, isPending } = useTransactionDetail(transactionId);
+  const { data, isPending, isError, error } = useTransactionDetail(transactionId);
   const [showReceipt, setShowReceipt] = useState(false);
 
   const propertyId = data?.transaction.property_id ?? null;
@@ -74,6 +75,23 @@ export function TransactionDetailModal({
         {isPending && (
           <div className="flex items-center justify-center p-12">
             <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          </div>
+        )}
+
+        {isError && (
+          <div className="space-y-2 p-8 text-center">
+            <p className="text-sm font-medium">
+              {isApiError(error) && error.details?.current_status === "pending_payment"
+                ? "This transaction hasn't been paid yet"
+                : "Couldn't load this transaction"}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {isApiError(error) && error.details?.current_status === "pending_payment"
+                ? "To complete or cancel it, go back to the property's listing page — you'll see a \"View Offer\" option there."
+                : error instanceof Error
+                  ? error.message
+                  : "Something went wrong. Try again shortly."}
+            </p>
           </div>
         )}
 

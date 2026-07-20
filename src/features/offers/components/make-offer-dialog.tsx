@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { Button, type buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
@@ -13,6 +14,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { formatCurrency } from "@/lib/utils/format";
+import { isApiError } from "@/lib/api/errors";
 import type { ID } from "@/types/api";
 import type { VariantProps } from "class-variance-authority";
 import { useCreateOffer } from "../hooks";
@@ -114,9 +116,26 @@ export function MakeOfferDialog({
           </div>
 
           {createOffer.isError && (
-            <p className="text-sm text-destructive">
-              Couldn&apos;t create this offer — try again.
-            </p>
+            <div className="space-y-2 rounded-xl bg-destructive/8 p-3 text-sm">
+              {isApiError(createOffer.error) && createOffer.error.code === "KYC_NOT_VERIFIED" ? (
+                <>
+                  <p className="font-medium text-destructive">Verify your identity to continue</p>
+                  <p className="text-muted-foreground">
+                    Crest requires KYC verification before you can make an offer — this keeps
+                    transactions safe for both buyers and sellers.
+                  </p>
+                  <Link href="/kyc" className="inline-block font-medium text-primary underline">
+                    Start KYC verification
+                  </Link>
+                </>
+              ) : (
+                <p className="text-destructive">
+                  {isApiError(createOffer.error)
+                    ? createOffer.error.message
+                    : "Couldn't create this offer — try again."}
+                </p>
+              )}
+            </div>
           )}
 
           <Button type="button" onClick={handleConfirm} disabled={createOffer.isPending} className="w-full">

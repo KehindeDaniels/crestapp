@@ -26,7 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { usePropertyDetail, MessageOwnerButton } from "@/features/properties";
 import { SaveButton } from "@/features/saved-properties";
-import { MakeOfferDialog } from "@/features/offers";
+import { OfferCta } from "@/features/offers";
 import { useSessionStore } from "@/features/auth";
 import { formatDate } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
@@ -292,7 +292,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
       {/* Sticky mobile CTA bar — hidden entirely for the property's own owner */}
       {!isOwner && (
       <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 border-t bg-background px-4 py-3 sm:hidden">
-        <MakeOfferDialog
+        <OfferCta
           propertyId={property.id}
           propertyPrice={property.price}
           currency={property.currency}
@@ -487,7 +487,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
               <div className="flex flex-col gap-2">
                 {!isOwner && (
                   <>
-                    <MakeOfferDialog
+                    <OfferCta
                       propertyId={property.id}
                       propertyPrice={property.price}
                       currency={property.currency}

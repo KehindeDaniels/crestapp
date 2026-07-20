@@ -6,22 +6,31 @@ import type { FieldErrors } from "@/types/api";
  */
 export class ApiError extends Error {
   readonly status: number;
-  /** Backend `error_code` (e.g. "USER_BLOCKED"), when present. */
+  /** Backend `error_code`/`error` (e.g. "USER_BLOCKED", "INVALID_TRANSACTION_STATE"), when present. */
   readonly code?: string;
   /** Laravel 422 field-keyed messages, when present. */
   readonly fieldErrors?: FieldErrors;
+  /**
+   * Raw response body beyond message/code/errors — some endpoints (contract
+   * and transaction state-guards) return extra context like
+   * `current_status`/`allowed_actions` that's worth surfacing rather than
+   * discarding.
+   */
+  readonly details?: Record<string, unknown>;
 
   constructor(params: {
     status: number;
     message: string;
     code?: string;
     fieldErrors?: FieldErrors;
+    details?: Record<string, unknown>;
   }) {
     super(params.message);
     this.name = "ApiError";
     this.status = params.status;
     this.code = params.code;
     this.fieldErrors = params.fieldErrors;
+    this.details = params.details;
   }
 
   get isUnauthorized(): boolean {
@@ -55,10 +64,14 @@ export async function toApiError(response: Response): Promise<ApiError> {
       ? (record.errors as FieldErrors)
       : undefined;
 
-  const code =
-    typeof record.error_code === "string" ? record.error_code : undefined;
+  const code: string | undefined =
+    typeof record.error_code === "string"
+      ? record.error_code
+      : typeof record.error === "string"
+        ? record.error
+        : undefined;
 
-  return new ApiError({ status: response.status, message, code, fieldErrors });
+  return new ApiError({ status: response.status, message, code, fieldErrors, details: record });
 }
 
 /** Type guard for consumers. */

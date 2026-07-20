@@ -237,8 +237,27 @@ Built from real screenshots (`docs/design/screenshots/saved/`), not a live Figma
 
 ---
 
+## Phase 9 — Notifications
+
+Built from a real Figma pull (node `1551-7332`, file `8YqDLQnhJoIRLV1xEOXZcR` — a **different file key** than every other screen this session, worth noting for future pulls) plus a corroborating screenshot (`docs/design/screenshots/notification/`). The design turned out to be a **dropdown panel anchored to the topbar bell**, not a separate page/route — no new route was added.
+
+| Gap | Detail | What we did |
+|---|---|---|
+| **Per-notification icon has no confirmed backend mapping** | Only one real `notification_type` value has ever been seen (`kyc_approved`, docs/design/home-page-data-plan.md §2c). The design shows different icons per row (house, receipt/clock, person avatar, shield). | Substring-matching heuristic over whatever string the backend sends (`kyc`→shield, `message`/`chat`→message-circle, `transaction`→receipt, `propert`/`listing`→building, else→bell) — flagged in code as inferred, not a confirmed enum. |
+| **No `reference_id`/`reference_type` on notifications** | Unlike messages (which do have this pair), there's nothing to link a notification to the property/transaction/conversation it's about. The design's chevron implies each row goes somewhere. | Rows **mark-as-read on click** (real, via `PUT /api/notifications/{id}/read`) but don't navigate anywhere — building a guessed link would be worse than no link. |
+| **No `--warning` design token** | The "Pending" status pill needs an amber/orange treatment; no such token exists yet (same gap first hit in List Property's confirmation modal). | Reused the same arbitrary hex (`#faae16`) rather than minting a token for a second one-off use — promote to a real token if a third use comes up. |
+
+### Architecture notes
+- **A real bug caught in self-review before shipping**: the first draft had `useUnreadNotifications` and a new `useNotificationsList` both calling `useQuery` with the **same** `queryKeys.notifications.all` key but returning **different shapes** from their `queryFn` (one `{hasUnread, count}`, the other the raw array). Since TanStack Query caches by key regardless of which hook populated it, whichever query last wrote the cache would silently corrupt the other's expected shape (e.g. the topbar bell suddenly receiving a raw array and crashing on `.hasUnread`). Fixed by having **one shared base query** (always caching the raw list) with each hook applying its own `select` transform — the idiomatic TanStack Query pattern for multiple views over the same cached data.
+- **`NotificationTypeIcon` is a real component, not a function returning a component reference** — an initial version had `function iconForType(type): LucideIcon { ...; return Shield }` and assigned the result to `const Icon = iconForType(...)` before rendering `<Icon />`. That trips the `react-hooks/static-components` lint rule (it can't statically prove the returned reference is stable across renders, even though here it always is) — rewritten as a normal component that branches internally and returns JSX directly.
+- **New `src/components/ui/popover.tsx`** — same shadcn-style wrapper pattern as `dialog.tsx`, built on `radix-ui`'s `Popover` (already a dependency, no new package needed).
+- Wired into **both** `Topbar` (desktop) and Home's `MobileHomeHeader` (mobile) — matches how the unread-count badge already needed to exist in both places.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, still 28 routes (no new route — it's a popover, not a page).
+
+---
+
 ## Not yet compared (future phases — flagging now, not asserting a mismatch)
 These are things noticed during the initial capability check, before the relevant Figma screens were inspected in detail. Revisit when that phase starts:
 - **No single `GET /properties/{id}`** — property detail is fetched via `search` with an `id` filter. Fine for now; worth double-checking the Search Property / Listing Figma screens don't assume a dedicated detail endpoint's response shape.
-- **Notifications**: only mark-single-read exists — no mark-all or delete. Check if any screen implies a "mark all as read" action.
 - **Admin Dashboard** (separate Figma page, future phase) — not inspected screen-by-screen yet; expect gaps once it is (see `docs/frontend-blueprint.md` §17 for what's already known to be missing on the backend: user suspend/activate, non-KYC user directory, admin support desk, single stats-overview endpoint).

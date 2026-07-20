@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Bell, BadgeCheck, Heart, MessageCircle, User } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { useProfile } from "@/features/profile";
 import { useMyKycStatus } from "@/features/kyc";
-import { useUnreadNotifications } from "@/features/notifications";
+import { useUnreadNotifications, NotificationsPanel } from "@/features/notifications";
 import { useUnreadMessageCount } from "@/features/messaging";
 
 /**
@@ -69,14 +70,25 @@ export function MobileHomeHeader() {
             </span>
           )}
         </Link>
-        <span className="relative flex size-6 items-center justify-center rounded-full bg-black/[0.06]">
-          <Bell className="size-3.5 text-foreground" />
-          {notifications && notifications.count > 0 && (
-            <span className="absolute -top-1 -right-1 flex size-3.5 items-center justify-center rounded-full bg-[#d62c01] text-[8px] font-medium text-white">
-              {notifications.count}
-            </span>
-          )}
-        </span>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              aria-label="Notifications"
+              className="relative flex size-6 items-center justify-center rounded-full bg-black/[0.06]"
+            >
+              <Bell className="size-3.5 text-foreground" />
+              {notifications && notifications.count > 0 && (
+                <span className="absolute -top-1 -right-1 flex size-3.5 items-center justify-center rounded-full bg-[#d62c01] text-[8px] font-medium text-white">
+                  {notifications.count}
+                </span>
+              )}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="p-0" align="end">
+            <NotificationsPanel />
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );

@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Bell, BadgeCheck, Heart, User } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { useProfile } from "@/features/profile";
 import { useMyKycStatus } from "@/features/kyc";
-import { useUnreadNotifications } from "@/features/notifications";
+import { useUnreadNotifications, NotificationsPanel } from "@/features/notifications";
 import { MobileNav } from "./mobile-nav";
 
 /**
@@ -36,16 +37,23 @@ export function Topbar() {
           <Heart className="size-5 text-foreground" />
         </Link>
 
-        <button
-          type="button"
-          className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-muted"
-          aria-label="Notifications"
-        >
-          <Bell className="size-5 text-foreground" />
-          {notifications?.hasUnread && (
-            <span className="absolute top-2.5 right-2.5 size-2 rounded-full bg-destructive" />
-          )}
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-muted"
+              aria-label="Notifications"
+            >
+              <Bell className="size-5 text-foreground" />
+              {notifications?.hasUnread && (
+                <span className="absolute top-2.5 right-2.5 size-2 rounded-full bg-destructive" />
+              )}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="p-0">
+            <NotificationsPanel />
+          </PopoverContent>
+        </Popover>
 
         <div className="flex items-center gap-3">
           <div className="relative size-11.25 shrink-0 overflow-hidden rounded-full bg-muted">

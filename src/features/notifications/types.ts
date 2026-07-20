@@ -22,3 +22,12 @@ export interface NotificationsResponse {
   success: boolean;
   data: Paginated<ApiNotification>;
 }
+
+/**
+ * PUT /api/notifications/{id}/read — confirmed real endpoint, but no saved
+ * example response (unlike `GET /api/notifications`). Typed defensively.
+ */
+export interface MarkNotificationReadResponse {
+  success: boolean;
+  message: string;
+}

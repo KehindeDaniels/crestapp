@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Heart } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
+import { SaveButton } from "@/features/saved-properties";
 import type { PropertyCardModel } from "../models";
 
 /**
@@ -17,9 +18,8 @@ import type { PropertyCardModel } from "../models";
  * to sit inline with the price (bottom-right, no white circle
  * background), not top-right.
  *
- * The heart is presentational only — favorites has no backend endpoint
- * (see docs/design/home-page-data-plan.md §7) — but the mobile design
- * shows it, so it's rendered non-functional rather than omitted.
+ * The heart is a real, working save toggle (client-only, `localStorage` —
+ * no backend favorites endpoint exists; see docs/design-vs-backend-gaps.md).
  */
 export function PropertyCard({ property }: { property: PropertyCardModel }) {
   return (
@@ -83,7 +83,11 @@ export function PropertyCard({ property }: { property: PropertyCardModel }) {
               {property.address}
             </p>
           </div>
-          <Heart className="size-4.5 shrink-0 sm:hidden" />
+          <SaveButton
+            propertyId={property.id}
+            className="shrink-0 sm:hidden"
+            iconClassName="size-4.5 text-white"
+          />
         </div>
       </div>
     </Link>

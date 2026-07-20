@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Heart } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
+import { SaveButton } from "@/features/saved-properties";
 import { MessageOwnerButton } from "./message-owner-button";
 import type { PropertyCardModel } from "../models";
 
@@ -52,13 +53,11 @@ export function PropertySearchResultCard({ property }: { property: PropertyCardM
             />
           )}
 
-          <button
-            type="button"
-            aria-label="Save"
+          <SaveButton
+            propertyId={property.id}
             className="absolute right-3 bottom-3 flex size-8.75 items-center justify-center rounded-full bg-white sm:top-3 sm:bottom-auto sm:size-8"
-          >
-            <Heart className="size-4" />
-          </button>
+            iconClassName="size-4"
+          />
 
           {/* Desktop only — mobile moves this off the image into its own row below. */}
           {property.isActive && (

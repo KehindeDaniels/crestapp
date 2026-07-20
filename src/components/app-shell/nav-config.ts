@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  Bookmark,
   History,
   LayoutGrid,
   LogOut,
@@ -18,9 +19,6 @@ export interface NavItem {
    * non-clickable) rather than linking to a 404 — same
    * "visible but not wired" treatment as the Property Feature filter, not a
    * new pattern invented for nav. Flip to `true` as each screen ships.
-   * "Saved Property" is intentionally absent — hidden entirely per the
-   * favorites decision (docs/design/home-page-data-plan.md §7), same as the
-   * topbar/per-card heart icons, not just disabled.
    */
   enabled: boolean;
 }
@@ -31,6 +29,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "List Property", href: "/properties/new", icon: PlusSquare, enabled: true },
   { label: "Messages", href: "/messages", icon: MessageCircle, enabled: true },
   { label: "History", href: "/history", icon: History, enabled: false },
+  { label: "Saved Property", href: "/saved", icon: Bookmark, enabled: true },
   { label: "Profile", href: "/profile", icon: User, enabled: false },
 ];
 

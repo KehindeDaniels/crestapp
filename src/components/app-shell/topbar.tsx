@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Bell, BadgeCheck, User } from "lucide-react";
+import Link from "next/link";
+import { Bell, BadgeCheck, Heart, User } from "lucide-react";
 import { useProfile } from "@/features/profile";
 import { useMyKycStatus } from "@/features/kyc";
 import { useUnreadNotifications } from "@/features/notifications";
@@ -27,6 +28,14 @@ export function Topbar() {
       <MobileNav />
 
       <div className="ml-auto hidden items-center gap-3 sm:flex sm:gap-4">
+        <Link
+          href="/saved"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-muted"
+          aria-label="Saved properties"
+        >
+          <Heart className="size-5 text-foreground" />
+        </Link>
+
         <button
           type="button"
           className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-muted"

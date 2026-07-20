@@ -11,7 +11,6 @@ import {
   Car,
   ChevronLeft,
   CheckCircle2,
-  Heart,
   Loader2,
   MapPin,
   Navigation,
@@ -26,6 +25,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePropertyDetail, MessageOwnerButton } from "@/features/properties";
+import { SaveButton } from "@/features/saved-properties";
 import { formatDate } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { PhotoGalleryModal } from "./photo-gallery-modal";
@@ -112,7 +112,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
               <X className="size-4 text-white" />
             </Link>
             <div className="flex items-center gap-3">
-              <Heart className="size-5.5 text-white" />
+              <SaveButton propertyId={property.id} iconClassName="size-5.5 text-white" />
               <span className="flex size-8 items-center justify-center rounded-full bg-white">
                 <Share2 className="size-4" />
               </span>
@@ -314,20 +314,27 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
             <ChevronLeft className="size-4" />
             Back to search results
           </Link>
-          <button
-            type="button"
-            onClick={() => {
-              if (typeof navigator !== "undefined" && navigator.share) {
-                navigator.share({ title: property.title, url: window.location.href });
-              } else if (typeof navigator !== "undefined") {
-                navigator.clipboard.writeText(window.location.href);
-              }
-            }}
-            className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground"
-          >
-            <Share2 className="size-4" />
-            Share
-          </button>
+          <div className="flex items-center gap-4">
+            <SaveButton
+              propertyId={property.id}
+              className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground"
+              iconClassName="size-4"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof navigator !== "undefined" && navigator.share) {
+                  navigator.share({ title: property.title, url: window.location.href });
+                } else if (typeof navigator !== "undefined") {
+                  navigator.clipboard.writeText(window.location.href);
+                }
+              }}
+              className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground"
+            >
+              <Share2 className="size-4" />
+              Share
+            </button>
+          </div>
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -519,6 +526,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
         onOpenChange={setMobileGalleryOpen}
         categories={property.imagesByCategory}
         allImages={property.allImages}
+        propertyId={property.id}
       />
     </div>
   );

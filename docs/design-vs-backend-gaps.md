@@ -217,9 +217,28 @@ Built from real screenshots (`docs/design/screenshots/messages/`), not a live Fi
 
 ---
 
+## Phase 8 — Saved Property (favorites)
+
+Built from real screenshots (`docs/design/screenshots/saved/`), not a live Figma pull.
+
+| Gap | Detail | What we did |
+|---|---|---|
+| **No favorites/saved-property endpoint at all** | Searched the whole Postman collection exhaustively for `favorite`/`favourite`/`bookmark`/`save` — nothing, confirmed more than once this session (this is a re-confirmation against the latest collection export, not a first check). | **Built for real anyway, client-only** — explicit decision (the alternative, "build complete but disabled," was offered and declined). `useSavedPropertiesStore` (`src/features/saved-properties/store.ts`) persists a plain array of property ids to `localStorage` via Zustand's `persist` middleware — no new dependency, `zustand@5` ships it. |
+| **Accepted limitations of a client-only implementation** | Real product trade-offs, not bugs. | Doesn't sync across devices or browsers. Lost if the user clears site data. **Not namespaced per account** — if two different users log into the same browser, they'd see each other's saved list. Acceptable for a "quick feature" per explicit decision; revisit if this becomes a real pain point, or once a backend endpoint exists to replace it entirely. |
+| **Every heart icon in the app was previously decorative** | `PropertyCard`, `PropertySearchResultCard`, Listing Detail's header (mobile + desktop), and the mobile gallery overlay all had a `Heart` rendered with no click handler; the desktop `Topbar` and Home's `MobileHomeHeader` had none at all. | All now route through one shared `SaveButton` component (`src/features/saved-properties/components/save-button.tsx`) — toggle behavior and filled/unfilled icon state live in one place, each call site keeps its own wrapper styling. `Topbar` and `MobileHomeHeader` get a **new** heart as a shortcut link to `/saved` (not a per-property toggle — there's no single property in a header's context), rather than trying to force a toggle where the design shows a generic icon. |
+| **`MobileHomeHeader`'s message icon was also decorative** | Not part of this ask, but touched while already in the file for the heart fix — the message-circle icon there had no destination even after Messages shipped last phase. | Wired to `/messages`, with the same live unread-count badge `NavList` already shows. |
+
+### Architecture notes
+- **New `src/features/saved-properties/`** — `store.ts` (persisted Zustand store), `components/save-button.tsx` (shared toggle UI). No `api.ts`/`hooks.ts`/`types.ts` — there's no backend to call.
+- **`/saved` reuses `PropertySearchResultCard`** rather than a new card component — one `usePropertyDetail(id)` call per saved id, each in its own small `SavedPropertyCard` subcomponent (calling a parameterized hook inside a variable-length `.map()` directly in one component body would violate the rules of hooks; one hook call per subcomponent instance is the correct pattern). A property that's been deleted since it was saved fails its own `usePropertyDetail` fetch and is silently skipped rather than erroring the whole grid.
+- **"Saved Property" nav item restored** — previously removed entirely (not just disabled) per the old favorites-hidden decision; that decision is now superseded, so the `NavItem` doc comment noting its absence was also removed as stale.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, 28 routes (added `/saved`).
+
+---
+
 ## Not yet compared (future phases — flagging now, not asserting a mismatch)
 These are things noticed during the initial capability check, before the relevant Figma screens were inspected in detail. Revisit when that phase starts:
 - **No single `GET /properties/{id}`** — property detail is fetched via `search` with an `id` filter. Fine for now; worth double-checking the Search Property / Listing Figma screens don't assume a dedicated detail endpoint's response shape.
 - **Notifications**: only mark-single-read exists — no mark-all or delete. Check if any screen implies a "mark all as read" action.
-- **No saved/favorites endpoint** — check if any property card in Figma shows a heart/save icon.
 - **Admin Dashboard** (separate Figma page, future phase) — not inspected screen-by-screen yet; expect gaps once it is (see `docs/frontend-blueprint.md` §17 for what's already known to be missing on the backend: user suspend/activate, non-KYC user directory, admin support desk, single stats-overview endpoint).

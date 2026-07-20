@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { Heart, LayoutGrid, List as ListIcon, Share2, X } from "lucide-react";
+import { LayoutGrid, List as ListIcon, Share2, X } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { SaveButton } from "@/features/saved-properties";
 import { cn } from "@/lib/utils/cn";
 import type { PropertyDetailCategory, PropertyDetailImage } from "@/features/properties";
 
@@ -15,20 +16,22 @@ const ALL_LABEL = "All";
  * different pattern from the desktop `PhotoGalleryModal`'s single-image +
  * thumbnail-strip viewer. Toggled between a 3-column grid and a
  * single-column scrolling list via the header icon; category tabs filter
- * which images show in either mode. Heart/Share are presentational only —
- * same "visible but non-functional" treatment used for favorites
- * elsewhere (no backend endpoint, see docs/design/home-page-data-plan.md §7).
+ * which images show in either mode. Heart is a real save toggle (see
+ * `SaveButton`); Share remains presentational (no share action wired here,
+ * unlike the page header's).
  */
 export function MobileGalleryOverlay({
   open,
   onOpenChange,
   categories,
   allImages,
+  propertyId,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   categories: PropertyDetailCategory[];
   allImages: PropertyDetailImage[];
+  propertyId: number;
 }) {
   const [activeCategory, setActiveCategory] = useState(ALL_LABEL);
   const [mode, setMode] = useState<"grid" | "list">("grid");
@@ -74,7 +77,7 @@ export function MobileGalleryOverlay({
                   <LayoutGrid className="size-6 text-foreground" />
                 )}
               </button>
-              <Heart className="size-6 text-foreground" />
+              <SaveButton propertyId={propertyId} iconClassName="size-6 text-foreground" />
               <Share2 className="size-5 text-foreground" />
             </div>
           </div>

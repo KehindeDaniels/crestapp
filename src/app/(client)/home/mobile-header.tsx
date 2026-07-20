@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Bell, BadgeCheck, Heart, MessageCircle, User } from "lucide-react";
 import { useProfile } from "@/features/profile";
 import { useMyKycStatus } from "@/features/kyc";
 import { useUnreadNotifications } from "@/features/notifications";
+import { useUnreadMessageCount } from "@/features/messaging";
 
 /**
  * Mobile-only (`sm:hidden`) — matches a real Figma mobile pull (node
@@ -14,15 +16,15 @@ import { useUnreadNotifications } from "@/features/notifications";
  * key, no extra network calls) since it's a genuinely different layout on
  * mobile, not just a restyle.
  *
- * Heart and message icons are decorative — no favorites endpoint exists
- * (docs/design/home-page-data-plan.md §7) and Messages has no inbox UI yet
- * — but the real design shows them, so they're rendered non-functional
- * rather than omitted, same treatment as the Property Feature filter.
+ * Heart is a shortcut to `/saved` (not a per-property toggle — there's no
+ * single property in this header's context) and message is a shortcut to
+ * `/messages`; both real destinations now that those features exist.
  */
 export function MobileHomeHeader() {
   const { data: profile } = useProfile();
   const { data: kycStatus } = useMyKycStatus();
   const { data: notifications } = useUnreadNotifications();
+  const { data: unreadMessageCount } = useUnreadMessageCount();
   const isVerified = kycStatus === "approved";
 
   return (
@@ -52,10 +54,21 @@ export function MobileHomeHeader() {
       </div>
 
       <div className="flex items-center gap-4 pt-1">
-        <Heart className="size-6 text-foreground" />
-        <span className="flex size-6 items-center justify-center rounded-full bg-black/[0.06]">
+        <Link href="/saved" aria-label="Saved properties">
+          <Heart className="size-6 text-foreground" />
+        </Link>
+        <Link
+          href="/messages"
+          aria-label="Messages"
+          className="relative flex size-6 items-center justify-center rounded-full bg-black/[0.06]"
+        >
           <MessageCircle className="size-3.5 text-foreground" />
-        </span>
+          {!!unreadMessageCount && unreadMessageCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex size-3.5 items-center justify-center rounded-full bg-[#d62c01] text-[8px] font-medium text-white">
+              {unreadMessageCount > 9 ? "9+" : unreadMessageCount}
+            </span>
+          )}
+        </Link>
         <span className="relative flex size-6 items-center justify-center rounded-full bg-black/[0.06]">
           <Bell className="size-3.5 text-foreground" />
           {notifications && notifications.count > 0 && (

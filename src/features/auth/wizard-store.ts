@@ -25,11 +25,22 @@ interface RegisterWizardState {
   phoneNumber: string;
   phoneVerified: boolean;
   role: UserRole | null;
+  /**
+   * The OTP, when `POST /api/auth/verification/send` returns one directly —
+   * confirmed real for `type: "phone"`, since the SMS/email sending service
+   * isn't live yet. Carries the code across the route change from
+   * `/register` or `/register/phone` (where it's sent) to
+   * `/register/verify-email`/`/register/verify-phone` (where it's shown),
+   * so testers don't need devtools or a second device to read it. Cleared
+   * once consumed so a stale code can't leak into a later step.
+   */
+  devOtp: string | null;
   setPersonalInfo: (data: { firstName: string; lastName: string; email: string }) => void;
   markEmailVerified: () => void;
   setPhoneNumber: (phoneNumber: string) => void;
   markPhoneVerified: () => void;
   setRole: (role: UserRole) => void;
+  setDevOtp: (code: string | null) => void;
   reset: () => void;
 }
 
@@ -41,6 +52,7 @@ const initialState = {
   phoneNumber: "",
   phoneVerified: false,
   role: null as UserRole | null,
+  devOtp: null as string | null,
 };
 
 export const useRegisterWizardStore = create<RegisterWizardState>((set) => ({
@@ -51,5 +63,6 @@ export const useRegisterWizardStore = create<RegisterWizardState>((set) => ({
   setPhoneNumber: (phoneNumber) => set({ phoneNumber }),
   markPhoneVerified: () => set({ phoneVerified: true }),
   setRole: (role) => set({ role }),
+  setDevOtp: (code) => set({ devOtp: code }),
   reset: () => set(initialState),
 }));

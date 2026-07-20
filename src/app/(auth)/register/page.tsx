@@ -26,6 +26,7 @@ import { isApiError } from "@/lib/api/errors";
 export default function RegisterPage() {
   const router = useRouter();
   const setPersonalInfo = useRegisterWizardStore((s) => s.setPersonalInfo);
+  const setDevOtp = useRegisterWizardStore((s) => s.setDevOtp);
   const sendVerification = useSendVerification();
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -39,12 +40,13 @@ export default function RegisterPage() {
     sendVerification.mutate(
       { type: "email", identifier: values.email },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           setPersonalInfo({
             firstName: values.first_name,
             lastName: values.last_name,
             email: values.email,
           });
+          setDevOtp(data.code ?? null);
           router.push("/register/verify-email");
         },
         onError: (error) => {

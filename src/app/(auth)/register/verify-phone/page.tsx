@@ -8,6 +8,8 @@ export default function VerifyPhonePage() {
   const router = useRouter();
   const phoneNumber = useRegisterWizardStore((s) => s.phoneNumber);
   const markPhoneVerified = useRegisterWizardStore((s) => s.markPhoneVerified);
+  const devOtp = useRegisterWizardStore((s) => s.devOtp);
+  const setDevOtp = useRegisterWizardStore((s) => s.setDevOtp);
 
   useEffect(() => {
     if (!phoneNumber) router.replace("/register/phone");
@@ -20,8 +22,10 @@ export default function VerifyPhonePage() {
       type="phone"
       identifier={phoneNumber}
       title="Verify Phone Number"
+      prefillCode={devOtp}
       onVerified={() => {
         markPhoneVerified();
+        setDevOtp(null);
         router.push("/register/role");
       }}
     />

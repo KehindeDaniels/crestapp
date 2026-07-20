@@ -26,6 +26,7 @@ export default function RegisterPhonePage() {
   const router = useRouter();
   const emailVerified = useRegisterWizardStore((s) => s.emailVerified);
   const setPhoneNumber = useRegisterWizardStore((s) => s.setPhoneNumber);
+  const setDevOtp = useRegisterWizardStore((s) => s.setDevOtp);
   const sendVerification = useSendVerification();
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -43,8 +44,9 @@ export default function RegisterPhonePage() {
     sendVerification.mutate(
       { type: "phone", identifier: values.phone_number },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           setPhoneNumber(values.phone_number);
+          setDevOtp(data.code ?? null);
           router.push("/register/verify-phone");
         },
         onError: (error) => {

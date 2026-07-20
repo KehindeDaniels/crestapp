@@ -25,6 +25,9 @@ export const queryKeys = {
     list: (params: unknown) => ["contracts", "list", params] as const,
     detail: (id: number) => ["contracts", "detail", id] as const,
     statistics: ["contracts", "statistics"] as const,
+    /** One-time creation payload (payment_link/fee_breakdown) — distinct from `detail`, which is the real re-fetchable `GET /api/contracts/{id}`. Never both keyed the same — see offers/hooks.ts. */
+    paymentSession: (id: number) => ["contracts", "payment-session", id] as const,
+    forProperty: (propertyId: number) => ["contracts", "for-property", propertyId] as const,
   },
   transactions: {
     all: ["transactions"] as const,

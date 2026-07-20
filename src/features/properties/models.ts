@@ -14,6 +14,8 @@ import type { ApiProperty } from "./types";
 export interface PropertyCardModel {
   id: ID;
   title: string;
+  price: number;
+  currency: string;
   priceFormatted: string;
   purpose: PropertyPurpose;
   /** "For sale" | "Rent" | "Lease" — the card's type badge label. */
@@ -52,6 +54,8 @@ export function toPropertyCardModel(property: ApiProperty): PropertyCardModel {
   return {
     id: property.property_id,
     title: property.title,
+    price: Number(property.price),
+    currency: property.currency,
     priceFormatted: formatCurrency(Number(property.price), property.currency),
     purpose: property.purpose,
     typeBadgeLabel: TYPE_BADGE_LABELS[property.purpose] ?? property.purpose,

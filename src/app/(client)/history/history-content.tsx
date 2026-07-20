@@ -37,7 +37,12 @@ export function HistoryContent() {
   const tab = (searchParams.get("tab") as TransactionBucket | "all" | null) ?? "all";
   const page = Number(searchParams.get("page") ?? "1");
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  // Lazy init from `?transaction=` — lets the post-payment offer flow deep-link
+  // straight into a transaction's detail modal instead of just landing on the list.
+  const [selectedId, setSelectedId] = useState<number | null>(() => {
+    const fromQuery = searchParams.get("transaction");
+    return fromQuery ? Number(fromQuery) : null;
+  });
 
   const { data, isPending, isError } = useTransactions({
     status: tab === "completed" || tab === "cancelled" ? tab : undefined,

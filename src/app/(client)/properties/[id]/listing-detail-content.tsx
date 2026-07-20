@@ -26,6 +26,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { usePropertyDetail, MessageOwnerButton } from "@/features/properties";
 import { SaveButton } from "@/features/saved-properties";
+import { MakeOfferDialog } from "@/features/offers";
+import { useSessionStore } from "@/features/auth";
 import { formatDate } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { PhotoGalleryModal } from "./photo-gallery-modal";
@@ -54,6 +56,7 @@ const COMING_SOON_FEATURES: { label: string; icon: LucideIcon }[] = [
 
 export function ListingDetailContent({ propertyId }: { propertyId: number }) {
   const { data: property, isPending, isError } = usePropertyDetail(propertyId);
+  const currentUserId = useSessionStore((s) => s.user?.user_id);
   const [desktopGalleryOpen, setDesktopGalleryOpen] = useState(false);
   const [mobileGalleryOpen, setMobileGalleryOpen] = useState(false);
 
@@ -79,6 +82,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
   }
 
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.address)}`;
+  const isOwner = currentUserId != null && property.ownerId === currentUserId;
 
   return (
     <div className="max-w-6xl space-y-5 p-4 pb-0 sm:space-y-6 sm:p-6 sm:pb-6 lg:p-10">
@@ -285,14 +289,18 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
         <div className="h-24" />
       </div>
 
-      {/* Sticky mobile CTA bar */}
+      {/* Sticky mobile CTA bar — hidden entirely for the property's own owner */}
+      {!isOwner && (
       <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 border-t bg-background px-4 py-3 sm:hidden">
-        {/* Static per explicit decision — POST /api/contracts/quick-create
-            immediately creates AND auto-accepts a binding contract with a
-            payment link, not a negotiable offer. Not wired yet. */}
-        <Button type="button" variant="outline" size="xl" disabled className="flex-1">
-          Make Offer
-        </Button>
+        <MakeOfferDialog
+          propertyId={property.id}
+          propertyPrice={property.price}
+          currency={property.currency}
+          propertyTitle={property.title}
+          variant="outline"
+          size="xl"
+          className="flex-1"
+        />
         <MessageOwnerButton
           ownerId={property.ownerId}
           propertyId={property.id}
@@ -303,6 +311,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
           className="flex-1"
         />
       </div>
+      )}
 
       {/* ---------- Desktop (hidden sm:block) — unchanged ---------- */}
       <div className="hidden sm:block">
@@ -476,18 +485,23 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
               </div>
 
               <div className="flex flex-col gap-2">
-                {/* Static per explicit decision — POST /api/contracts/quick-create
-                    immediately creates AND auto-accepts a binding contract with a
-                    payment link, not a negotiable offer. Not wired yet. */}
-                <Button type="button" variant="outline" disabled>
-                  Make Offer
-                </Button>
-                <MessageOwnerButton
-                  ownerId={property.ownerId}
-                  propertyId={property.id}
-                  ownerName={property.ownerName}
-                  label="Message Landlord"
-                />
+                {!isOwner && (
+                  <>
+                    <MakeOfferDialog
+                      propertyId={property.id}
+                      propertyPrice={property.price}
+                      currency={property.currency}
+                      propertyTitle={property.title}
+                      variant="outline"
+                    />
+                    <MessageOwnerButton
+                      ownerId={property.ownerId}
+                      propertyId={property.id}
+                      ownerName={property.ownerName}
+                      label="Message Landlord"
+                    />
+                  </>
+                )}
               </div>
             </div>
 

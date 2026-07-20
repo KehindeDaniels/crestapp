@@ -193,10 +193,33 @@ The user actually tried to list a property and hit a real 403, plus flagged seve
 
 ---
 
+## Phase 7 — Messages (inbox)
+
+Built from real screenshots (`docs/design/screenshots/messages/`), not a live Figma pull — the session's per-plan Figma tool-call limit was hit before the frame (node `1531-4938`) could be pulled. Same "build now, verify pixel-fidelity later" trade-off as List Property's first pass.
+
+| Gap | Detail | What we did |
+|---|---|---|
+| **No real-time/broadcasting backend** | Checked the whole Postman collection — no Pusher/Laravel Echo/websocket endpoints anywhere. Confirms the standing note this doc used to carry under "Not yet compared." | **Polling via `refetchInterval`** — conversations list every 15s, an open thread every 5s. Same "fakes live" approach this app already uses for notifications; not a new pattern. |
+| **Conversation-list/thread response shapes unconfirmed** | `Get Conversations`, `Get Conversation with User`, `Mark as Read`, and `Get Unread Count` are all real endpoints (URL, method, auth confirmed) but **none have a saved example request/response** in the collection — unlike `Send Message`, which does. | Typed defensively: field names inferred from `Send Message`'s own confirmed payload (`sender_id`/`recipient_id`/`content`/etc.) and how this backend shapes a user reference elsewhere (`ApiPropertyOwner`'s nested `profile` object). Flagged in `types.ts` as unconfirmed — **worth a live test with a real token before trusting fully**. |
+| **`reference_id`/`reference_type` incorrectly assumed required** | The original `SendMessagePayload` type marked these required, copying `Send Message`'s example verbatim. A plain reply inside an existing conversation thread has no property to reference. | Made both fields **optional** — only `MessageOwnerButton` (genuinely about one property) sets them; the in-thread composer omits them rather than fabricating a fake reference (e.g. sending the recipient's user id mislabeled as a property id, a real bug caught during self-review before shipping). |
+| **"All"/"Recents" tabs and search — no matching backend params** | `Search Messages` (`GET .../messages/search?query=`) searches message *content* server-side, not contact/conversation names. | Built **client-side only**: search filters the fetched conversation list by name; "Recents" is a client-side 48h cutoff on `last_message.created_at`, not a real distinction confirmed anywhere in the backend. |
+| **Referenced-property card in a thread** | A message with `reference_type: "property"` doesn't (as far as confirmed) embed the property's own details inline. | The thread view **fetches the referenced property separately** via the already-existing `usePropertyDetail(id)` when a message carries a property reference, rather than assuming embedded data that may not exist. |
+| **Attachments** | `Send Message`'s payload has an `attachments` field, but no file-upload-for-message-attachments endpoint was found anywhere in the collection. | **Shown, disabled** — the paperclip icon in the composer is present but non-functional, same "visible but not wired" treatment as everywhere else in this session. |
+
+### Architecture notes
+- **New `src/features/messaging/models.ts`** — `toConversationModel()`/`toMessageModel()`, same view-model mapping-layer convention as `properties`; components never touch `ApiConversation`/`ApiMessage` directly.
+- **`useConversationThread`/`useUnreadMessageCount` depend on `useSessionStore`'s `user_id`** to compute `isMine` per message and gate the unread-count query — both `enabled: false` until the session is hydrated, avoiding a request with a garbage/undefined id.
+- **Messages nav item flipped to `enabled: true`**, with a live unread-count badge added directly in `NavList` (the one nav item with dynamic state so far — every other item is still a static enabled/disabled flag).
+- **`MessageOwnerButton` reworked**: now offers both "Send message" (stays on the current page) and "Open Chat" (deep-links to `/messages?with={ownerId}`), matching the real Figma screenshot's two-button pattern, now that a real inbox exists to open into.
+- A real bug caught in self-review before shipping (see table above): the in-thread composer was about to send every reply with `reference_id: selectedUserId, reference_type: "property"` — passing a **user id mislabeled as a property id**. Fixed by making the reference fields optional and only set where they're actually true.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, 27 routes (added `/messages`). **Not yet done:** no live test of any of the four unconfirmed-response-shape endpoints, and no visual check against the real Figma frame (rate-limited this session).
+
+---
+
 ## Not yet compared (future phases — flagging now, not asserting a mismatch)
 These are things noticed during the initial capability check, before the relevant Figma screens were inspected in detail. Revisit when that phase starts:
 - **No single `GET /properties/{id}`** — property detail is fetched via `search` with an `id` filter. Fine for now; worth double-checking the Search Property / Listing Figma screens don't assume a dedicated detail endpoint's response shape.
 - **Notifications**: only mark-single-read exists — no mark-all or delete. Check if any screen implies a "mark all as read" action.
 - **No saved/favorites endpoint** — check if any property card in Figma shows a heart/save icon.
-- **Messaging is REST-only, no websocket** — if the messaging screens imply live typing indicators/online presence, that's a gap (would need polling instead).
-- **Admin Dashboard** (separate Figma page, Phase 7) — not inspected screen-by-screen yet; expect gaps once it is (see `docs/frontend-blueprint.md` §17 for what's already known to be missing on the backend: user suspend/activate, non-KYC user directory, admin support desk, single stats-overview endpoint).
+- **Admin Dashboard** (separate Figma page, future phase) — not inspected screen-by-screen yet; expect gaps once it is (see `docs/frontend-blueprint.md` §17 for what's already known to be missing on the backend: user suspend/activate, non-KYC user directory, admin support desk, single stats-overview endpoint).

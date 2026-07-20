@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, type buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import {
@@ -15,12 +16,12 @@ import type { VariantProps } from "class-variance-authority";
 import type { ID } from "@/types/api";
 
 /**
- * Real send, per explicit decision — POST /api/communication/messages/send
- * actually fires, even though no inbox/thread UI exists yet to view the
- * reply (see docs/design-vs-backend-gaps.md). Kept as a simple compose
- * dialog rather than a canned one-click message, since there's no thread to
- * continue the conversation in afterward — the message needs to say
- * something on its own.
+ * Real send — `POST /api/communication/messages/send`. `reference_id`/
+ * `reference_type` are set here since this message is genuinely about a
+ * specific property, unlike a plain reply in `/messages`. "Open Chat"
+ * deep-links into the real inbox (`/messages?with={ownerId}`), which now
+ * exists — this dialog used to be the only way to message an owner at all;
+ * now it's a shortcut that also drops you into the full thread.
  */
 export function MessageOwnerButton({
   ownerId,
@@ -39,6 +40,7 @@ export function MessageOwnerButton({
   size?: VariantProps<typeof buttonVariants>["size"];
   className?: string;
 }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState("");
   const sendMessage = useSendMessage();
@@ -81,10 +83,7 @@ export function MessageOwnerButton({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Message {ownerName}</DialogTitle>
-            <DialogDescription>
-              Send a message about this property. There&apos;s no inbox yet
-              to view replies — this just sends the message.
-            </DialogDescription>
+            <DialogDescription>Send a message about this property.</DialogDescription>
           </DialogHeader>
 
           <textarea
@@ -100,18 +99,25 @@ export function MessageOwnerButton({
               Couldn&apos;t send that message — try again.
             </p>
           )}
-          {sendMessage.isSuccess && (
-            <p className="text-sm text-success">Message sent.</p>
-          )}
 
-          <Button
-            type="button"
-            onClick={handleSend}
-            disabled={!content.trim() || sendMessage.isPending}
-            className="w-full"
-          >
-            {sendMessage.isPending ? "Sending…" : "Send"}
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button
+              type="button"
+              onClick={handleSend}
+              disabled={!content.trim() || sendMessage.isPending}
+              className="w-full"
+            >
+              {sendMessage.isPending ? "Sending…" : "Send message"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => router.push(`/messages?with=${ownerId}`)}
+            >
+              Open Chat
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>

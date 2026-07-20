@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLogout } from "@/features/auth";
+import { useUnreadMessageCount } from "@/features/messaging";
 import { cn } from "@/lib/utils/cn";
 import { NAV_ITEMS, LOG_OUT_ICON } from "./nav-config";
 
@@ -21,6 +22,7 @@ export function NavList({
 }) {
   const pathname = usePathname();
   const logout = useLogout();
+  const { data: unreadMessageCount } = useUnreadMessageCount();
 
   return (
     <>
@@ -50,6 +52,9 @@ export function NavList({
             );
           }
 
+          const showUnreadBadge =
+            item.label === "Messages" && !!unreadMessageCount && unreadMessageCount > 0;
+
           return (
             <Link
               key={item.label}
@@ -64,7 +69,14 @@ export function NavList({
                   : "text-foreground hover:bg-accent",
               )}
             >
-              <Icon className="size-5.5 shrink-0" />
+              <span className="relative shrink-0">
+                <Icon className="size-5.5" />
+                {showUnreadBadge && (
+                  <span className="absolute -top-1 -right-1 flex size-3.5 items-center justify-center rounded-full bg-destructive text-[9px] font-medium text-white">
+                    {unreadMessageCount > 9 ? "9+" : unreadMessageCount}
+                  </span>
+                )}
+              </span>
               {!collapsed && item.label}
             </Link>
           );

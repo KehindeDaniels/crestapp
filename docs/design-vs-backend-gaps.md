@@ -392,6 +392,31 @@ Two more from live testing: switching to the Completed/Cancelled tabs when they 
 
 ---
 
+## Phase 12 — Profile
+
+Built from real screenshots (`docs/design/screenshots/profile/`, 5 frames), not a live Figma pull — these are simple form layouts, not worth spending the session's Figma rate limit on.
+
+**Correction to something claimed in Phase 11:** that phase said no seller payout/bank-account endpoint exists anywhere in the backend. That was wrong — it only searched for a dedicated "Payments"-style folder. `PUT /api/profile` accepts `bank_name`/`account_number`/`account_name` directly (confirmed via the endpoint's own documented request-body comments), and the profile feature's `GET /api/profile` response type — built back in an earlier phase — already had a real `bank_account` key in it, just left typed as `unknown` and never surfaced in any UI. The "Payment Method" screen in this phase's screenshots is real.
+
+| Gap | Detail | What we did |
+|---|---|---|
+| **Edit form's Email and "ID number" fields have no backing update field** | The confirmed `PUT /api/profile` payload only accepts first/last name, phone, DOB, bio, address/city/state/country, profile picture, and the 3 bank fields — no `email`, no anything resembling an ID number. | Email shown **read-only** in the edit dialog (not silently dropped on save); "ID number" **omitted entirely** rather than collected and discarded. |
+| **`phone_number` is inconsistently documented** | Present as a real key in the `PUT /api/profile` example request body, but absent from that same endpoint's validation-rule comments listing every other field as `sometimes\|...`. | Included it in the payload anyway — the literal example JSON is stronger evidence than a comment that may simply be stale. Worth confirming with the backend if editing phone silently no-ops. |
+| **Notifications is far simpler than the design** | Figma shows a 3-way Immediately/Daily/Off per channel (Push, Email) plus a separate "Chats Notification" on/off. The confirmed `PUT /api/notifications/preferences` body is just 3 plain booleans: `email_notifications`/`sms_notifications`/`push_notifications`. No tiering, no chat-specific field. | Built plain On/Off toggles for Push/Email/SMS, each saving immediately on click — no fabricated "Daily" tier or chat toggle. |
+| **"Documents" screen's own subtitle looks like a design copy-paste mistake** | Its screenshot subtitle reads "Receive payments directly into your bank account after successful transactions" — identical to the Payment Method screen's subtitle — over a list of property legal documents (Land C of O, Survey Plan, Purchase Receipt) with Remove buttons. No confirmed endpoint lists "all documents a user has uploaded" — only entity-scoped lookups (`GET /api/documents/entity/{type}/{id}`) exist, and even KYC's own submitted document URLs aren't confirmed retrievable after submission (`kyc/find-single`'s one documented example has no `kyc` field at all — see Phase 2.5). | **Not built.** Shown as a disabled "Uploaded document" row rather than reusing KYC data (which doesn't actually hold up under inspection) or fabricating a document list. |
+| **Help & Support / Terms & Conditions / About Crest** | No confirmed content endpoints for any of the three. A real "Support Tickets" API does exist in the collection, but wiring it up is a whole separate feature, not a Profile-page detail. | Shown disabled for now. |
+| **"My listing" has no saved response example** | `POST /api/properties/my-properties` is real (confirmed request body), but has zero saved example response. | Assumed it mirrors `properties/search`'s `{properties, pagination}` envelope and reuses the same `ApiProperty`/`PropertyCardModel` — reasonable given every other property-list endpoint follows that pattern, but not independently confirmed. |
+
+### Architecture notes
+- **`useFullProfile()` and `useProfile()` (topbar) now share one base query** (`useProfileSelect`, one real `GET /api/profile` fetch under `queryKeys.profile.detail`, each hook applying its own `select`) — the same shared-query-plus-`select` pattern already fixed a real cache-corruption bug in Notifications (Phase 9); built this one correctly from the start instead of repeating that mistake.
+- **Three dialogs (Edit Profile, Payment Method, Notifications) needed to reset their pre-filled form state each time they reopen** — normally a `useEffect` job, but this repo's lint config (`react-hooks/set-state-in-effect`) disallows calling `setState` synchronously inside an effect. Fixed with React's documented alternative: a `key` on each dialog, bumped only in the button `onClick` that opens it (never on close), forcing a fresh remount whose `useState` initializers re-read current props/query data — no effect involved. The Notifications dialog went a step further and dropped local draft state entirely, since a query's async data can't safely seed a `useState` initializer on a fresh mount anyway; each toggle now saves immediately instead of batching into a Save button.
+- **New `MyPropertiesParams`/`useMyProperties()`** in the `properties` feature (not `profile`) — property data belongs there, matching how the rest of the app is organized; `queryKeys.properties.mine` already existed, scaffolded but unused until now.
+- **`nav-config.ts`'s Profile item flipped to `enabled: true`** — the last remaining disabled top-level nav item.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, 32 routes (added `/profile`, `/profile/listings`).
+
+---
+
 ## Not yet compared (future phases — flagging now, not asserting a mismatch)
 These are things noticed during the initial capability check, before the relevant Figma screens were inspected in detail. Revisit when that phase starts:
 - **No single `GET /properties/{id}`** — property detail is fetched via `search` with an `id` filter. Fine for now; worth double-checking the Search Property / Listing Figma screens don't assume a dedicated detail endpoint's response shape.

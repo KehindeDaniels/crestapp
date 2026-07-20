@@ -8,6 +8,8 @@ import type {
   CreatePropertyResponse,
   UploadMediaResponse,
   UploadDocumentResponse,
+  MyPropertiesParams,
+  MyPropertiesResponse,
 } from "./types";
 
 export const propertiesApi = {
@@ -58,5 +60,12 @@ export const propertiesApi = {
     apiClient<UploadDocumentResponse>("/api/documents/upload", {
       method: "POST",
       body: formData,
+    }),
+
+  /** Powers Profile's "My listing" — the currently logged-in user's own properties. */
+  mine: (params: MyPropertiesParams) =>
+    apiClient<MyPropertiesResponse>("/api/properties/my-properties", {
+      method: "POST",
+      body: params,
     }),
 };

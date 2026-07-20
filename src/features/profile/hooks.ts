@@ -1,16 +1,58 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/api/query-keys";
 import { useSessionStore } from "@/features/auth";
 import { profileApi } from "./api";
-import { toProfileViewModel } from "./models";
+import { toFullProfileModel, toProfileViewModel } from "./models";
+import type { ChangePasswordPayload, UpdateProfilePayload } from "./types";
 
-/** Returns a `ProfileViewModel`, never the raw API shape — see models.ts. */
-export function useProfile() {
+/**
+ * Shared base query — one real `GET /api/profile` fetch, cached under
+ * `queryKeys.profile.detail`. `useProfile()` and `useFullProfile()` below
+ * both read this same cache entry via `select`, rather than each running
+ * their own `queryFn` against the same key with a different return shape —
+ * that exact pattern (two hooks, one key, different shapes) corrupted the
+ * Notifications cache earlier this session (Phase 9); not repeating it here.
+ */
+function useProfileSelect<T>(select: (r: Awaited<ReturnType<typeof profileApi.get>>) => T) {
   const userId = useSessionStore((s) => s.user?.user_id);
   return useQuery({
     queryKey: queryKeys.profile.detail,
-    queryFn: async () => toProfileViewModel(await profileApi.get()),
+    queryFn: () => profileApi.get(),
     enabled: Boolean(userId),
     staleTime: 60_000,
+    select,
+  });
+}
+
+/** Returns a `ProfileViewModel`, never the raw API shape — see models.ts. */
+export function useProfile() {
+  return useProfileSelect(toProfileViewModel);
+}
+
+/** Returns a `FullProfileModel` — used by the `/profile` page itself. */
+export function useFullProfile() {
+  return useProfileSelect(toFullProfileModel);
+}
+
+/**
+ * `PUT /api/profile` — no confirmed response shape, so success is judged by
+ * a non-throwing response, not by parsing `data`. Invalidates the shared
+ * profile cache so both `useProfile()` (topbar) and `useFullProfile()`
+ * (this page) reflect the change immediately.
+ */
+export function useUpdateProfile() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: UpdateProfilePayload) => profileApi.update(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.detail });
+    },
+  });
+}
+
+/** `POST /api/auth/password/change` — confirmed real endpoint. */
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (payload: ChangePasswordPayload) => profileApi.changePassword(payload),
   });
 }

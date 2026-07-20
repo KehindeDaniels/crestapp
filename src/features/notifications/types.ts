@@ -31,3 +31,27 @@ export interface MarkNotificationReadResponse {
   success: boolean;
   message: string;
 }
+
+/**
+ * `GET`/`PUT /api/notifications/preferences` — real endpoints, confirmed via
+ * the `PUT` request body's 3 boolean fields (no saved example for either).
+ * Simpler than the Figma design, which shows a 3-way Immediately/Daily/Off
+ * per channel plus a separate "Chats Notification" toggle — none of that
+ * granularity has a backing field here, just one on/off per channel. See
+ * docs/design-vs-backend-gaps.md, Phase 12.
+ */
+export interface NotificationPreferences {
+  email_notifications: boolean;
+  sms_notifications: boolean;
+  push_notifications: boolean;
+}
+
+export interface GetPreferencesResponse {
+  success: boolean;
+  data: NotificationPreferences;
+}
+
+export interface UpdatePreferencesResponse {
+  success: boolean;
+  message: string;
+}

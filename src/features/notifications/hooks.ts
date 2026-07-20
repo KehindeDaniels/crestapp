@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/api/query-keys";
 import { useSessionStore } from "@/features/auth";
 import { notificationsApi } from "./api";
-import type { ApiNotification } from "./types";
+import type { ApiNotification, NotificationPreferences } from "./types";
 
 /**
  * Shared base query — one real fetch, one cache entry
@@ -58,6 +58,27 @@ export function useMarkNotificationAsRead() {
     mutationFn: (notificationId: number) => notificationsApi.markAsRead(notificationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
+    },
+  });
+}
+
+/** `GET /api/notifications/preferences` — real endpoint, no saved example. */
+export function useNotificationPreferences() {
+  const userId = useSessionStore((s) => s.user?.user_id);
+  return useQuery({
+    queryKey: queryKeys.notifications.preferences,
+    queryFn: async () => (await notificationsApi.getPreferences()).data,
+    enabled: Boolean(userId),
+  });
+}
+
+/** `PUT /api/notifications/preferences` — real endpoint, no saved example. */
+export function useUpdateNotificationPreferences() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: NotificationPreferences) => notificationsApi.updatePreferences(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.preferences });
     },
   });
 }

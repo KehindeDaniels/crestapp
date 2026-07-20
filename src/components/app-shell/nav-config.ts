@@ -30,7 +30,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Messages", href: "/messages", icon: MessageCircle, enabled: true },
   { label: "History", href: "/history", icon: History, enabled: true },
   { label: "Saved Property", href: "/saved", icon: Bookmark, enabled: true },
-  { label: "Profile", href: "/profile", icon: User, enabled: false },
+  { label: "Profile", href: "/profile", icon: User, enabled: true },
 ];
 
 export const LOG_OUT_ICON = LogOut;

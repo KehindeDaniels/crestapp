@@ -168,6 +168,26 @@ export interface UploadMediaResponse {
  * certificate|report`), not the specific legal-document categories the
  * List Property wizard's UI shows — see `DOCUMENT_SLOTS` in config.ts.
  */
+/**
+ * `POST /api/properties/my-properties` request body — confirmed real field
+ * names via the Postman collection's example request. No saved response
+ * example, so `MyPropertiesResponse` below assumes it mirrors `search`'s
+ * envelope (`{properties, pagination}`) and reuses the same `ApiProperty`
+ * shape — reasonable given every other property-list endpoint follows that
+ * pattern, but not independently confirmed.
+ */
+export interface MyPropertiesParams {
+  property_type?: PropertyType;
+  purpose?: PropertyPurpose;
+  status?: PropertyStatus;
+  sort_by?: "created_at" | "price" | "updated_at";
+  sort_order?: "asc" | "desc";
+  per_page?: number;
+  page?: number;
+}
+
+export type MyPropertiesResponse = PropertySearchResponse;
+
 export interface UploadDocumentResponse {
   success: boolean;
   message: string;

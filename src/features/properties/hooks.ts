@@ -4,7 +4,7 @@ import type { ID } from "@/types/api";
 import type { PropertyPurpose } from "@/config/constants";
 import { propertiesApi } from "./api";
 import { toPropertyCardModel, toPropertyDetailModel } from "./models";
-import type { CreatePropertyPayload, PropertySearchParams } from "./types";
+import type { CreatePropertyPayload, MyPropertiesParams, PropertySearchParams } from "./types";
 
 /**
  * Returns view models (`PropertyCardModel[]`) plus pagination metadata —
@@ -73,5 +73,19 @@ export function useUploadPropertyMedia() {
 export function useUploadDocument() {
   return useMutation({
     mutationFn: (formData: FormData) => propertiesApi.uploadDocument(formData),
+  });
+}
+
+/** Powers Profile's "My listing" — `POST /api/properties/my-properties`, real endpoint, unconfirmed response shape (assumed to match `search`'s). */
+export function useMyProperties(params: MyPropertiesParams) {
+  return useQuery({
+    queryKey: queryKeys.properties.mine(params),
+    queryFn: async () => {
+      const response = await propertiesApi.mine(params);
+      return {
+        properties: response.data.properties.map(toPropertyCardModel),
+        pagination: response.data.pagination,
+      };
+    },
   });
 }

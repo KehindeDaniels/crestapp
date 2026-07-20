@@ -257,6 +257,28 @@ Built from a real Figma pull (node `1551-7332`, file `8YqDLQnhJoIRLV1xEOXZcR` �
 
 ---
 
+## Phase 10 — History (transactions)
+
+Built from real screenshots (`docs/design/screenshots/history/`), not a live Figma pull. Unusually well-confirmed backend for this one — both `GET /api/transactions` (list) and `GET /api/transactions/{id}` (detail) have full saved example responses in the Postman collection, not just documented request shapes.
+
+| Gap | Detail | What we did |
+|---|---|---|
+| **"In-Progress" tab has no matching single `status` value** | The design has 3 non-"All" tabs (Completed/In-Progress/Cancelled); the real backend has 8 statuses (`initiated\|pending_payment\|payment_received\|in_escrow\|completed\|cancelled\|disputed\|refunded`), and `GET /api/transactions` only filters by one exact value at a time. "Completed"/"Cancelled" map 1:1 onto real values; "In-Progress" would need 6 of them combined. | **"Completed"/"Cancelled" filter server-side** (real `status` param). **"In-Progress" fetches unfiltered and buckets client-side** on whatever page is already loaded — a known simplification: the visible row count for that tab (or an active search) can be less than `per_page` even when more matches exist on other pages. `disputed`/`refunded` fall under "In-Progress" too, since neither has its own tab in the design. |
+| **Search box has no confirmed backend param** | `GET /api/transactions` accepts `type`/`status`/`start_date`/`end_date`/`per_page` — no `search`/`query` param anywhere. | Client-side text filter on the property title of whatever page is already fetched, same simplification as the tab above (and the same pattern already used for Messages' search/tabs). |
+| **The exact 4-step progress timeline has no backing data** | Design shows "Payment Completed → Legal Review in Progress → Verification in Progress → Finalizing Agreement" as named stages. The confirmed transaction-detail response has no per-step timestamps or named stages — only `payment_received_at`, per-linked-document `status`, and the escrow's `conditions_met` boolean. | Built a **checklist from what's real** instead (payment received / documents reviewed X of Y / escrow conditions met / transaction completed) rather than fabricating 4 named steps with no data behind them. |
+| **Platform Fee / Legal Fee breakdown has no source on a transaction** | These numbers only ever appeared in a **contract-creation** response (`POST /api/contracts`'s `fees` object) — the confirmed transaction/transaction-detail shapes have no fee fields at all, and a transaction doesn't carry a `contract_id` to look one up after the fact. | **Omitted entirely** rather than shown as zero/fake/disabled — there's no "not wired yet" field to point at, the data structurally doesn't exist here. Shown instead: amount, currency, `payment_gateway` (maps to the design's "Payment Method"), transaction ID, and dates — all real. |
+| **"Share as Image" has no library** | Real client-side work (e.g. `html2canvas`), a new dependency, not asked for. | **Disabled**, per the same "visible but not wired" pattern used everywhere else. **"Share as PDF" is real**, though — wired to the browser's native print dialog (`window.print()`, most browsers offer "Save as PDF" there), zero new dependencies. |
+
+### Architecture notes
+- **New `src/features/transactions/`** — full `types.ts`/`api.ts`/`models.ts`/`hooks.ts`, same structure as every other feature. `bucketForStatus()` in `models.ts` is the one place the tab-bucketing heuristic lives, so it's not duplicated between the list page and anywhere else that might need it later.
+- **`queryKeys.transactions` extended** with `list(params)`/`detail(id)` factory functions, matching the existing `properties`/`contracts` convention — it previously only had a bare `all` key.
+- **Detail modal fetches two things in parallel**: `useTransactionDetail(id)` (transaction/buyer/seller/escrow/documents) and the existing `usePropertyDetail(propertyId)` (for the actual property image/bed/bath/address, which the transaction-detail response doesn't carry beyond title/type/description).
+- **Reused `Pagination`** from the `properties` feature rather than building a new one — same component already used on Search Property.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, 29 routes (added `/history`).
+
+---
+
 ## Not yet compared (future phases — flagging now, not asserting a mismatch)
 These are things noticed during the initial capability check, before the relevant Figma screens were inspected in detail. Revisit when that phase starts:
 - **No single `GET /properties/{id}`** — property detail is fetched via `search` with an `id` filter. Fine for now; worth double-checking the Search Property / Listing Figma screens don't assume a dedicated detail endpoint's response shape.

@@ -113,3 +113,12 @@ https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=151
 https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-8888&t=eNPdX4MbvbS4nUfn-1
 https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-9165&t=eNPdX4MbvbS4nUfn-1
 https://www.figma.com/design/1jtfoprMGUFfoo3CBzhjMV/Crest-App--Copy-?node-id=1510-9493&t=eNPdX4MbvbS4nUfn-1
+
+Make an offer
+https://www.figma.com/design/8YqDLQnhJoIRLV1xEOXZcR/Crest-App--Copy-?node-id=1478-8110&t=NaEcNa6JVNiJdkvn-1
+https://www.figma.com/design/8YqDLQnhJoIRLV1xEOXZcR/Crest-App--Copy-?node-id=1478-8499&t=NaEcNa6JVNiJdkvn-1
+https://www.figma.com/design/8YqDLQnhJoIRLV1xEOXZcR/Crest-App--Copy-?node-id=1478-8838&t=NaEcNa6JVNiJdkvn-1
+https://www.figma.com/design/8YqDLQnhJoIRLV1xEOXZcR/Crest-App--Copy-?node-id=1483-1842&t=NaEcNa6JVNiJdkvn-1
+https://www.figma.com/design/8YqDLQnhJoIRLV1xEOXZcR/Crest-App--Copy-?node-id=1483-2252&t=NaEcNa6JVNiJdkvn-1
+https://www.figma.com/design/8YqDLQnhJoIRLV1xEOXZcR/Crest-App--Copy-?node-id=1483-3835&t=NaEcNa6JVNiJdkvn-1
+https://www.figma.com/design/8YqDLQnhJoIRLV1xEOXZcR/Crest-App--Copy-?node-id=1483-4705&t=NaEcNa6JVNiJdkvn-1

@@ -12,12 +12,13 @@ export interface ConversationModel {
 }
 
 export function toConversationModel(conversation: ApiConversation): ConversationModel {
+  const { first_name, last_name, profile_picture_url } = conversation.other_user.profile;
   return {
-    userId: conversation.user.user_id,
-    name: conversation.user.profile.full_name || "User",
-    avatarUrl: conversation.user.profile.profile_picture_url,
+    userId: conversation.other_user.user_id,
+    name: `${first_name} ${last_name}`.trim() || "User",
+    avatarUrl: profile_picture_url,
     lastMessagePreview: conversation.last_message.content,
-    lastMessageAt: conversation.last_message.created_at,
+    lastMessageAt: conversation.last_message_at,
     unreadCount: conversation.unread_count,
   };
 }
@@ -38,8 +39,8 @@ export function toMessageModel(message: ApiMessage, currentUserId: ID): MessageM
     id: message.message_id,
     isMine: message.sender_id === currentUserId,
     content: message.content,
-    createdAt: message.created_at,
-    isRead: message.is_read === 1,
+    createdAt: message.sent_at,
+    isRead: message.read_status,
     referencedPropertyId:
       message.reference_type?.toLowerCase() === "property" ? message.reference_id : null,
   };

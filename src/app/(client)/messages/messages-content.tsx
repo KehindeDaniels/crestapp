@@ -4,12 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeft, MessageCircle, Paperclip, Search, Send, User } from "lucide-react";
+import { Check, CheckCheck, ChevronLeft, MessageCircle, Paperclip, Search, Send, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { formatDate } from "@/lib/utils/format";
 import { usePropertyDetail } from "@/features/properties";
+import { useProfile } from "@/features/profile";
 import {
   useConversations,
   useConversationThread,
@@ -41,8 +42,14 @@ export function MessagesContent() {
   const searchParams = useSearchParams();
   const selectedUserId = searchParams.get("with") ? Number(searchParams.get("with")) : null;
 
-  const { data: conversations, isLoading: conversationsLoading } = useConversations();
+  const {
+    data: conversations,
+    isLoading: conversationsLoading,
+    isError: conversationsError,
+    error: conversationsErrorDetail,
+  } = useConversations();
   const { data: messages, isLoading: threadLoading } = useConversationThread(selectedUserId);
+  const { data: myProfile } = useProfile();
   const sendMessage = useSendMessage();
   const markAsRead = useMarkAsRead();
 
@@ -134,7 +141,17 @@ export function MessagesContent() {
           {conversationsLoading && (
             <p className="p-4 text-sm text-muted-foreground">Loading…</p>
           )}
-          {filteredConversations.length === 0 && !conversationsLoading && (
+          {conversationsError && !conversationsLoading && (
+            <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center">
+              <p className="text-sm font-medium text-destructive">Couldn&apos;t load your chats</p>
+              <p className="text-xs text-muted-foreground">
+                {conversationsErrorDetail instanceof Error
+                  ? conversationsErrorDetail.message
+                  : "Something went wrong. Pull to refresh or try again shortly."}
+              </p>
+            </div>
+          )}
+          {!conversationsError && filteredConversations.length === 0 && !conversationsLoading && (
             <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
               <MessageCircle className="size-12 text-muted-foreground/40" />
               <p className="text-base font-semibold">No messages yet</p>
@@ -181,7 +198,14 @@ export function MessagesContent() {
             <div className="flex-1 space-y-4 overflow-y-auto p-4">
               {threadLoading && <p className="text-sm text-muted-foreground">Loading…</p>}
               {messages?.map((message) => (
-                <MessageBubble key={message.id} message={message} />
+                <MessageBubble
+                  key={message.id}
+                  message={message}
+                  senderName={message.isMine ? (myProfile?.displayName ?? "Me") : (selectedConversation?.name ?? "User")}
+                  senderAvatarUrl={
+                    message.isMine ? (myProfile?.avatarUrl ?? null) : (selectedConversation?.avatarUrl ?? null)
+                  }
+                />
               ))}
             </div>
 
@@ -260,23 +284,66 @@ function ConversationRow({
   );
 }
 
-function MessageBubble({ message }: { message: MessageModel }) {
-  return (
-    <div className={cn("flex flex-col gap-1", message.isMine ? "items-end" : "items-start")}>
-      <div
-        className={cn(
-          "max-w-md rounded-2xl px-4 py-2.5 text-sm",
-          message.isMine ? "bg-primary text-primary-foreground" : "bg-muted",
-        )}
-      >
-        {message.content}
-      </div>
-      <span className="text-xs text-muted-foreground">
-        {formatDate(message.createdAt, { timeStyle: "short" })}
-      </span>
-      {message.referencedPropertyId && (
-        <ReferencedProperty propertyId={message.referencedPropertyId} />
+/**
+ * Self on the right, other participant on the left — per explicit
+ * instruction. Note: the Figma reference (node 1539-7104) actually shows its
+ * own "Me" bubble on the LEFT in that specific frame, which conflicts with
+ * that instruction — kept self-on-the-right here since it's both what was
+ * asked for and the standard chat convention; only the bubble's visual
+ * details (avatar + name/timestamp/read-check row, referenced-property
+ * label) were adopted from that frame.
+ */
+function MessageBubble({
+  message,
+  senderName,
+  senderAvatarUrl,
+}: {
+  message: MessageModel;
+  senderName: string;
+  senderAvatarUrl: string | null;
+}) {
+  const avatar = (
+    <div className="relative size-9 shrink-0 overflow-hidden rounded-full bg-muted">
+      {senderAvatarUrl ? (
+        <Image src={senderAvatarUrl} alt="" fill className="object-cover" />
+      ) : (
+        <User className="absolute inset-0 m-auto size-4 text-muted-foreground" />
       )}
+    </div>
+  );
+
+  return (
+    <div className={cn("flex w-full gap-2", message.isMine ? "justify-end" : "justify-start")}>
+      {!message.isMine && avatar}
+      <div className={cn("flex max-w-md flex-col gap-1", message.isMine ? "items-end" : "items-start")}>
+        <div className="flex items-center gap-1.5 text-xs">
+          <span className="font-medium">{senderName}</span>
+          <span className="text-muted-foreground">
+            {formatDate(message.createdAt, { timeStyle: "short" })}
+          </span>
+          {message.isMine &&
+            (message.isRead ? (
+              <CheckCheck className="size-3 text-primary" />
+            ) : (
+              <Check className="size-3 text-muted-foreground" />
+            ))}
+        </div>
+        <div
+          className={cn(
+            "rounded-2xl px-4 py-2.5 text-sm",
+            message.isMine ? "bg-primary text-primary-foreground" : "bg-muted",
+          )}
+        >
+          {message.content}
+        </div>
+        {message.referencedPropertyId && (
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-muted-foreground">This message is related to:</p>
+            <ReferencedProperty propertyId={message.referencedPropertyId} />
+          </div>
+        )}
+      </div>
+      {message.isMine && avatar}
     </div>
   );
 }

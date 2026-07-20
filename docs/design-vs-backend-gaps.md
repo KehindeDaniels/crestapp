@@ -217,6 +217,20 @@ Built from real screenshots (`docs/design/screenshots/messages/`), not a live Fi
 
 ---
 
+## Phase 7.5 — Messages: live-tested shape mismatch (real bug found + fixed)
+
+Live testing (2026-07-20) surfaced the "unconfirmed response shape" risk flagged above as a real bug: the Messages tab always showed the empty state even after sending/receiving real messages, and the open thread kept re-fetching noticeably more than the documented 5s poll.
+
+| Gap | Detail | What we did |
+|---|---|---|
+| **`GET /conversations` real shape didn't match the guessed one** | Real captured response uses `other_user` (not `user`), `last_message_at` at the top level (not `last_message.created_at`), `last_message.read_status` boolean (not `is_read` 0/1), and `profile.first_name`/`last_name` only (no `full_name`). The guessed shape made `toConversationModel` throw on every row. | Rewrote `ApiConversation`/`MessagingParticipant`/`MessagingProfile`/`ApiMessage` in `types.ts` to the confirmed real shape; `toConversationModel` now reads `other_user` and builds the display name from `first_name`/`last_name`. |
+| **Thrown errors were silently rendered as "No messages yet"** | `messages-content.tsx` only checked `isLoading`, never `isError` — a genuine fetch/parse failure looked identical to a real empty inbox. | Added a distinct error state showing the real error message, matching the pattern already used on the History page. |
+| **Compounding reload/"flicker" bug, same root cause** | `toMessageModel` read a nonexistent `is_read` field, so `isMine: false` messages were always judged unread. The thread's mark-as-read effect re-fired every 5s poll for the same messages, and each `markAsRead` success invalidates the conversations-list query too — stacking extra refetches on top of the intentional 15s/5s polling. | `toMessageModel` now reads the real `read_status` boolean, so already-read messages stop re-triggering `markAsRead`. The 15s/5s polling itself is unchanged and still deliberate (documented in Phase 7 above) — this fix only removes the *extra*, unintended refetch loop layered on top of it. |
+
+**Verified:** `pnpm typecheck`, `pnpm lint` clean. Confirmed against a real captured `GET /conversations` response (embedded above in this doc's source conversation) rather than inference this time.
+
+---
+
 ## Phase 8 — Saved Property (favorites)
 
 Built from real screenshots (`docs/design/screenshots/saved/`), not a live Figma pull.

@@ -27,56 +27,92 @@ export interface SendMessageResponse {
 }
 
 /**
- * Everything below (conversations list, thread, unread count, mark-as-read)
- * is confirmed to exist as real endpoints (Postman collection, "Messaging"
- * folder), but NONE of them have a saved example request/response — unlike
- * `Send Message` above. These shapes are a best-effort design based on: (a)
- * the field names `Send Message`'s own payload confirms are real
- * (`sender_id`/`recipient_id`/`content`/`message_type`/`attachments`/
- * `reference_id`/`reference_type`), and (b) how this same backend shapes a
- * user reference elsewhere (`ApiPropertyOwner` in properties/types.ts nests
- * `profile: {first_name, last_name, full_name, profile_picture_url}`).
- * Treat as unconfirmed until live-tested — see docs/design-vs-backend-gaps.md.
+ * Confirmed live via a real captured response from
+ * `GET /api/communication/messages/conversations` (2026-07-20) — this
+ * replaced an earlier guessed shape (`user`/`last_message.created_at`/
+ * `last_message.is_read`) that didn't match reality and was throwing at
+ * runtime. `ConversationThreadResponse`'s per-message shape is still
+ * unconfirmed on its own, but reuses `ApiMessage` since a thread message and
+ * a conversation's embedded `last_message` are the same underlying model.
  */
+export interface MessagingProfile {
+  profile_id: ID;
+  user_id: ID;
+  first_name: string;
+  last_name: string;
+  date_of_birth: string | null;
+  profile_picture_url: string | null;
+  bio: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface MessagingParticipant {
   user_id: ID;
+  email: string;
+  phone_number: string;
   role: string;
-  profile: {
-    first_name: string;
-    last_name: string;
-    full_name: string;
-    profile_picture_url: string | null;
-  };
-}
-
-export interface ApiConversation {
-  user: MessagingParticipant;
-  last_message: {
-    content: string;
-    created_at: string;
-    is_read: 0 | 1;
-    sender_id: ID;
-  };
-  unread_count: number;
-}
-
-export interface ConversationsResponse {
-  success: boolean;
-  message: string;
-  data: ApiConversation[];
+  status: string;
+  created_at: string;
+  updated_at: string;
+  last_login_at: string | null;
+  profile: MessagingProfile;
 }
 
 export interface ApiMessage {
   message_id: ID;
+  conversation_id: string;
   sender_id: ID;
-  recipient_id: ID;
-  content: string;
+  receiver_id: ID;
+  sender?: MessagingParticipant;
+  receiver?: MessagingParticipant;
   message_type: string;
+  content: string;
   attachments: string[];
+  read_status: boolean;
+  read_at: string | null;
+  delivered_status: boolean;
+  delivered_at: string | null;
+  sent_at: string;
+  edited_at: string | null;
+  is_edited: boolean;
+  is_deleted: boolean;
   reference_id: ID | null;
   reference_type: string | null;
-  is_read: 0 | 1;
-  created_at: string;
+}
+
+export interface ApiConversationProperty {
+  property_id: ID;
+  title: string;
+  property_type: string;
+  purpose: string;
+  price: string;
+  currency: string;
+  location_address: string;
+  city: string;
+  state: string;
+}
+
+export interface ApiConversation {
+  conversation_id: string;
+  other_user: MessagingParticipant;
+  last_message: ApiMessage;
+  last_message_at: string;
+  unread_count: number;
+  is_archived: boolean;
+  is_blocked: boolean;
+  is_blocked_by: boolean;
+  property: ApiConversationProperty | null;
+  transaction: unknown | null;
+}
+
+export interface ConversationsResponse {
+  success: boolean;
+  data: ApiConversation[];
 }
 
 export interface ConversationThreadResponse {

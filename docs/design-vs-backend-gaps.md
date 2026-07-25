@@ -417,6 +417,33 @@ Built from real screenshots (`docs/design/screenshots/profile/`, 5 frames), not 
 
 ---
 
+## Phase 13 — Shortlets (+ self-service role switch)
+
+New feature area, from the 2026-07-22 Postman collection (15 new endpoints, all with full real saved examples — unusually well-documented) and `Shortlet_Frontend_UI_UX_BRD.md`. Blueprint written first in `docs/design/shortlet-implementation-plan.md`; this section records what was actually built and the gaps that remain. A shortlet listing is a real `property` record with a third `purpose` value (`shortlet`), plus a booking system (rooms → search → quote → hold → pay → auto-confirm, no checkout).
+
+**New this phase, and relevant beyond shortlets:** `PUT /api/profile/role` — a genuine self-service role switch (in the User Profile folder, not shortlet-specific). This is the endpoint the earlier role-consolidation discussion assumed didn't exist. Wired into Profile as a "Switch account role" dialog offering the four consumer roles (buyer/tenant/landlord/seller); updates the session store + role cookie so gates (List Property's `canList`) and proxy redirects reflect it without a re-login.
+
+| Gap | Detail | What we did |
+|---|---|---|
+| **No owner-facing bookings endpoint** | The BRD plans an "Owner bookings" screen, but only `GET /bookings/mine` (guest) and `GET /admin/shortlets/bookings` (admin-only) exist. | **Not built.** Owner management covers listings + room calendars only; incoming-bookings visibility is deferred until a real owner endpoint exists. Flagged as the top open question to backend. |
+| **Role naming is a relabel, not a new enum** | BRD says "Shortlet owner"/"Shortlet user"; the actual role enum is unchanged (`landlord/tenant/seller/buyer/lawyer/surveyor`), and `Switch Role`'s example switches to `"landlord"`. | Built the switch around the real existing roles, with copy noting capability (a host switches to Landlord). **Which roles may switch, and which one shortlet-creation actually requires, is unconfirmed** — the UI surfaces the real backend error (e.g. 403) verbatim rather than pre-gating. |
+| **No single-booking `GET` endpoint** | Only list endpoints exist for bookings — no `GET /bookings/{id}`. | The booking detail page reads from the polled `/bookings/mine` list and finds the row by id. Polling (15s) means it flips `pending_payment`→`confirmed` on its own after the webhook; workable, but flagged to backend as a likely oversight. |
+| **Only Flutterwave** | `Pay Booking`'s only example uses `gateway: "flutterwave"`. | Single real "Pay with Flutterwave" action (reuses Offers' new-tab redirect + cache-only payment-session pattern), not a gateway picker. Same treatment as Make an Offer. |
+| **`Switch Role` has no saved response** | Body confirmed (`{role}`), response shape unknown. | Trust the role we sent, not a parsed response — `useSwitchRole` sets the session role from the mutation variable on success. |
+| **Money typed inconsistently across responses** | Some fields are decimal strings (`"40000.00"`), others plain numbers (quote's `subtotal: 80000`). | `models.ts` coerces everything through one `num()` helper; components only ever see formatted strings. |
+| **Nested `rooms`/`property` trimmed differently per endpoint** | Create returns the fullest room shape; list/browse/search return only `status/room_id/name`. | Optional fields on `ApiShortletRoom`/`ApiShortletListing` reflect "not always in the example," and the models fall back gracefully (e.g. `capacity ?? null`). |
+| **Photos** | Not yet wired for shortlets. | Listing cards/detail show a neutral placeholder. The create response returns a real `property_id`, so the existing `propertiesApi.uploadMedia` flow can be reused later — deferred, not blocked. |
+
+### Architecture notes
+- **New `src/features/shortlets/`** — full `types/api/models/hooks/index`, same structure as every feature. Deliberately mirrors `offers` for the pay flow: a cache-only `paymentSession` key (seeded by `usePayBooking`) kept strictly separate from any re-fetchable query, exactly the split that avoided the Notifications-style cache-corruption bug (Phase 9).
+- **New `shortlets` query-key namespace** with factory functions, matching the `properties`/`contracts` convention.
+- **Session store gained `setRole`** + a narrow `persistRole` in `token.ts` (updates only the role cookie, leaving token/status untouched) — so a role switch doesn't require a full re-login to keep proxy redirects consistent.
+- **7 new routes**: `/shortlets` (guest search), `/shortlets/[listingId]` (detail + availability + quote + book), `/shortlets/bookings` (my bookings), `/shortlets/bookings/[bookingId]` (booking detail + pay + cancel), `/shortlets/manage` (owner listings), `/shortlets/manage/[listingId]` (activate + rooms), `/shortlets/manage/[listingId]/rooms/[roomId]` (calendar). One new nav item ("Shortlets"); owner + bookings reachable via buttons on the search page, keeping nav uncluttered per BRD §2.
+
+**Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm build` — all clean, 35 routes. **Not yet done (same caveats as Offers, Phase 11):** no live end-to-end test through a real Flutterwave payment to confirm the `pending_payment`→`confirmed` transition; no live confirmation of which role the backend requires for shortlet creation (Gap 2); photo upload deferred.
+
+---
+
 ## Not yet compared (future phases — flagging now, not asserting a mismatch)
 These are things noticed during the initial capability check, before the relevant Figma screens were inspected in detail. Revisit when that phase starts:
 - **No single `GET /properties/{id}`** — property detail is fetched via `search` with an `id` filter. Fine for now; worth double-checking the Search Property / Listing Figma screens don't assume a dedicated detail endpoint's response shape.

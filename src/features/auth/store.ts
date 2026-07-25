@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { clearSession, persistSession } from "@/lib/auth/token";
+import { clearSession, persistRole, persistSession } from "@/lib/auth/token";
+import type { UserRole } from "@/config/constants";
 import type { AuthUser } from "./types";
 
 interface SessionState {
@@ -8,6 +9,8 @@ interface SessionState {
   status: "idle" | "loading" | "authenticated" | "guest";
   setSession: (user: AuthUser, token: string) => void;
   setUser: (user: AuthUser) => void;
+  /** Self-service role switch — updates the store's user + the role cookie so gates and proxy redirects reflect it immediately. */
+  setRole: (role: UserRole) => void;
   setStatus: (status: SessionState["status"]) => void;
   clear: () => void;
 }
@@ -25,6 +28,11 @@ export const useSessionStore = create<SessionState>((set) => ({
     set({ user, status: "authenticated" });
   },
   setUser: (user) => set({ user, status: "authenticated" }),
+  setRole: (role) =>
+    set((state) => {
+      persistRole(role);
+      return state.user ? { user: { ...state.user, role } } : {};
+    }),
   setStatus: (status) => set({ status }),
   clear: () => {
     clearSession();

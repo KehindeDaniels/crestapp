@@ -15,16 +15,29 @@ import {
   Info,
   List,
   Lock,
+  Repeat,
   Scale,
   User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFullProfile } from "@/features/profile";
 import { useMyKycStatus } from "@/features/kyc";
+import { useSessionStore } from "@/features/auth";
 import { EditProfileDialog } from "./edit-profile-dialog";
 import { PaymentMethodDialog } from "./payment-method-dialog";
 import { NotificationsDialog } from "./notifications-dialog";
 import { ChangePasswordDialog } from "./change-password-dialog";
+import { RoleSwitchDialog } from "./role-switch-dialog";
+
+const ROLE_LABELS: Record<string, string> = {
+  buyer: "Buyer",
+  tenant: "Renter",
+  landlord: "Landlord / Host",
+  seller: "Seller",
+  lawyer: "Lawyer",
+  surveyor: "Surveyor",
+  admin: "Admin",
+};
 
 /**
  * Built from real screenshots (docs/design/screenshots/profile/), not a live
@@ -37,11 +50,14 @@ import { ChangePasswordDialog } from "./change-password-dialog";
 export function ProfileContent() {
   const { data: profile, isPending } = useFullProfile();
   const { data: kycStatus } = useMyKycStatus();
+  const role = useSessionStore((s) => s.user?.role);
   const isVerified = kycStatus === "approved";
   const [editOpen, setEditOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
+  const [roleOpen, setRoleOpen] = useState(false);
+  const [roleRevision, setRoleRevision] = useState(0);
   // Bumped only when a dialog opens (never on close) and passed as its
   // `key` below — forces a fresh remount so pre-filled form state
   // (name/bank details/preferences) always starts from the latest server
@@ -83,6 +99,11 @@ export function ProfileContent() {
               )}
             </p>
             <p className="text-sm text-muted-foreground">{profile.email}</p>
+            {role && (
+              <p className="mt-1 inline-block rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                {ROLE_LABELS[role] ?? role}
+              </p>
+            )}
           </div>
         </div>
         <Button
@@ -102,6 +123,14 @@ export function ProfileContent() {
           <ProfileRow icon={List} label="My listing" href="/profile/listings" />
           <ProfileRow icon={Heart} label="Favourites" href="/saved" />
           <ProfileRow icon={HistoryIcon} label="History" href="/history" />
+          <ProfileRow
+            icon={Repeat}
+            label="Switch account role"
+            onClick={() => {
+              setRoleRevision((r) => r + 1);
+              setRoleOpen(true);
+            }}
+          />
         </ProfileSection>
 
         <ProfileSection title="Legal">
@@ -155,6 +184,12 @@ export function ProfileContent() {
       />
       <NotificationsDialog key={notificationsRevision} open={notificationsOpen} onOpenChange={setNotificationsOpen} />
       <ChangePasswordDialog open={passwordOpen} onOpenChange={setPasswordOpen} />
+      <RoleSwitchDialog
+        key={roleRevision}
+        open={roleOpen}
+        onOpenChange={setRoleOpen}
+        currentRole={role}
+      />
     </div>
   );
 }

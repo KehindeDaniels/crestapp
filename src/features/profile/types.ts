@@ -96,3 +96,16 @@ export interface ChangePasswordPayload {
 export interface ChangePasswordResponse {
   message: string;
 }
+
+/**
+ * `PUT /api/profile/role` — self-service role switch. Real endpoint (appeared
+ * in the 2026-07-22 collection), body confirmed as `{role}`, but it has NO
+ * saved response example — typed loosely. IMPORTANT: which existing role(s)
+ * this may switch TO, and which roles are allowed to switch at all, is not
+ * documented — the one example switches to "landlord". See
+ * docs/design/shortlet-implementation-plan.md, Gap 2.
+ */
+export interface SwitchRoleResponse {
+  success?: boolean;
+  message?: string;
+}

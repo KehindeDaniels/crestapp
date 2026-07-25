@@ -1,8 +1,10 @@
 import { apiClient } from "@/lib/api/client";
+import type { UserRole } from "@/config/constants";
 import type {
   ChangePasswordPayload,
   ChangePasswordResponse,
   ProfileResponse,
+  SwitchRoleResponse,
   UpdateProfilePayload,
   UpdateProfileResponse,
 } from "./types";
@@ -18,4 +20,7 @@ export const profileApi = {
       method: "POST",
       body: payload,
     }),
+
+  switchRole: (role: UserRole) =>
+    apiClient<SwitchRoleResponse>("/api/profile/role", { method: "PUT", body: { role } }),
 };

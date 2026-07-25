@@ -48,4 +48,29 @@ export const queryKeys = {
     tickets: ["support", "tickets"] as const,
     ticket: (id: number) => ["support", "ticket", id] as const,
   },
+  shortlets: {
+    all: ["shortlets"] as const,
+    /** Owner's own listings (`GET /api/shortlets`). */
+    mine: ["shortlets", "mine"] as const,
+    /** Guest search results (`POST /api/shortlets/search`). */
+    search: (params: unknown) => ["shortlets", "search", params] as const,
+    /** Public listing detail (`GET /api/shortlets/browse/{id}`). */
+    detail: (listingId: number) => ["shortlets", "detail", listingId] as const,
+    /** Which rooms are free for a date range (`GET .../browse/{id}/availability`). */
+    availability: (listingId: number, params: unknown) =>
+      ["shortlets", "availability", listingId, params] as const,
+    /** Per-night owner calendar for one room (`GET .../rooms/{id}/calendar`). */
+    calendar: (listingId: number, roomId: number, params: unknown) =>
+      ["shortlets", "calendar", listingId, roomId, params] as const,
+    /** Guest's own bookings (`GET /api/shortlets/bookings/mine`). */
+    myBookings: ["shortlets", "bookings", "mine"] as const,
+    /**
+     * One-time payment session for a booking (payment_url) — distinct from any
+     * re-fetchable booking-status query, exactly like `contracts.paymentSession`
+     * vs `contracts.detail`. Never share a key between a cache-only snapshot and
+     * a live-polled query (see offers/hooks.ts for why).
+     */
+    paymentSession: (bookingId: number) =>
+      ["shortlets", "booking-payment-session", bookingId] as const,
+  },
 } as const;

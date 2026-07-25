@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/api/query-keys";
 import { useSessionStore } from "@/features/auth";
+import type { UserRole } from "@/config/constants";
 import { profileApi } from "./api";
 import { toFullProfileModel, toProfileViewModel } from "./models";
 import type { ChangePasswordPayload, UpdateProfilePayload } from "./types";
@@ -54,5 +55,24 @@ export function useUpdateProfile() {
 export function useChangePassword() {
   return useMutation({
     mutationFn: (payload: ChangePasswordPayload) => profileApi.changePassword(payload),
+  });
+}
+
+/**
+ * `PUT /api/profile/role` — self-service role switch. On success, updates the
+ * session store's role (so gates like List Property's `canList` and the
+ * role cookie's proxy redirects reflect it without a re-login) and refreshes
+ * the profile cache. No confirmed response shape — the switched-to role we
+ * trust is the one we sent, not one parsed from the response.
+ */
+export function useSwitchRole() {
+  const queryClient = useQueryClient();
+  const setRole = useSessionStore((s) => s.setRole);
+  return useMutation({
+    mutationFn: (role: UserRole) => profileApi.switchRole(role),
+    onSuccess: (_data, role) => {
+      setRole(role);
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.detail });
+    },
   });
 }

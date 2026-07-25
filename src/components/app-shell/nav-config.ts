@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  BedDouble,
   Bookmark,
   History,
   LayoutGrid,
@@ -27,6 +28,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/home", icon: LayoutGrid, enabled: true },
   { label: "Search Property", href: "/search", icon: Search, enabled: true },
   { label: "List Property", href: "/properties/new", icon: PlusSquare, enabled: true },
+  { label: "Shortlets", href: "/shortlets", icon: BedDouble, enabled: true },
   { label: "Messages", href: "/messages", icon: MessageCircle, enabled: true },
   { label: "History", href: "/history", icon: History, enabled: true },
   { label: "Saved Property", href: "/saved", icon: Bookmark, enabled: true },

@@ -52,6 +52,16 @@ export function persistSession({ token, role, status }: SessionSnapshot): void {
   writeCookie(STATUS_COOKIE, status);
 }
 
+/**
+ * Updates only the role cookie (leaving token/status untouched) — for the
+ * self-service role switch (`PUT /api/profile/role`), so `proxy.ts`'s
+ * role-based redirects stay consistent with the switched role without a full
+ * re-login.
+ */
+export function persistRole(role: UserRole): void {
+  writeCookie(ROLE_COOKIE, role);
+}
+
 export function clearSession(): void {
   deleteCookie(AUTH_COOKIE);
   deleteCookie(ROLE_COOKIE);

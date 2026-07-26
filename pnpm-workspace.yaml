@@ -1,3 +1,9 @@
-ignoredBuiltDependencies:
+# Allow these native deps to run their build scripts during install.
+# sharp = image processing (pulled in by Next); unrs-resolver = native resolver
+# in Next's toolchain. Both must compile native binaries — without this,
+# pnpm 10+ blocks them (ERR_PNPM_IGNORED_BUILDS) and Hostinger's Deploy Web App
+# install fails. `onlyBuiltDependencies` is the allow-list; do NOT use
+# `ignoredBuiltDependencies` here (that's the block-list, the original bug).
+onlyBuiltDependencies:
   - sharp
   - unrs-resolver

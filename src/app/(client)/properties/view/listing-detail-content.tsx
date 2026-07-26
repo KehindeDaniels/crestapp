@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   BedDouble,
   Bath,
@@ -54,7 +55,9 @@ const COMING_SOON_FEATURES: { label: string; icon: LucideIcon }[] = [
   { label: "Covered Parking", icon: Car },
 ];
 
-export function ListingDetailContent({ propertyId }: { propertyId: number }) {
+export function ListingDetailContent() {
+  const idParam = useSearchParams().get("id");
+  const propertyId = idParam ? Number(idParam) : 0;
   const { data: property, isPending, isError } = usePropertyDetail(propertyId);
   const currentUserId = useSessionStore((s) => s.user?.user_id);
   const [desktopGalleryOpen, setDesktopGalleryOpen] = useState(false);

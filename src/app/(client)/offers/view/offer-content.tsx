@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   CheckCircle2,
   ChevronLeft,
@@ -50,7 +51,9 @@ import {
  *   glyphs, not the real marks — those 3 tiles are disabled placeholders,
  *   not worth downloading/hosting real brand assets for.
  */
-export function OfferContent({ contractId }: { contractId: number }) {
+export function OfferContent() {
+  const idParam = useSearchParams().get("id");
+  const contractId = idParam ? Number(idParam) : 0;
   const { data: offer } = useOffer(contractId);
   const { data: status, isPending, isError, error } = useContractDetail(contractId);
   const { data: property } = usePropertyDetail(status?.propertyId ?? 0);
@@ -81,7 +84,7 @@ export function OfferContent({ contractId }: { contractId: number }) {
       <div className="mx-auto max-w-md space-y-4 p-10 text-center">
         <XCircle className="mx-auto size-8 text-destructive" />
         <p className="text-sm font-medium">This offer was cancelled</p>
-        <Link href={`/properties/${status.propertyId}`} className="text-sm font-medium text-primary">
+        <Link href={`/properties/view?id=${status.propertyId}`} className="text-sm font-medium text-primary">
           Back to the property
         </Link>
       </div>
@@ -92,7 +95,7 @@ export function OfferContent({ contractId }: { contractId: number }) {
 
   return (
     <div className="mx-auto max-w-6xl space-y-4 p-4 sm:p-6 lg:p-10">
-      <Link href={`/properties/${status.propertyId}`} className="flex items-center gap-1 text-xs text-muted-foreground">
+      <Link href={`/properties/view?id=${status.propertyId}`} className="flex items-center gap-1 text-xs text-muted-foreground">
         <ChevronLeft className="size-3.5" />
         Back
       </Link>

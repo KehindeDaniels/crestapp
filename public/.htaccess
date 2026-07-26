@@ -1,0 +1,32 @@
+# Crest — static export (Next.js `output: export`) on Hostinger LiteSpeed/Apache.
+#
+# Every app route is pre-rendered to its own folder + index.html (trailingSlash),
+# so NO single-page catch-all rewrite is needed — unknown URLs fall through to
+# the real 404 page below. Query-param routes (e.g. /properties/view?id=5) are
+# served by the matching /properties/view/ directory index; the server's
+# DirectorySlash keeps the query string intact.
+
+# Serve Next's generated not-found page for unknown URLs.
+ErrorDocument 404 /404.html
+
+# Force HTTPS.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Content-hashed build assets are immutable — cache hard.
+  <FilesMatch "\.(js|css|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # HTML must always revalidate so a new deploy is picked up immediately.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  # Basic hardening.
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

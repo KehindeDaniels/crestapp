@@ -354,7 +354,7 @@ function ReferencedProperty({ propertyId }: { propertyId: number }) {
 
   return (
     <Link
-      href={`/properties/${propertyId}`}
+      href={`/properties/view?id=${propertyId}`}
       className="flex max-w-sm items-center gap-3 rounded-xl border bg-background p-2"
     >
       <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-muted">

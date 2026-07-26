@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { CheckCircle2, ChevronLeft, Clock, Loader2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,7 +47,8 @@ const STATUS_LABELS: Record<string, string> = {
  * the Offers redirect pattern: open the real payment_url in a new tab, keep
  * this page (and its polling) alive.
  */
-export function BookingDetailContent({ bookingId }: { bookingId: number }) {
+export function BookingDetailContent() {
+  const bookingId = Number(useSearchParams().get("id")) || 0;
   const { data: bookings, isPending } = useMyBookings();
   const booking = bookings?.find((b) => b.bookingId === bookingId);
 

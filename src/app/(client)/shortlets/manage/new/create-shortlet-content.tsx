@@ -95,7 +95,7 @@ export function CreateShortletContent() {
       },
       {
         onSuccess: (response) => {
-          router.push(`/shortlets/manage/${response.data.listing_id}`);
+          router.push(`/shortlets/manage/view?id=${response.data.listing_id}`);
         },
       },
     );

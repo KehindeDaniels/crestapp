@@ -23,7 +23,7 @@ import type { PropertyCardModel } from "../models";
  */
 export function PropertyCard({ property }: { property: PropertyCardModel }) {
   return (
-    <Link href={`/properties/${property.id}`} className="block w-80 shrink-0 sm:w-84.25">
+    <Link href={`/properties/view?id=${property.id}`} className="block w-80 shrink-0 sm:w-84.25">
       <div className="mb-2 flex items-center gap-2 sm:mb-3 sm:gap-3">
         <div className="bg-muted relative size-7.5 shrink-0 overflow-hidden rounded-full sm:size-10.5">
           {property.ownerAvatarUrl && (

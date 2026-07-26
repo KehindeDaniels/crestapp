@@ -4,15 +4,11 @@ import { ShortletDetailContent } from "./shortlet-detail-content";
 
 export const metadata: Metadata = { title: "Shortlet" };
 
-export default async function ShortletDetailPage({
-  params,
-}: {
-  params: Promise<{ listingId: string }>;
-}) {
-  const { listingId } = await params;
+/** `/shortlets/view?id=1&check_in=…&nights=…` — query-param based for static export. */
+export default function ShortletDetailPage() {
   return (
     <Suspense>
-      <ShortletDetailContent listingId={Number(listingId)} />
+      <ShortletDetailContent />
     </Suspense>
   );
 }

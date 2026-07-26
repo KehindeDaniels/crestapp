@@ -182,7 +182,7 @@ export function ShortletSearchContent() {
               {data.listings.map((listing) => (
                 <Link
                   key={listing.listingId}
-                  href={`/shortlets/${listing.listingId}?check_in=${data.checkInDate}&nights=${data.nights}`}
+                  href={`/shortlets/view?id=${listing.listingId}&check_in=${data.checkInDate}&nights=${data.nights}`}
                   className="flex flex-col gap-2 rounded-2xl border p-4 transition-colors hover:bg-accent"
                 >
                   <div className="aspect-video w-full rounded-xl bg-muted" />

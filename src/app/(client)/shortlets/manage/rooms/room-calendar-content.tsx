@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -31,13 +32,10 @@ function monthBounds(year: number, month: number): { from: string; to: string } 
   return { from: first.toISOString().slice(0, 10), to: last.toISOString().slice(0, 10) };
 }
 
-export function RoomCalendarContent({
-  listingId,
-  roomId,
-}: {
-  listingId: number;
-  roomId: number;
-}) {
+export function RoomCalendarContent() {
+  const searchParams = useSearchParams();
+  const listingId = Number(searchParams.get("listing")) || 0;
+  const roomId = Number(searchParams.get("room")) || 0;
   const now = new Date();
   const [year, setYear] = useState(now.getUTCFullYear());
   const [month, setMonth] = useState(now.getUTCMonth());
@@ -81,7 +79,7 @@ export function RoomCalendarContent({
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4 sm:p-6 lg:p-10">
       <Link
-        href={`/shortlets/manage/${listingId}`}
+        href={`/shortlets/manage/view?id=${listingId}`}
         className="flex items-center gap-1 text-sm font-medium text-muted-foreground"
       >
         <ChevronLeft className="size-4" />

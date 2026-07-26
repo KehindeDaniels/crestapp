@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
@@ -15,7 +16,8 @@ import { useShortletDetail, useUpdateShortlet } from "@/features/shortlets";
  * reconstruct). Each room links to its calendar. See
  * docs/design/shortlet-implementation-plan.md.
  */
-export function ManageListingContent({ listingId }: { listingId: number }) {
+export function ManageListingContent() {
+  const listingId = Number(useSearchParams().get("id")) || 0;
   const { data: listing, isPending, isError } = useShortletDetail(listingId);
   const updateShortlet = useUpdateShortlet(listingId);
 
@@ -121,7 +123,7 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
           {listing.rooms.map((room) => (
             <Link
               key={room.roomId}
-              href={`/shortlets/manage/${listingId}/rooms/${room.roomId}`}
+              href={`/shortlets/manage/rooms?listing=${listingId}&room=${room.roomId}`}
               className="flex items-center justify-between gap-3 rounded-xl border p-3 transition-colors hover:bg-accent"
             >
               <span className="flex items-center gap-3">

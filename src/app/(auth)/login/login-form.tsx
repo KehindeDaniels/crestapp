@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -21,8 +21,10 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useLogin, loginSchema, type LoginInput } from "@/features/auth";
 import { isApiError } from "@/lib/api/errors";
 
-export function LoginForm({ nextPath }: { nextPath: string }) {
+export function LoginForm() {
   const router = useRouter();
+  const nextParam = useSearchParams().get("next");
+  const nextPath = nextParam && nextParam.startsWith("/") ? nextParam : "/home";
   const login = useLogin();
   const [formError, setFormError] = useState<string | null>(null);
 

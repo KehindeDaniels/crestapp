@@ -41,7 +41,7 @@ export function PropertySearchResultCard({ property }: { property: PropertyCardM
         </div>
       </div>
 
-      <Link href={`/properties/${property.id}`} className="block">
+      <Link href={`/properties/view?id=${property.id}`} className="block">
         <div className="relative aspect-337/217 overflow-hidden rounded-xl bg-muted sm:rounded-2xl">
           {property.imageUrl && (
             <Image

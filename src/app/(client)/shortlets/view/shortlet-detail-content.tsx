@@ -41,9 +41,10 @@ function todayIso(): string {
  * created it routes to the booking page to pay. See
  * docs/design/shortlet-implementation-plan.md.
  */
-export function ShortletDetailContent({ listingId }: { listingId: number }) {
+export function ShortletDetailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const listingId = Number(searchParams.get("id")) || 0;
   const [checkIn, setCheckIn] = useState(searchParams.get("check_in") || todayIso());
   const [nights, setNights] = useState(Number(searchParams.get("nights")) || 2);
   const [selectedRooms, setSelectedRooms] = useState<ID[]>([]);
@@ -95,7 +96,7 @@ export function ShortletDetailContent({ listingId }: { listingId: number }) {
       },
       {
         onSuccess: (response) => {
-          router.push(`/shortlets/bookings/${response.data.booking_id}`);
+          router.push(`/shortlets/bookings/view?id=${response.data.booking_id}`);
         },
       },
     );

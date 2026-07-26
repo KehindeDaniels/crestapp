@@ -103,7 +103,7 @@ export function MyBookingsContent() {
         {visible.map((booking) => (
           <Link
             key={booking.bookingId}
-            href={`/shortlets/bookings/${booking.bookingId}`}
+            href={`/shortlets/bookings/view?id=${booking.bookingId}`}
             className="flex items-center justify-between gap-4 rounded-2xl border p-4 transition-colors hover:bg-accent"
           >
             <div className="min-w-0">

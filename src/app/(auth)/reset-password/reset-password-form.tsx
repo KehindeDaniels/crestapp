@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -27,8 +27,9 @@ import {
 } from "@/features/auth";
 import { isApiError } from "@/lib/api/errors";
 
-export function ResetPasswordForm({ email }: { email: string }) {
+export function ResetPasswordForm() {
   const router = useRouter();
+  const email = useSearchParams().get("email") ?? "";
   const confirmReset = useConfirmPasswordReset();
   const [formError, setFormError] = useState<string | null>(null);
 

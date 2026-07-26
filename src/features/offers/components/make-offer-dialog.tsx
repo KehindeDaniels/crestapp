@@ -61,7 +61,7 @@ export function MakeOfferDialog({
     createOffer.mutate(propertyId, {
       onSuccess: (response) => {
         setOpen(false);
-        router.push(`/offers/${response.data.contract.contract_id}`);
+        router.push(`/offers/view?id=${response.data.contract.contract_id}`);
       },
     });
   }

@@ -62,7 +62,7 @@ export function ManageShortletsContent() {
           {listings.map((listing) => (
             <Link
               key={listing.listingId}
-              href={`/shortlets/manage/${listing.listingId}`}
+              href={`/shortlets/manage/view?id=${listing.listingId}`}
               className="flex flex-col gap-2 rounded-2xl border p-4 transition-colors hover:bg-accent"
             >
               <div className="aspect-video w-full rounded-xl bg-muted" />

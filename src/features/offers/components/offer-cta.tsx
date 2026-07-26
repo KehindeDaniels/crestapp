@@ -55,7 +55,7 @@ export function OfferCta({
   if (existingOffer && !RESTARTABLE_STATUSES.has(existingOffer.status)) {
     return (
       <Button asChild variant={variant} size={size} className={className}>
-        <Link href={`/offers/${existingOffer.contractId}`}>
+        <Link href={`/offers/view?id=${existingOffer.contractId}`}>
           View Offer · {STATUS_LABELS[existingOffer.status] ?? existingOffer.status}
         </Link>
       </Button>

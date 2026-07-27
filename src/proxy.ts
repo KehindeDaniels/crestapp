@@ -32,6 +32,13 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasToken = Boolean(request.cookies.get(AUTH_COOKIE)?.value);
 
+  // The app has no marketing landing of its own — the public site at
+  // crestapp.ng (WordPress) is the front door. So the app root goes straight
+  // to Home (already signed in) or Login (guest), in a single edge redirect.
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL(hasToken ? "/home" : "/login", request.url));
+  }
+
   const isGuestOnly = GUEST_ONLY.some((p) => pathname.startsWith(p));
   const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
 

@@ -73,27 +73,36 @@ Browser ──▶ app.crestapp.ng  (this Next.js SSR app, on Hostinger Deploy We
 
 ## 4. User roles
 
-The backend role enum is fixed: **`landlord`, `tenant`, `seller`, `buyer`,
-`lawyer`, `surveyor`, `admin`** (plus a staff `support_agent`). The four
-consumer roles are the only self-selectable ones.
+Backend role enum: **`landlord`, `tenant`, `seller`, `buyer`, `lawyer`,
+`surveyor`, `shortlet_owner`, `shortlet_user`, `admin`** (plus a staff
+`support_agent`). The six consumer roles are self-selectable.
+
+> **Update (2026-07-27):** `shortlet_owner` and `shortlet_user` were added to the
+> backend register enum in the "final" Postman collection and are now wired into
+> the frontend (registration picker, Profile role switch, hosting gate). Before
+> that, no shortlet role existed and a shortlet host had to be treated as a
+> `landlord` — that was a backend limitation the frontend flagged, not a frontend
+> bug. See §5.7.
 
 | What the user is | Role value | Can do |
 |---|---|---|
 | Buyer | `buyer` | Browse, make offers on **sale** properties |
 | Renter | `tenant` | Find/rent long-term properties |
-| Landlord / Host | `landlord` | **List rentals AND shortlets** |
+| Landlord | `landlord` | List long-term **rental** properties |
 | Seller | `seller` | List **sale** properties |
+| **Shortlet Host** | `shortlet_owner` | **List & manage short-stay rentals** |
+| **Shortlet Guest** | `shortlet_user` | Search & book short-stays |
 | Lawyer / Surveyor / Admin | staff | Not self-service; provisioned via the separate admin system |
 
-- **Role gating that actually exists in the UI**: only `landlord`/`seller` see a
-  working "List Property" flow; everyone else sees a blocking message.
-- **Self-service role switch** (new): Profile → "Switch account role" →
-  `PUT /api/profile/role`. This updates the session + role cookie live, no
-  re-login. **Important, unconfirmed**: the exact role the backend requires to
-  *create a shortlet* was never confirmed (see `shortlet-implementation-plan.md`,
-  Gap 2). The "Shortlet owner" / "Shortlet user" names in the BRD are a **product
-  relabeling of existing roles** (owner ≈ landlord, guest ≈ tenant/buyer), NOT
-  new role values.
+- **Role gating in the UI**: only `landlord`/`seller` see a working "List
+  Property" flow; **shortlet hosting is gated on `shortlet_owner`** (non-hosts
+  get a soft "Switch to Host" prompt, since the switch is self-service).
+- **Self-service role switch**: Profile → "Switch account role" →
+  `PUT /api/profile/role`. Updates the session + role cookie live, no re-login.
+  Offers all six consumer roles including the two shortlet ones.
+- **Still worth confirming with backend**: whether shortlet *creation* is gated
+  server-side on exactly `shortlet_owner` (the UI assumes so and shows the real
+  error if not). See `docs/design/shortlet-implementation-plan.md`, Gap 2.
 
 ---
 
@@ -204,9 +213,16 @@ released) · `cancelled`.
 ### 5.7 Stakeholder (lead) concerns raised — and the honest explanation
 
 During the build the project lead raised three specific concerns about the
-Shortlet revision. They are all valid product questions; here is exactly why the
-app is the way it is, and what it would take to change each — so the next
-developer isn't blindsided.
+Shortlet revision.
+
+> **Status update (2026-07-27): Concerns 1 and 2 are now RESOLVED.** The backend
+> added `shortlet_owner`/`shortlet_user` roles (2026-07-27 "final" Postman
+> collection), which unblocked the frontend. Now implemented: shortlet roles in
+> the **registration picker** and **Profile role switch**, shortlet **hosting
+> gated on `shortlet_owner`**, and a **"Shortlet" tab on Home/Search** that
+> routes to the dated shortlet search. The explanations below are kept for the
+> record (they show *why* it couldn't be done earlier — a backend gap, not a
+> frontend miss).
 
 **Concern 1 — "I thought 'Shortlet owner' would be a role option on the
 registration screen."**

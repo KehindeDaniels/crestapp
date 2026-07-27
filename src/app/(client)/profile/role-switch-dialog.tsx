@@ -31,12 +31,18 @@ import type { UserRole } from "@/config/constants";
 const SWITCHABLE_ROLES: { value: UserRole; label: string; description: string }[] = [
   { value: "buyer", label: "Buyer", description: "Browse and make offers on properties for sale" },
   { value: "tenant", label: "Renter", description: "Find and rent long-term properties" },
-  {
-    value: "landlord",
-    label: "Landlord / Host",
-    description: "List properties for rent and short-stays",
-  },
+  { value: "landlord", label: "Landlord", description: "List properties for long-term rent" },
   { value: "seller", label: "Seller", description: "List properties for sale" },
+  {
+    value: "shortlet_owner",
+    label: "Shortlet Host",
+    description: "List and manage short-stay rentals",
+  },
+  {
+    value: "shortlet_user",
+    label: "Shortlet Guest",
+    description: "Search and book short-stays",
+  },
 ];
 
 export function RoleSwitchDialog({

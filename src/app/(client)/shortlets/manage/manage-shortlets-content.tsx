@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { BedDouble, Loader2, MapPin, Plus } from "lucide-react";
+import { BedDouble, Loader2, MapPin, Plus, Repeat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { useMyShortlets } from "@/features/shortlets";
+import { useSessionStore } from "@/features/auth";
 
 const STATUS_STYLES: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
@@ -16,9 +17,16 @@ const STATUS_STYLES: Record<string, string> = {
  * confirmed owner-facing bookings endpoint (plan Gap 1), so this manages
  * listings only; incoming-bookings visibility for owners is deferred until
  * that endpoint exists.
+ *
+ * Hosting a shortlet requires the `shortlet_owner` role (added to the backend
+ * enum in the 2026-07-27 collection). A non-host is shown a soft prompt to
+ * switch role rather than a hard block — the switch is self-service in Profile,
+ * and the backend is the real gate (a create attempt with the wrong role 403s).
  */
 export function ManageShortletsContent() {
   const { data: listings, isPending, isError } = useMyShortlets();
+  const role = useSessionStore((s) => s.user?.role);
+  const isHost = role === "shortlet_owner";
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4 sm:p-6 lg:p-10">
@@ -27,13 +35,33 @@ export function ManageShortletsContent() {
           <h1 className="text-xl font-bold sm:text-2xl">My shortlets</h1>
           <p className="text-sm text-muted-foreground">Listings you host for short stays</p>
         </div>
-        <Button asChild size="sm">
-          <Link href="/shortlets/manage/new">
-            <Plus className="size-4" />
-            Add shortlet
-          </Link>
-        </Button>
+        {isHost && (
+          <Button asChild size="sm">
+            <Link href="/shortlets/manage/new">
+              <Plus className="size-4" />
+              Add shortlet
+            </Link>
+          </Button>
+        )}
       </div>
+
+      {!isHost && (
+        <div className="flex flex-col items-start gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-medium">Become a Shortlet Host to list</p>
+            <p className="text-sm text-muted-foreground">
+              Hosting short-stays needs the Shortlet Host role. Switch your role, then come back to
+              add a listing.
+            </p>
+          </div>
+          <Button asChild size="sm" variant="outline" className="shrink-0">
+            <Link href="/profile">
+              <Repeat className="size-4" />
+              Switch to Host
+            </Link>
+          </Button>
+        </div>
+      )}
 
       {isPending && (
         <div className="flex items-center justify-center p-12">

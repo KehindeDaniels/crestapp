@@ -7,6 +7,12 @@ export const USER_ROLES = [
   "buyer",
   "lawyer",
   "surveyor",
+  // Shortlet-specific roles — added to the backend's register enum in the
+  // 2026-07-27 ("final") Postman collection. A shortlet host is now its OWN
+  // role (`shortlet_owner`), NOT lumped under `landlord`; a shortlet guest is
+  // `shortlet_user`. See HANDOVER.md §5.7 and docs/design-vs-backend-gaps.md.
+  "shortlet_owner",
+  "shortlet_user",
   "admin",
 ] as const;
 export type UserRole = (typeof USER_ROLES)[number];

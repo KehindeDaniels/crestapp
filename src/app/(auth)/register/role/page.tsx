@@ -15,29 +15,28 @@ import { cn } from "@/lib/utils/index";
  * and there's no backend endpoint for a user to set it after the fact — see
  * docs/design-vs-backend-gaps.md.
  *
- * Figma's options are Buyer/Renter/Property Owner/Short-Let; the backend's
- * actual role enum is landlord/tenant/seller/buyer/lawyer/surveyor/admin.
- * Mapped Buyer->buyer, Renter->tenant. "Short-Let" has no backend equivalent
- * and was dropped, not silently guessed.
+ * Options map directly to the backend role enum
+ * (landlord/tenant/seller/buyer + shortlet_owner/shortlet_user). "Property
+ * Owner" was originally one option mapped to `landlord`, which was wrong for
+ * Sale owners (role `seller`) — split into explicit Landlord/Seller. Shortlet
+ * roles were added to the backend enum in the 2026-07-27 collection, so
+ * shortlet hosts/guests now register with their OWN role instead of being
+ * lumped under Landlord. See docs/design-vs-backend-gaps.md / HANDOVER.md §5.7.
  *
- * "Property Owner" was originally mapped to `landlord` alone — confirmed
- * live to be wrong: a real seeded example in the Postman collection shows a
- * `purpose: "sale"` property's owner has role `"seller"`, not `"landlord"`,
- * and there's no self-service role-change endpoint (only an admin-only
- * `PUT /api/admin/users/{id}/role`). Anyone who registered as "Property
- * Owner" got 403 the moment they tried to list a Sale property, with no way
- * to fix it themselves. Split into two explicit options instead — see
- * docs/design-vs-backend-gaps.md.
+ * A user can change this later via Profile → Switch account role
+ * (`PUT /api/profile/role`), so an imperfect first choice is no longer a dead
+ * end the way it was before that endpoint existed.
  *
  * Rendered as checkbox-style squares (matching the Figma visual) but with
- * radio (single-select) semantics/behavior, since `role` is a single enum
- * field on the backend, not an array.
+ * radio (single-select) semantics, since `role` is a single enum field.
  */
 const ROLE_OPTIONS: { label: string; value: UserRole }[] = [
-  { label: "Buyer", value: "buyer" },
-  { label: "Renter", value: "tenant" },
+  { label: "Buyer — buy properties", value: "buyer" },
+  { label: "Renter — rent long-term", value: "tenant" },
   { label: "Landlord — list properties for rent", value: "landlord" },
   { label: "Seller — list properties for sale", value: "seller" },
+  { label: "Shortlet Host — rent out short-stays", value: "shortlet_owner" },
+  { label: "Shortlet Guest — book short-stays", value: "shortlet_user" },
 ];
 
 export default function RegisterRolePage() {

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils/cn";
@@ -57,6 +58,14 @@ export function SearchPanel({
             {tab.label}
           </button>
         ))}
+        {/* Shortlet is a different search (needs dates → separate endpoint),
+            so this tab NAVIGATES to /shortlets rather than toggling `purpose`. */}
+        <Link
+          href="/shortlets"
+          className="flex flex-1 items-center justify-center rounded-md py-2.5 text-sm font-medium text-foreground transition-colors"
+        >
+          Shortlet
+        </Link>
       </div>
 
       {/* Desktop: underline tabs */}
@@ -76,6 +85,10 @@ export function SearchPanel({
             {tab.label}
           </button>
         ))}
+        {/* Navigates to the dedicated shortlet search (date-based) — see above. */}
+        <Link href="/shortlets" className="pb-1 text-sm font-medium text-muted-foreground transition-colors">
+          Shortlet
+        </Link>
       </div>
 
       <div className="relative">

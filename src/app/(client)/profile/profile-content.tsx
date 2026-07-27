@@ -32,8 +32,10 @@ import { RoleSwitchDialog } from "./role-switch-dialog";
 const ROLE_LABELS: Record<string, string> = {
   buyer: "Buyer",
   tenant: "Renter",
-  landlord: "Landlord / Host",
+  landlord: "Landlord",
   seller: "Seller",
+  shortlet_owner: "Shortlet Host",
+  shortlet_user: "Shortlet Guest",
   lawyer: "Lawyer",
   surveyor: "Surveyor",
   admin: "Admin",

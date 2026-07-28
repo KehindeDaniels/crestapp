@@ -1,56 +1,21 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { AUTH_COOKIE } from "@/config/constants";
 
 /**
- * Landing page — no Figma design exists for this screen, so this is an
- * original, minimal composition built from the app's existing design tokens
- * and assets (not a new visual language). Purely presentational: both CTAs
- * route into the real, already-built auth flow — no new functionality here.
+ * The app has no landing page of its own — the public site at crestapp.ng
+ * (WordPress) is the marketing front door. The app root redirects to Home
+ * (signed in) or Login (guest).
+ *
+ * This redirect is done HERE at the page level (not only in proxy.ts
+ * middleware) on purpose: on some hosts the middleware doesn't run, and a
+ * previously-static landing page can get cached by a CDN and keep showing.
+ * `force-dynamic` opts this route out of static generation/CDN caching so the
+ * redirect always runs per request.
  */
-export default function LandingPage() {
-  return (
-    <main className="flex flex-1 flex-col">
-      <header className="mx-auto flex w-full max-w-6xl items-center px-6 py-8">
-        <Image
-          src="/images/auth/shared/logo-lockup.png"
-          alt="Crest"
-          width={122}
-          height={37}
-          className="h-9 w-auto"
-        />
-      </header>
+export const dynamic = "force-dynamic";
 
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center gap-12 px-6 pb-16 lg:flex-row lg:justify-between lg:gap-8">
-        <div className="flex max-w-lg flex-col items-center gap-6 text-center lg:items-start lg:text-left">
-          <h1 className="font-heading text-auth-heading text-4xl leading-tight font-bold lg:text-5xl">
-            A safer way to rent or buy homes
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Find verified properties, connect directly with landlords, and avoid
-            scams — Crest checks every listing and every user before you ever
-            make contact.
-          </p>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="xl">
-              <Link href="/register">Get Started</Link>
-            </Button>
-            <Button asChild size="xl" variant="outline">
-              <Link href="/login">Sign In</Link>
-            </Button>
-          </div>
-        </div>
-
-        <Image
-          src="/images/auth/login/house-illustration.png"
-          alt=""
-          width={452}
-          height={404}
-          className="hidden w-full max-w-md lg:block"
-          preload
-        />
-      </div>
-    </main>
-  );
+export default async function RootPage() {
+  const hasToken = Boolean((await cookies()).get(AUTH_COOKIE)?.value);
+  redirect(hasToken ? "/home" : "/login");
 }

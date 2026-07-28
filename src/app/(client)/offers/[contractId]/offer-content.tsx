@@ -161,45 +161,33 @@ export function OfferContent({ contractId }: { contractId: number }) {
             <ShieldCheck className="size-8 shrink-0" />
           </div>
 
-          <div className="space-y-4 rounded-xl border p-3">
-            <div className="space-y-2">
-              <p className="text-sm font-semibold">Transaction Status</p>
-              <div className="flex flex-wrap gap-4">
-                {status.stages.map((stage) => (
-                  <div key={stage.label} className="flex items-center gap-1.5 text-xs">
-                    {stage.done ? (
-                      <CheckCircle2 className="size-3.5 text-success" />
-                    ) : (
-                      <Circle
-                        className={cn(
-                          "size-3.5",
-                          stage.active ? "text-primary" : "text-muted-foreground/40",
-                        )}
-                      />
-                    )}
-                    <span className={stage.done || stage.active ? "" : "text-muted-foreground"}>
-                      {stage.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-xl bg-muted/50 p-3">
-              <p className="text-sm font-semibold">Expected Payouts</p>
-              <div className="mt-3 space-y-2 text-xs">
-                <SummaryRow label="Property Price" value={status.propertyAmountFormatted} />
-                <SummaryRow
-                  label={`Platform Fee (${status.platformFeePercentage}%)`}
-                  value={status.platformFeeFormatted}
-                />
-                <SummaryRow label={`Legal Fee (${status.legalFeePercentage}%)`} value={status.legalFeeFormatted} />
-                <div className="border-t pt-2">
-                  <SummaryRow label="Owner Receives" value={status.ownerReceivesFormatted} bold />
+          <div className="space-y-2 rounded-xl border p-3">
+            <p className="text-sm font-semibold">Transaction Status</p>
+            <div className="flex flex-wrap gap-4">
+              {status.stages.map((stage) => (
+                <div key={stage.label} className="flex items-center gap-1.5 text-xs">
+                  {stage.done ? (
+                    <CheckCircle2 className="size-3.5 text-success" />
+                  ) : (
+                    <Circle
+                      className={cn(
+                        "size-3.5",
+                        stage.active ? "text-primary" : "text-muted-foreground/40",
+                      )}
+                    />
+                  )}
+                  <span className={stage.done || stage.active ? "" : "text-muted-foreground"}>
+                    {stage.label}
+                  </span>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
+          {/* "Expected Payouts / Owner Receives" panel removed — it was a
+              frontend-calculated owner-side figure (not returned by the API,
+              and inconsistent with the real fee model where the buyer pays
+              property + fees). A buyer shouldn't see the owner's payout; the
+              buyer's own costs are already in the Order Summary above. */}
 
           <div className="rounded-xl border border-success bg-success/8 p-3 text-sm">
             <span className="font-semibold text-success">Legal review</span>{" "}

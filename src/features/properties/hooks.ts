@@ -76,6 +76,21 @@ export function useUploadDocument() {
   });
 }
 
+/** Uploads an ownership document to the property-verification track (admin approval reads this). */
+export function useUploadVerificationDocument() {
+  return useMutation({
+    mutationFn: ({ propertyId, formData }: { propertyId: ID; formData: FormData }) =>
+      propertiesApi.uploadVerificationDocument(propertyId, formData),
+  });
+}
+
+/** Submits a property for verification (moves it into the admin's pending review queue). */
+export function useSubmitVerification() {
+  return useMutation({
+    mutationFn: (propertyId: ID) => propertiesApi.submitForVerification(propertyId),
+  });
+}
+
 /** Powers Profile's "My listing" — `POST /api/properties/my-properties`, real endpoint, unconfirmed response shape (assumed to match `search`'s). */
 export function useMyProperties(params: MyPropertiesParams) {
   return useQuery({

@@ -5,18 +5,28 @@ import { CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, Loader2 } from "
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { isApiError } from "@/lib/api/errors";
-import { useShortletDetail, useUpdateShortlet } from "@/features/shortlets";
+import { useMyShortlets, useShortletDetail, useUpdateShortlet } from "@/features/shortlets";
 
 /**
- * Owner's single-listing management — reuses the public `browse` endpoint for
- * detail. Activation sends `{status: "active"}` only (the `PUT` accepts
- * partial updates — every field on `UpdateShortletPayload` is optional — so
- * this avoids re-sending, and possibly clobbering, fields we'd have to
- * reconstruct). Each room links to its calendar. See
- * docs/design/shortlet-implementation-plan.md.
+ * Owner's single-listing management.
+ *
+ * Core data (status, rooms, activate) comes from the owner's own listing list
+ * (`GET /api/shortlets`), which — crucially — includes *drafts*. The public
+ * `browse` endpoint is active-only and 404s a draft, so it can't be the source
+ * here; it's used only to enrich the extra stats (cleaning/service/nights) once
+ * a listing is active.
+ *
+ * Activation sends `{status: "active"}` only (the `PUT` accepts partial updates
+ * — every field on `UpdateShortletPayload` is optional — so this avoids
+ * re-sending, and possibly clobbering, fields we'd have to reconstruct). Each
+ * room links to its calendar. See docs/design/shortlet-implementation-plan.md.
  */
 export function ManageListingContent({ listingId }: { listingId: number }) {
-  const { data: listing, isPending, isError } = useShortletDetail(listingId);
+  const { data: listings, isPending, isError } = useMyShortlets();
+  const listing = listings?.find((l) => String(l.listingId) === String(listingId));
+  const isDraft = listing?.status === "draft";
+  // `browse` is active-only — only fetch the richer detail when the listing is live.
+  const { data: detail } = useShortletDetail(listing && !isDraft ? listingId : null);
   const updateShortlet = useUpdateShortlet(listingId);
 
   if (isPending) {
@@ -38,7 +48,6 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
     );
   }
 
-  const isDraft = listing.status === "draft";
   const hasActiveRoom = listing.rooms.some((r) => r.status === "active");
 
   return (
@@ -68,16 +77,16 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
 
       <div className="grid grid-cols-2 gap-3 rounded-2xl border p-4 text-sm sm:grid-cols-4">
         <Stat label="Per night" value={listing.pricePerNightFormatted} />
-        <Stat label="Cleaning" value={listing.cleaningFeeFormatted} />
+        <Stat label="Cleaning" value={detail?.cleaningFeeFormatted ?? "—"} />
         <Stat
           label="Service fee"
-          value={listing.serviceFeePercent != null ? `${listing.serviceFeePercent}%` : "—"}
+          value={detail?.serviceFeePercent != null ? `${detail.serviceFeePercent}%` : "—"}
         />
         <Stat
           label="Nights"
           value={
-            listing.minNights != null && listing.maxNights != null
-              ? `${listing.minNights}–${listing.maxNights}`
+            detail?.minNights != null && detail?.maxNights != null
+              ? `${detail.minNights}–${detail.maxNights}`
               : "—"
           }
         />

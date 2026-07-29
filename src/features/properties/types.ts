@@ -201,3 +201,24 @@ export interface UploadDocumentResponse {
     file_size: string;
   };
 }
+
+/**
+ * `POST /api/properties/{id}/verification/documents` (multipart) — the
+ * *ownership-verification* track that the admin approval queue actually reads
+ * (distinct from the general `/api/documents/upload` "legal" track). Fields
+ * confirmed from the Postman collection: `document_type`, `document_file`,
+ * plus optional `document_number`/`comments`. No saved response example, so
+ * `data` is typed loosely.
+ */
+export interface UploadVerificationDocumentResponse {
+  success: boolean;
+  message: string;
+  data?: unknown;
+}
+
+/** `POST /api/properties/{id}/verification/submit` — moves the property into the admin's `pending` review queue. */
+export interface SubmitVerificationResponse {
+  success: boolean;
+  message: string;
+  data?: unknown;
+}

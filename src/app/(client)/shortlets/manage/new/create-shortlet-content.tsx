@@ -3,25 +3,54 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { ChevronLeft, Plus, Trash2, Video } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { FileDropzone } from "@/components/ui/file-dropzone";
+import { ImageDropzone } from "@/components/ui/image-dropzone";
 import { isApiError } from "@/lib/api/errors";
 import { useCreateShortlet } from "@/features/shortlets";
+import {
+  useUploadPropertyMedia,
+  useUploadVerificationDocument,
+  useSubmitVerification,
+} from "@/features/properties";
 
 /**
  * Create shortlet listing — `POST /api/shortlets`. Country/currency are fixed
- * (Nigeria/NGN, same as the property-creation wizard). A listing is created
- * as `draft`; the owner activates it afterward from the manage page. Photo
- * upload is deferred to the existing property-media flow once the listing's
- * `property_id` exists (plan §3). See docs/design/shortlet-implementation-plan.md.
+ * (Nigeria/NGN, same as the property-creation wizard).
+ *
+ * Creating a shortlet also creates the underlying *property* (the create
+ * response returns its `property_id`). We use that id to, in one flow:
+ *  1. upload photos → `POST /api/properties/{id}/media`, and
+ *  2. upload ownership documents → `POST /api/properties/{id}/verification/documents`
+ *     then submit for review → `.../verification/submit`.
+ * The ownership-document step is what unblocks the admin approval queue — the
+ * general `/api/documents/upload` (legal) track does NOT feed it. The listing
+ * itself is auto-activated by `useCreateShortlet`. See
+ * docs/design/shortlet-implementation-plan.md.
  *
  * IMPORTANT: whether the backend allows the current account's role to create
  * a shortlet at all is unconfirmed (plan Gap 2) — a real backend error
  * (e.g. 403) is surfaced verbatim rather than pre-gated in the UI.
  */
+
+/**
+ * Ownership `document_type` enum for `POST /.../verification/documents` —
+ * confirmed from the collection's validate-documents response (`c_of_o`,
+ * `deed`, `survey_plan`, `govt_consent`, `receipt`). Sending anything else
+ * 422s with "The selected document type is invalid."
+ */
+const VERIFICATION_DOCUMENT_TYPES = [
+  { value: "c_of_o", label: "Certificate of Occupancy (C of O)" },
+  { value: "deed", label: "Deed of Assignment" },
+  { value: "survey_plan", label: "Survey Plan" },
+  { value: "govt_consent", label: "Governor's Consent" },
+  { value: "receipt", label: "Purchase Receipt" },
+];
 interface RoomDraft {
   name: string;
   room_type: string;
@@ -41,6 +70,15 @@ function newRoom(): RoomDraft {
 export function CreateShortletContent() {
   const router = useRouter();
   const createShortlet = useCreateShortlet();
+  const uploadMedia = useUploadPropertyMedia();
+  const uploadVerificationDoc = useUploadVerificationDocument();
+  const submitVerification = useSubmitVerification();
+
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [documents, setDocuments] = useState<File[]>([]);
+  const [documentType, setDocumentType] = useState(VERIFICATION_DOCUMENT_TYPES[0].value);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -68,10 +106,12 @@ export function CreateShortletContent() {
   const canSubmit =
     title.trim() && address.trim() && city.trim() && baseRate > 0 && rooms.every((r) => r.name.trim());
 
-  function handleSubmit() {
-    if (!canSubmit) return;
-    createShortlet.mutate(
-      {
+  async function handleSubmit() {
+    if (!canSubmit || submitting) return;
+    setError(null);
+    setSubmitting(true);
+    try {
+      const created = await createShortlet.mutateAsync({
         title: title.trim(),
         description: description.trim(),
         property_type: propertyType,
@@ -92,13 +132,63 @@ export function CreateShortletContent() {
         service_fee_bps: serviceFeeBps,
         cancellation_policy: cancellationPolicy,
         rooms: rooms.map((room, i) => ({ ...room, sort_order: i })),
-      },
-      {
-        onSuccess: (response) => {
-          router.push(`/shortlets/manage/${response.data.listing_id}`);
-        },
-      },
-    );
+      });
+
+      const listingId = created.data.listing_id;
+      const propertyId = created.data.property_id ?? created.data.property?.property_id;
+
+      // Uploads target the underlying property. If the create response somehow
+      // omits its id we skip them (rather than fail the whole create) — the
+      // listing still exists and the owner can add photos/documents later.
+      if (propertyId != null && photos.length > 0) {
+        const formData = new FormData();
+        for (const file of photos) formData.append("media_files[]", file);
+        formData.append("media_type", "image");
+        try {
+          await uploadMedia.mutateAsync({ propertyId, formData });
+        } catch {
+          toast.warning("Listing created, but photo upload failed — add photos later.");
+        }
+      }
+
+      if (propertyId != null && documents.length > 0) {
+        const results = await Promise.allSettled(
+          documents.map((file) => {
+            const formData = new FormData();
+            formData.append("document_type", documentType);
+            formData.append("document_file", file);
+            return uploadVerificationDoc.mutateAsync({ propertyId, formData });
+          }),
+        );
+        // Only push it into the review queue if at least one document landed.
+        if (results.some((r) => r.status === "fulfilled")) {
+          try {
+            await submitVerification.mutateAsync(propertyId);
+          } catch {
+            // Best-effort — the property may already be submitted/pending.
+          }
+        }
+        // Surface the *real* backend reason (incl. Laravel 422 field messages)
+        // rather than a generic notice — document upload is the whole point of
+        // getting admin approval, so a failure needs to be visible/actionable.
+        const rejected = results.find(
+          (r): r is PromiseRejectedResult => r.status === "rejected",
+        );
+        if (rejected) {
+          toast.error(`Document upload failed: ${describeUploadError(rejected.reason)}`, {
+            duration: 12000,
+          });
+        }
+      }
+
+      router.push(`/shortlets/manage/${listingId}`);
+    } catch (err) {
+      setError(
+        isApiError(err) ? err.message : "Couldn't create this shortlet — try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -114,7 +204,8 @@ export function CreateShortletContent() {
       <div className="space-y-1">
         <h1 className="text-xl font-bold sm:text-2xl">Add a shortlet</h1>
         <p className="text-sm text-muted-foreground">
-          Create your listing and rooms. You&apos;ll activate it and open the calendar next.
+          Add your listing, rooms, photos and ownership documents. It goes live right away; an
+          admin verifies your documents before it&apos;s fully approved.
         </p>
       </div>
 
@@ -288,19 +379,70 @@ export function CreateShortletContent() {
         ))}
       </section>
 
-      {createShortlet.isError && (
-        <p className="text-sm text-destructive">
-          {isApiError(createShortlet.error)
-            ? createShortlet.error.message
-            : "Couldn't create this shortlet — try again."}
-        </p>
-      )}
+      <section className="space-y-5 rounded-2xl border p-5">
+        <div className="space-y-3">
+          <p className="text-sm font-semibold">Image (up to 30)</p>
+          <ImageDropzone files={photos} onChange={setPhotos} />
+        </div>
 
-      <Button type="button" className="w-full" disabled={!canSubmit || createShortlet.isPending} onClick={handleSubmit}>
-        {createShortlet.isPending ? "Creating…" : "Create shortlet (draft)"}
+        <div
+          className="space-y-2"
+          title="Not built — the media endpoint's only confirmed media_type is 'image'"
+        >
+          <p className="text-sm font-semibold text-muted-foreground/60">Video (up to 2)</p>
+          <div className="flex w-full cursor-not-allowed flex-col items-center gap-2 rounded-xl border border-dashed border-input bg-input-background py-8 text-sm text-muted-foreground/60">
+            <Video className="size-6" />
+            Upload your video or Browse
+            <span className="text-xs">Max 1min video size are allowed</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-4 rounded-2xl border p-5">
+        <div className="space-y-1">
+          <h2 className="text-base font-semibold">Verify ownership documents</h2>
+          <p className="text-xs text-muted-foreground">
+            Upload documents that prove ownership or your legal right to list this space. Required
+            before an admin can approve the listing.
+          </p>
+        </div>
+        <Field label="Document type" htmlFor="s-doc-type">
+          <Select
+            id="s-doc-type"
+            value={documentType}
+            onChange={(e) => setDocumentType(e.target.value)}
+          >
+            {VERIFICATION_DOCUMENT_TYPES.map((t) => (
+              <option key={t.value} value={t.value}>
+                {t.label}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <FileDropzone files={documents} onChange={setDocuments} />
+      </section>
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      <Button
+        type="button"
+        className="w-full"
+        disabled={!canSubmit || submitting}
+        onClick={handleSubmit}
+      >
+        {submitting ? "Publishing…" : "Create shortlet"}
       </Button>
     </div>
   );
+}
+
+/** Flatten an ApiError (message + any Laravel 422 field messages) into one readable string. */
+function describeUploadError(reason: unknown): string {
+  if (isApiError(reason)) {
+    const fieldMessages = reason.fieldErrors ? Object.values(reason.fieldErrors).flat() : [];
+    return fieldMessages.length > 0 ? fieldMessages.join(" ") : reason.message;
+  }
+  return "Unknown error — check your connection and try again.";
 }
 
 function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: React.ReactNode }) {

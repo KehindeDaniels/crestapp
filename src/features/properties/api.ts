@@ -8,6 +8,8 @@ import type {
   CreatePropertyResponse,
   UploadMediaResponse,
   UploadDocumentResponse,
+  UploadVerificationDocumentResponse,
+  SubmitVerificationResponse,
   MyPropertiesParams,
   MyPropertiesResponse,
 } from "./types";
@@ -60,6 +62,24 @@ export const propertiesApi = {
     apiClient<UploadDocumentResponse>("/api/documents/upload", {
       method: "POST",
       body: formData,
+    }),
+
+  /**
+   * Multipart — uploads an *ownership* document to the property-verification
+   * track (what the admin approval reads). Distinct from `uploadDocument`,
+   * which posts to the general legal-documents endpoint the admin doesn't gate
+   * on. See docs/design-vs-backend-gaps.md.
+   */
+  uploadVerificationDocument: (propertyId: ID, formData: FormData) =>
+    apiClient<UploadVerificationDocumentResponse>(
+      `/api/properties/${propertyId}/verification/documents`,
+      { method: "POST", body: formData },
+    ),
+
+  /** Submits the property for admin/professional verification (→ `pending`). */
+  submitForVerification: (propertyId: ID) =>
+    apiClient<SubmitVerificationResponse>(`/api/properties/${propertyId}/verification/submit`, {
+      method: "POST",
     }),
 
   /** Powers Profile's "My listing" — the currently logged-in user's own properties. */

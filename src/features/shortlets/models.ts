@@ -15,6 +15,27 @@ function num(value: string | number | null | undefined): number {
   return typeof value === "number" ? value : Number(value);
 }
 
+export interface ShortletRoomModel {
+  roomId: ID;
+  name: string;
+  status: string;
+  capacity: number | null;
+  beds: number | null;
+  nightlyRateFormatted: string | null;
+}
+
+function toRoomModels(listing: ApiShortletListing, currency: string): ShortletRoomModel[] {
+  return (listing.rooms ?? []).map((room) => ({
+    roomId: room.room_id,
+    name: room.name,
+    status: room.status,
+    capacity: room.capacity ?? null,
+    beds: room.beds ?? null,
+    nightlyRateFormatted:
+      room.nightly_rate != null ? formatCurrency(num(room.nightly_rate), currency) : null,
+  }));
+}
+
 /** One card in the guest search grid / owner listing list. */
 export interface ShortletCardModel {
   listingId: ID;
@@ -25,6 +46,12 @@ export interface ShortletCardModel {
   pricePerNightFormatted: string;
   status: string;
   roomCount: number;
+  /**
+   * Rooms as returned by the list/search endpoints (id + name + status). The
+   * owner manage page relies on this so it can list/activate a *draft* — the
+   * list endpoint returns drafts, whereas `browse` (detail) is active-only.
+   */
+  rooms: ShortletRoomModel[];
 }
 
 export function toShortletCardModel(listing: ApiShortletListing): ShortletCardModel {
@@ -38,16 +65,8 @@ export function toShortletCardModel(listing: ApiShortletListing): ShortletCardMo
     pricePerNightFormatted: formatCurrency(num(listing.base_nightly_rate), currency),
     status: listing.status,
     roomCount: listing.rooms?.length ?? 0,
+    rooms: toRoomModels(listing, currency),
   };
-}
-
-export interface ShortletRoomModel {
-  roomId: ID;
-  name: string;
-  status: string;
-  capacity: number | null;
-  beds: number | null;
-  nightlyRateFormatted: string | null;
 }
 
 /** Full listing detail for the guest browse page. */
@@ -61,31 +80,20 @@ export interface ShortletDetailModel extends ShortletCardModel {
   minNights: number | null;
   maxNights: number | null;
   cancellationPolicy: string | null;
-  rooms: ShortletRoomModel[];
 }
 
 export function toShortletDetailModel(listing: ApiShortletListing): ShortletDetailModel {
   const card = toShortletCardModel(listing);
-  const currency = card.currency;
   return {
     ...card,
     checkInTime: listing.check_in_time ?? null,
     cleaningFee: num(listing.cleaning_fee),
-    cleaningFeeFormatted: formatCurrency(num(listing.cleaning_fee), currency),
+    cleaningFeeFormatted: formatCurrency(num(listing.cleaning_fee), card.currency),
     serviceFeePercent: listing.service_fee_bps != null ? listing.service_fee_bps / 100 : null,
     instantBook: listing.instant_book ?? false,
     minNights: listing.min_nights ?? null,
     maxNights: listing.max_nights ?? null,
     cancellationPolicy: listing.cancellation_policy ?? null,
-    rooms: (listing.rooms ?? []).map((room) => ({
-      roomId: room.room_id,
-      name: room.name,
-      status: room.status,
-      capacity: room.capacity ?? null,
-      beds: room.beds ?? null,
-      nightlyRateFormatted:
-        room.nightly_rate != null ? formatCurrency(num(room.nightly_rate), currency) : null,
-    })),
   };
 }
 

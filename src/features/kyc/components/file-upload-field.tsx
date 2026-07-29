@@ -59,7 +59,7 @@ export function FileUploadField({
           )}
         </span>
         <span className="text-base font-semibold">{label}</span>
-        <span className="text-xs text-muted-foreground">
+        <span className="w-full wrap-break-word text-xs text-muted-foreground">
           {upload.isPending
             ? "Uploading…"
             : fileName || "Drag a file here or browse for a file to upload"}

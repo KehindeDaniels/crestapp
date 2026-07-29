@@ -74,7 +74,7 @@ export default function KycIdUploadPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center gap-6 p-6">
+    <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-6 p-6 sm:justify-center">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Upload a valid ID</h1>
@@ -160,7 +160,12 @@ export default function KycIdUploadPage() {
               </div>
             )}
 
-            <Button className="w-full" disabled={!canContinue} onClick={handleContinue}>
+            <Button
+              type="button"
+              className="w-full"
+              disabled={!canContinue}
+              onClick={handleContinue}
+            >
               Continue
             </Button>
           </div>

@@ -23,7 +23,7 @@ export default function KycSelfiePage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 p-6">
+    <div className="mx-auto flex min-h-screen max-w-md flex-col gap-6 p-6 sm:justify-center">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Take a Selfie</h1>
@@ -42,7 +42,7 @@ export default function KycSelfiePage() {
         <SelfieCapture purpose="kyc_selfie" onUploaded={(url) => setSelfieUrl(url)} />
       </div>
 
-      <Button className="w-full" disabled={!selfieUrl} onClick={handleContinue}>
+      <Button type="button" className="w-full" disabled={!selfieUrl} onClick={handleContinue}>
         Continue
       </Button>
     </div>

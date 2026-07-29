@@ -264,6 +264,28 @@ function PayButton({ paymentLink }: { paymentLink: string }) {
 function RegeneratePaymentLinkButton({ contractId }: { contractId: number }) {
   const regenerate = useRegeneratePaymentLink(contractId);
 
+  function handleClick() {
+    // Pre-open the tab in the click gesture so the new link isn't popup-blocked
+    // when it arrives from the async mutation; fall back to a same-tab redirect.
+    const checkoutTab = window.open("", "_blank");
+    regenerate.mutate(undefined, {
+      onSuccess: (response) => {
+        const link = response.data?.payment_link;
+        if (!link) {
+          checkoutTab?.close();
+          return;
+        }
+        if (checkoutTab && !checkoutTab.closed) {
+          checkoutTab.opener = null;
+          checkoutTab.location.href = link;
+        } else {
+          window.location.href = link;
+        }
+      },
+      onError: () => checkoutTab?.close(),
+    });
+  }
+
   return (
     <div className="space-y-1 text-center">
       <Button
@@ -271,14 +293,7 @@ function RegeneratePaymentLinkButton({ contractId }: { contractId: number }) {
         size="xl"
         className="w-full"
         disabled={regenerate.isPending}
-        onClick={() =>
-          regenerate.mutate(undefined, {
-            onSuccess: (response) => {
-              const link = response.data?.payment_link;
-              if (link) window.open(link, "_blank", "noopener,noreferrer");
-            },
-          })
-        }
+        onClick={handleClick}
       >
         {regenerate.isPending ? "Getting a new link…" : "Get a new payment link"}
       </Button>

@@ -175,10 +175,24 @@ function PendingPaymentPanel({ booking }: { booking: BookingModel }) {
       window.open(session.paymentUrl, "_blank", "noopener,noreferrer");
       return;
     }
+    // Open the checkout tab NOW, inside the click, so it isn't popup-blocked —
+    // `window.open` fired later from the async `onSuccess` is treated as a
+    // non-user-initiated popup and blocked (esp. on mobile), which is why the
+    // Flutterwave page never appeared. We then point this pre-opened tab at the
+    // real link once it arrives; if even the pre-open was blocked, fall back to
+    // a same-tab redirect (never popup-blocked).
+    const checkoutTab = window.open("", "_blank");
     pay.mutate("flutterwave", {
       onSuccess: (response) => {
-        window.open(response.data.payment_url, "_blank", "noopener,noreferrer");
+        const url = response.data.payment_url;
+        if (checkoutTab && !checkoutTab.closed) {
+          checkoutTab.opener = null;
+          checkoutTab.location.href = url;
+        } else {
+          window.location.href = url;
+        }
       },
+      onError: () => checkoutTab?.close(),
     });
   }
 

@@ -78,3 +78,21 @@ export async function toApiError(response: Response): Promise<ApiError> {
 export function isApiError(err: unknown): err is ApiError {
   return err instanceof ApiError;
 }
+
+/**
+ * The most useful human-readable message for an error. For Laravel 422s the
+ * top-level `message` is a useless "Validation failed" — the real reason is in
+ * the field-keyed `errors` (e.g. "The service fee bps field must not be greater
+ * than 10000."). This surfaces those instead, falling back to `message`, then
+ * to `fallback` for non-API errors.
+ */
+export function apiErrorMessage(
+  err: unknown,
+  fallback = "Something went wrong. Please try again.",
+): string {
+  if (isApiError(err)) {
+    const fieldMessages = err.fieldErrors ? Object.values(err.fieldErrors).flat() : [];
+    return fieldMessages.length > 0 ? fieldMessages.join(" ") : err.message;
+  }
+  return fallback;
+}

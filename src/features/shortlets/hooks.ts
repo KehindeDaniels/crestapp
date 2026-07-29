@@ -32,39 +32,17 @@ export function useMyShortlets() {
 }
 
 /**
- * Creates a listing, then flips it straight to `active` when it's ready.
- *
- * The backend always creates a listing as `draft`. But if the owner filled in
- * everything at once (the create form always adds at least one active room),
- * there's nothing left to review — so we send the follow-up
- * `PUT {status:"active"}` automatically and hand back the activated listing.
- * If activation is rejected (backend validation, no active room, etc.) we keep
- * the draft rather than failing the whole create — the owner can still
- * activate it by hand from the manage page.
+ * Creates a listing — nothing more. A new shortlet is NOT manually activated:
+ * the backend rejects `PUT {status:"active"}` on a pending listing with
+ * "Pending shortlets go live automatically after admin document approval."
+ * The lifecycle is create → `pending` → admin approves the uploaded ownership
+ * documents → the listing goes `active` on its own. (Manual `PUT status:active`
+ * is only valid to *resume* a `paused` listing — see `useUpdateShortlet`.)
  */
 export function useCreateShortlet() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (payload: CreateShortletPayload) => {
-      const created = await shortletsApi.create(payload);
-      const hasActiveRoom = created.data.rooms?.some((r) => r.status === "active");
-      if (created.data.status === "draft" && hasActiveRoom) {
-        try {
-          const activated = await shortletsApi.update(created.data.listing_id, {
-            status: "active",
-          });
-          // Keep the create response's `property_id` (the activation PUT may
-          // trim it) — the create flow needs it to upload media/ownership docs.
-          return {
-            ...activated,
-            data: { ...created.data, status: activated.data.status ?? "active" },
-          };
-        } catch {
-          return created;
-        }
-      }
-      return created;
-    },
+    mutationFn: (payload: CreateShortletPayload) => shortletsApi.create(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.shortlets.mine });
     },

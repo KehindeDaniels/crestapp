@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { BedDouble, Loader2, MapPin, Plus, Repeat } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,8 +10,13 @@ import { useSessionStore } from "@/features/auth";
 
 const STATUS_STYLES: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
+  pending: "bg-muted text-muted-foreground",
   active: "bg-green-100 text-green-800",
+  paused: "bg-amber-100 text-amber-800",
 };
+
+/** Tab order — only statuses actually present in the owner's listings get a tab (plus "All"). */
+const STATUS_TAB_ORDER = ["active", "pending", "paused", "draft"];
 
 /**
  * Owner's own shortlet listings — `GET /api/shortlets`. Note: there's no
@@ -27,6 +33,11 @@ export function ManageShortletsContent() {
   const { data: listings, isPending, isError } = useMyShortlets();
   const role = useSessionStore((s) => s.user?.role);
   const isHost = role === "shortlet_owner";
+
+  const [tab, setTab] = useState("all");
+  const presentStatuses = STATUS_TAB_ORDER.filter((s) => listings?.some((l) => l.status === s));
+  const tabs = ["all", ...presentStatuses];
+  const visibleListings = listings?.filter((l) => tab === "all" || l.status === tab) ?? [];
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4 sm:p-6 lg:p-10">
@@ -85,9 +96,33 @@ export function ManageShortletsContent() {
         </div>
       )}
 
+      {listings && listings.length > 0 && presentStatuses.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          {tabs.map((t) => {
+            const count =
+              t === "all" ? listings.length : listings.filter((l) => l.status === t).length;
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setTab(t)}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-xs font-medium capitalize transition-colors",
+                  tab === t
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border text-muted-foreground hover:bg-accent",
+                )}
+              >
+                {t} ({count})
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {listings && listings.length > 0 && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {listings.map((listing) => (
+          {visibleListings.map((listing) => (
             <Link
               key={listing.listingId}
               href={`/shortlets/manage/${listing.listingId}`}

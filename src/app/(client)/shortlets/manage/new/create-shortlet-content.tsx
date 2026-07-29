@@ -9,15 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
-import { FileDropzone } from "@/components/ui/file-dropzone";
 import { ImageDropzone } from "@/components/ui/image-dropzone";
-import { isApiError } from "@/lib/api/errors";
+import { DocumentUploader, type TypedDocument } from "@/components/ui/document-uploader";
+import { apiErrorMessage } from "@/lib/api/errors";
 import { useCreateShortlet } from "@/features/shortlets";
-import {
-  useUploadPropertyMedia,
-  useUploadVerificationDocument,
-  useSubmitVerification,
-} from "@/features/properties";
+import { useUploadPropertyMedia, useUploadVerificationDocument } from "@/features/properties";
 
 /**
  * Create shortlet listing — `POST /api/shortlets`. Country/currency are fixed
@@ -26,11 +22,15 @@ import {
  * Creating a shortlet also creates the underlying *property* (the create
  * response returns its `property_id`). We use that id to, in one flow:
  *  1. upload photos → `POST /api/properties/{id}/media`, and
- *  2. upload ownership documents → `POST /api/properties/{id}/verification/documents`
- *     then submit for review → `.../verification/submit`.
+ *  2. upload ownership documents → `POST /api/properties/{id}/verification/documents`.
  * The ownership-document step is what unblocks the admin approval queue — the
- * general `/api/documents/upload` (legal) track does NOT feed it. The listing
- * itself is auto-activated by `useCreateShortlet`. See
+ * general `/api/documents/upload` (legal) track does NOT feed it, and uploading
+ * a document already moves the property into that queue (so there's no separate
+ * `/verification/submit` call).
+ *
+ * The listing is NOT activated here: a new shortlet is `pending` and goes
+ * `active` on its own once an admin approves the documents (the backend rejects
+ * a manual `PUT status:active` on a pending listing). See
  * docs/design/shortlet-implementation-plan.md.
  *
  * IMPORTANT: whether the backend allows the current account's role to create
@@ -72,11 +72,9 @@ export function CreateShortletContent() {
   const createShortlet = useCreateShortlet();
   const uploadMedia = useUploadPropertyMedia();
   const uploadVerificationDoc = useUploadVerificationDocument();
-  const submitVerification = useSubmitVerification();
 
   const [photos, setPhotos] = useState<File[]>([]);
-  const [documents, setDocuments] = useState<File[]>([]);
-  const [documentType, setDocumentType] = useState(VERIFICATION_DOCUMENT_TYPES[0].value);
+  const [documents, setDocuments] = useState<TypedDocument[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -152,22 +150,18 @@ export function CreateShortletContent() {
       }
 
       if (propertyId != null && documents.length > 0) {
+        // Each document carries its own type. Uploading a document already
+        // moves the property into the admin's pending queue, so there's NO
+        // explicit `/verification/submit` call — that endpoint 400s once the
+        // property is already pending, and would just be noise.
         const results = await Promise.allSettled(
-          documents.map((file) => {
+          documents.map(({ file, type }) => {
             const formData = new FormData();
-            formData.append("document_type", documentType);
+            formData.append("document_type", type);
             formData.append("document_file", file);
             return uploadVerificationDoc.mutateAsync({ propertyId, formData });
           }),
         );
-        // Only push it into the review queue if at least one document landed.
-        if (results.some((r) => r.status === "fulfilled")) {
-          try {
-            await submitVerification.mutateAsync(propertyId);
-          } catch {
-            // Best-effort — the property may already be submitted/pending.
-          }
-        }
         // Surface the *real* backend reason (incl. Laravel 422 field messages)
         // rather than a generic notice — document upload is the whole point of
         // getting admin approval, so a failure needs to be visible/actionable.
@@ -175,17 +169,16 @@ export function CreateShortletContent() {
           (r): r is PromiseRejectedResult => r.status === "rejected",
         );
         if (rejected) {
-          toast.error(`Document upload failed: ${describeUploadError(rejected.reason)}`, {
-            duration: 12000,
-          });
+          toast.error(
+            `Document upload failed: ${apiErrorMessage(rejected.reason, "Please try again.")}`,
+            { duration: 12000 },
+          );
         }
       }
 
       router.push(`/shortlets/manage/${listingId}`);
     } catch (err) {
-      setError(
-        isApiError(err) ? err.message : "Couldn't create this shortlet — try again.",
-      );
+      setError(apiErrorMessage(err, "Couldn't create this shortlet — try again."));
     } finally {
       setSubmitting(false);
     }
@@ -204,8 +197,9 @@ export function CreateShortletContent() {
       <div className="space-y-1">
         <h1 className="text-xl font-bold sm:text-2xl">Add a shortlet</h1>
         <p className="text-sm text-muted-foreground">
-          Add your listing, rooms, photos and ownership documents. It goes live right away; an
-          admin verifies your documents before it&apos;s fully approved.
+          Add your listing, rooms, photos and ownership documents. It starts as{" "}
+          <span className="font-medium">pending</span> and goes live automatically once an admin
+          approves your documents.
         </p>
       </div>
 
@@ -402,24 +396,15 @@ export function CreateShortletContent() {
         <div className="space-y-1">
           <h2 className="text-base font-semibold">Verify ownership documents</h2>
           <p className="text-xs text-muted-foreground">
-            Upload documents that prove ownership or your legal right to list this space. Required
-            before an admin can approve the listing.
+            Upload documents that prove ownership or your legal right to list this space, and pick
+            what each one is. Required before an admin can approve the listing.
           </p>
         </div>
-        <Field label="Document type" htmlFor="s-doc-type">
-          <Select
-            id="s-doc-type"
-            value={documentType}
-            onChange={(e) => setDocumentType(e.target.value)}
-          >
-            {VERIFICATION_DOCUMENT_TYPES.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
-              </option>
-            ))}
-          </Select>
-        </Field>
-        <FileDropzone files={documents} onChange={setDocuments} />
+        <DocumentUploader
+          documents={documents}
+          onChange={setDocuments}
+          types={VERIFICATION_DOCUMENT_TYPES}
+        />
       </section>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
@@ -434,15 +419,6 @@ export function CreateShortletContent() {
       </Button>
     </div>
   );
-}
-
-/** Flatten an ApiError (message + any Laravel 422 field messages) into one readable string. */
-function describeUploadError(reason: unknown): string {
-  if (isApiError(reason)) {
-    const fieldMessages = reason.fieldErrors ? Object.values(reason.fieldErrors).flat() : [];
-    return fieldMessages.length > 0 ? fieldMessages.join(" ") : reason.message;
-  }
-  return "Unknown error — check your connection and try again.";
 }
 
 function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: React.ReactNode }) {

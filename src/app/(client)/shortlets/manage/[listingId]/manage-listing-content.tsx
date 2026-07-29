@@ -24,9 +24,8 @@ import { useMyShortlets, useShortletDetail, useUpdateShortlet } from "@/features
 export function ManageListingContent({ listingId }: { listingId: number }) {
   const { data: listings, isPending, isError } = useMyShortlets();
   const listing = listings?.find((l) => String(l.listingId) === String(listingId));
-  const isDraft = listing?.status === "draft";
   // `browse` is active-only — only fetch the richer detail when the listing is live.
-  const { data: detail } = useShortletDetail(listing && !isDraft ? listingId : null);
+  const { data: detail } = useShortletDetail(listing?.status === "active" ? listingId : null);
   const updateShortlet = useUpdateShortlet(listingId);
 
   if (isPending) {
@@ -48,7 +47,10 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
     );
   }
 
-  const hasActiveRoom = listing.rooms.some((r) => r.status === "active");
+  const isActive = listing.status === "active";
+  const isPaused = listing.status === "paused";
+  // draft + pending both mean "not live yet, waiting on admin approval".
+  const isAwaitingApproval = !isActive && !isPaused;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4 sm:p-6 lg:p-10">
@@ -68,7 +70,9 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
         <span
           className={cn(
             "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize",
-            isDraft ? "bg-muted text-muted-foreground" : "bg-green-100 text-green-800",
+            isActive && "bg-green-100 text-green-800",
+            isPaused && "bg-amber-100 text-amber-800",
+            isAwaitingApproval && "bg-muted text-muted-foreground",
           )}
         >
           {listing.status}
@@ -92,35 +96,44 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
         />
       </div>
 
-      {isDraft && (
-        <div className="space-y-3 rounded-2xl border border-primary/20 bg-primary/5 p-4">
-          <p className="text-sm font-medium">This listing is a draft</p>
+      {isAwaitingApproval && (
+        <div className="space-y-1 rounded-2xl border border-primary/20 bg-primary/5 p-4">
+          <p className="text-sm font-medium">Pending admin approval</p>
           <p className="text-sm text-muted-foreground">
-            {hasActiveRoom
-              ? "Activate it to open the calendar and start taking bookings."
-              : "Add at least one active room before you can activate this listing."}
+            Your listing goes live automatically once an admin approves your ownership documents —
+            you don&apos;t need to activate it yourself. You&apos;ll see it flip to{" "}
+            <span className="font-medium">Active</span> here.
+          </p>
+        </div>
+      )}
+
+      {isActive && (
+        <div className="flex items-center gap-2 rounded-2xl border border-success bg-success/8 p-3 text-sm">
+          <CheckCircle2 className="size-4 text-success" />
+          This listing is live and bookable.
+        </div>
+      )}
+
+      {isPaused && (
+        <div className="space-y-3 rounded-2xl border border-amber-300 bg-amber-50 p-4">
+          <p className="text-sm font-medium">This listing is paused</p>
+          <p className="text-sm text-muted-foreground">
+            It&apos;s hidden from guests. Resume it to make it bookable again.
           </p>
           {updateShortlet.isError && (
             <p className="text-sm text-destructive">
               {isApiError(updateShortlet.error)
                 ? updateShortlet.error.message
-                : "Couldn't activate — try again."}
+                : "Couldn't resume — try again."}
             </p>
           )}
           <Button
             type="button"
-            disabled={!hasActiveRoom || updateShortlet.isPending}
+            disabled={updateShortlet.isPending}
             onClick={() => updateShortlet.mutate({ status: "active" })}
           >
-            {updateShortlet.isPending ? "Activating…" : "Activate listing"}
+            {updateShortlet.isPending ? "Resuming…" : "Resume listing"}
           </Button>
-        </div>
-      )}
-
-      {!isDraft && (
-        <div className="flex items-center gap-2 rounded-2xl border border-success bg-success/8 p-3 text-sm">
-          <CheckCircle2 className="size-4 text-success" />
-          This listing is live and bookable.
         </div>
       )}
 

@@ -41,8 +41,13 @@ const TYPE_BADGE_LABELS: Record<PropertyPurpose, string> = {
 };
 
 export function toPropertyCardModel(property: ApiProperty): PropertyCardModel {
-  const primaryMedia =
-    property.media.find((m) => m.is_primary === 1) ?? property.media[0];
+  // Be defensive: `media`/`owner`/`owner.profile` are typed as always-present,
+  // but live responses can omit them (e.g. a property whose owner relation
+  // wasn't loaded, or one with no photos). One malformed record must NOT throw
+  // and take the whole feed/page down into the error boundary.
+  const media = property.media ?? [];
+  const primaryMedia = media.find((m) => m.is_primary === 1) ?? media[0];
+  const profile = property.owner?.profile;
 
   return {
     id: property.property_id,
@@ -61,9 +66,9 @@ export function toPropertyCardModel(property: ApiProperty): PropertyCardModel {
     imageUrl: primaryMedia ? toAbsoluteMediaUrl(primaryMedia.media_url) : null,
     isActive: property.status === "active",
     isVerified: property.verification_status === "verified",
-    ownerId: property.owner.user_id,
-    ownerName: property.owner.profile.full_name || "Property owner",
-    ownerAvatarUrl: property.owner.profile.profile_picture_url,
+    ownerId: property.owner?.user_id ?? 0,
+    ownerName: profile?.full_name || "Property owner",
+    ownerAvatarUrl: profile?.profile_picture_url ?? null,
     createdAt: property.created_at,
   };
 }

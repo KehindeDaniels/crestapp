@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -129,7 +130,17 @@ export function ShortletDetailContent({ listingId }: { listingId: number }) {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <div className="aspect-video w-full rounded-2xl bg-muted" />
+          <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-muted">
+            {listing.imageUrl && (
+              <Image
+                src={listing.imageUrl}
+                alt={listing.title}
+                fill
+                sizes="(min-width: 1024px) 66vw, 100vw"
+                className="object-cover"
+              />
+            )}
+          </div>
 
           <div className="space-y-2">
             <h1 className="text-2xl font-bold">{listing.title}</h1>

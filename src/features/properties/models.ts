@@ -1,5 +1,5 @@
-import { env } from "@/config/env";
 import { formatCurrency } from "@/lib/utils/format";
+import { toAbsoluteMediaUrl } from "@/lib/utils/media-url";
 import type { ID } from "@/types/api";
 import type { PropertyPurpose, PropertyType } from "@/config/constants";
 import type { ApiProperty } from "./types";
@@ -39,13 +39,6 @@ const TYPE_BADGE_LABELS: Record<PropertyPurpose, string> = {
   rent: "Rent",
   lease: "Lease",
 };
-
-/** Relative paths (media_url) need the API's own origin prefixed; already-absolute URLs (owner avatars) must not be touched. */
-function toAbsoluteMediaUrl(path: string): string {
-  if (/^https?:\/\//.test(path)) return path;
-  const origin = new URL(env.NEXT_PUBLIC_API_URL).origin;
-  return `${origin}${path.startsWith("/") ? "" : "/"}${path}`;
-}
 
 export function toPropertyCardModel(property: ApiProperty): PropertyCardModel {
   const primaryMedia =

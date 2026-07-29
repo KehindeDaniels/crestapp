@@ -1,4 +1,5 @@
 import { formatCurrency } from "@/lib/utils/format";
+import { toAbsoluteMediaUrl } from "@/lib/utils/media-url";
 import type { ID } from "@/types/api";
 import type {
   ApiBooking,
@@ -46,12 +47,21 @@ export interface ShortletCardModel {
   pricePerNightFormatted: string;
   status: string;
   roomCount: number;
+  /** Primary photo (absolute URL) from the underlying property's `media[]`, or null when none uploaded. */
+  imageUrl: string | null;
   /**
    * Rooms as returned by the list/search endpoints (id + name + status). The
    * owner manage page relies on this so it can list/activate a *draft* — the
    * list endpoint returns drafts, whereas `browse` (detail) is active-only.
    */
   rooms: ShortletRoomModel[];
+}
+
+/** The photo to show on a card: the primary media item, else the first, prefixed to an absolute URL. */
+function toPrimaryImageUrl(listing: ApiShortletListing): string | null {
+  const media = listing.property.media ?? [];
+  const primary = media.find((m) => m.is_primary === 1) ?? media[0];
+  return primary ? toAbsoluteMediaUrl(primary.media_url) : null;
 }
 
 export function toShortletCardModel(listing: ApiShortletListing): ShortletCardModel {
@@ -65,6 +75,7 @@ export function toShortletCardModel(listing: ApiShortletListing): ShortletCardMo
     pricePerNightFormatted: formatCurrency(num(listing.base_nightly_rate), currency),
     status: listing.status,
     roomCount: listing.rooms?.length ?? 0,
+    imageUrl: toPrimaryImageUrl(listing),
     rooms: toRoomModels(listing, currency),
   };
 }

@@ -49,6 +49,17 @@ export interface ApiShortletRoom {
   listing_id?: ID;
 }
 
+/** Same `media[]` shape the property endpoints return — the live shortlet list nests it under `property`. */
+export interface ApiShortletMedia {
+  media_id?: ID;
+  media_type?: string;
+  /** Relative path (e.g. "/storage/property_media/...") — needs the API origin prefixed. */
+  media_url: string;
+  thumbnail_url?: string;
+  is_primary?: number;
+  display_order?: number;
+}
+
 export interface ApiShortletPropertySummary {
   property_id?: ID;
   title: string;
@@ -58,6 +69,8 @@ export interface ApiShortletPropertySummary {
   state?: string;
   status?: string;
   price?: Money;
+  /** Present on the live list/browse (trimmed from the old Postman examples). */
+  media?: ApiShortletMedia[];
 }
 
 export interface ApiShortletListing {

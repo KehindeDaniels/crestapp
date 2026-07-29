@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { BedDouble, Loader2, MapPin, Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -185,7 +186,17 @@ export function ShortletSearchContent() {
                   href={`/shortlets/${listing.listingId}?check_in=${data.checkInDate}&nights=${data.nights}`}
                   className="flex flex-col gap-2 rounded-2xl border p-4 transition-colors hover:bg-accent"
                 >
-                  <div className="aspect-video w-full rounded-xl bg-muted" />
+                  <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted">
+                    {listing.imageUrl && (
+                      <Image
+                        src={listing.imageUrl}
+                        alt=""
+                        fill
+                        sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"
+                        className="object-cover"
+                      />
+                    )}
+                  </div>
                   <p className="text-sm font-semibold">{listing.title}</p>
                   <p className="flex items-center gap-1 text-xs text-muted-foreground">
                     <MapPin className="size-3.5" />

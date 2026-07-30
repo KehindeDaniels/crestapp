@@ -88,7 +88,10 @@ export default function KycIdUploadPage() {
       </div>
 
       <div className="rounded-2xl bg-muted p-6 sm:p-8">
-        <div className="grid gap-8 md:grid-cols-2">
+        {/* grid-cols-1 (= minmax(0,1fr)) is required on mobile — without it the
+            single column is auto-sized to content, so a long filename overflows
+            the viewport horizontally. */}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div className="space-y-5">
             <div>
               <Label className="mb-2 block">Choose an ID to verify your account</Label>

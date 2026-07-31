@@ -186,6 +186,22 @@ export function ShortletDetailContent({ listingId }: { listingId: number }) {
             )}
           </div>
 
+          {listing.amenities.length > 0 && (
+            <div className="space-y-3">
+              <h2 className="text-base font-semibold">Amenities</h2>
+              <div className="flex flex-wrap gap-2">
+                {listing.amenities.map((a) => (
+                  <span
+                    key={a}
+                    className="rounded-full border bg-muted/40 px-3 py-1.5 text-sm text-muted-foreground"
+                  >
+                    {a}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="space-y-3">
             <h2 className="text-base font-semibold">Rooms</h2>
             {availabilityLoading && (

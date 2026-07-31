@@ -63,3 +63,31 @@ export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
 export const AUTH_COOKIE = "crest_token";
 export const ROLE_COOKIE = "crest_role";
 export const STATUS_COOKIE = "crest_status";
+
+/**
+ * Canonical amenities list — the exact labels the backend stores and returns in
+ * `property.amenities` (confirmed live 2026-07-31 against a mobile-created
+ * listing). Order/labels mirror the mobile app's amenities picker. The backend
+ * accepts/returns these as plain strings; do NOT alter the casing/spelling or
+ * they won't match existing data.
+ */
+export const PROPERTY_AMENITIES = [
+  "Running Water",
+  "Electricity",
+  "Parking Space",
+  "Security",
+  "Swimming Pool",
+  "Grill",
+  "Tennis Court",
+  "Balcony",
+  "POP Ceiling",
+  "Kitchen cabinets",
+  "Gym",
+  "Wi-Fi",
+  "Air Conditioning",
+  "Generator",
+  "Washer",
+  "Dryer",
+  "Kitchen",
+  "Workspace",
+] as const;

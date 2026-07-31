@@ -72,6 +72,8 @@ export interface ApiShortletPropertySummary {
   price?: Money;
   /** Present on the live list/browse (trimmed from the old Postman examples). */
   media?: ApiShortletMedia[];
+  /** Amenity labels (e.g. "Wi-Fi", "Parking Space") — confirmed live 2026-07-31. */
+  amenities?: string[];
 }
 
 export interface ApiShortletListing {
@@ -127,6 +129,8 @@ export interface CreateShortletPayload {
   cleaning_fee: number;
   service_fee_bps: number;
   cancellation_policy: string;
+  /** Amenity labels from PROPERTY_AMENITIES (assumed create key — verify on first save). */
+  amenities?: string[];
   rooms: {
     name: string;
     room_type: string;
@@ -151,6 +155,7 @@ export interface UpdateShortletPayload {
   cancellation_policy?: string;
   title?: string;
   description?: string;
+  amenities?: string[];
 }
 
 export interface MutateShortletResponse {

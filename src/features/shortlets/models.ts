@@ -117,6 +117,8 @@ export interface ShortletDetailModel extends ShortletCardModel {
   cancellationPolicy: string | null;
   /** Uploaded videos (absolute .mp4 URLs) — no poster/thumbnail is returned for these. */
   videoUrls: string[];
+  /** Amenity labels (e.g. "Wi-Fi", "Parking Space"). */
+  amenities: string[];
 }
 
 export function toShortletDetailModel(listing: ApiShortletListing): ShortletDetailModel {
@@ -124,6 +126,7 @@ export function toShortletDetailModel(listing: ApiShortletListing): ShortletDeta
   return {
     ...card,
     videoUrls: toVideoUrls(listing),
+    amenities: listing.property.amenities ?? [],
     description: listing.property.description ?? null,
     checkInTime: listing.check_in_time ?? null,
     cleaningFee: num(listing.cleaning_fee),

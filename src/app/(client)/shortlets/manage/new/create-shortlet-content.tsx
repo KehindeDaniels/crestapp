@@ -12,6 +12,7 @@ import { Select } from "@/components/ui/select";
 import { ImageDropzone } from "@/components/ui/image-dropzone";
 import { FileDropzone } from "@/components/ui/file-dropzone";
 import { DocumentUploader, type TypedDocument } from "@/components/ui/document-uploader";
+import { AmenitiesPicker } from "@/components/ui/amenities-picker";
 import { apiErrorMessage } from "@/lib/api/errors";
 import { useCreateShortlet } from "@/features/shortlets";
 import { useUploadPropertyMedia, useUploadVerificationDocument } from "@/features/properties";
@@ -77,6 +78,7 @@ export function CreateShortletContent() {
   const [photos, setPhotos] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const [documents, setDocuments] = useState<TypedDocument[]>([]);
+  const [amenities, setAmenities] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -131,6 +133,7 @@ export function CreateShortletContent() {
         cleaning_fee: cleaningFee,
         service_fee_bps: serviceFeeBps,
         cancellation_policy: cancellationPolicy,
+        amenities,
         rooms: rooms.map((room, i) => ({ ...room, sort_order: i })),
       });
 
@@ -309,6 +312,16 @@ export function CreateShortletContent() {
           />
           Instant book (guests can book without approval)
         </label>
+      </section>
+
+      <section className="space-y-4 rounded-2xl border p-5">
+        <div className="space-y-1">
+          <h2 className="text-base font-semibold">Amenities</h2>
+          <p className="text-xs text-muted-foreground">
+            Tell guests what the space offers — pool, Wi-Fi, parking, and more.
+          </p>
+        </div>
+        <AmenitiesPicker selected={amenities} onChange={setAmenities} />
       </section>
 
       <section className="space-y-4 rounded-2xl border p-5">

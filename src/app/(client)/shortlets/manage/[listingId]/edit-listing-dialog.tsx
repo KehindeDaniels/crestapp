@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { AmenitiesPicker } from "@/components/ui/amenities-picker";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,7 @@ interface FormState {
   checkInTime: string;
   instantBook: boolean;
   cancellationPolicy: string;
+  amenities: string[];
 }
 
 function toForm(l: ShortletDetailModel): FormState {
@@ -43,6 +45,7 @@ function toForm(l: ShortletDetailModel): FormState {
     checkInTime: (l.checkInTime ?? "15:00").slice(0, 5),
     instantBook: l.instantBook,
     cancellationPolicy: l.cancellationPolicy ?? "flexible",
+    amenities: l.amenities,
   };
 }
 
@@ -116,6 +119,7 @@ function EditListingForm({
         check_in_time: form.checkInTime,
         instant_book: form.instantBook,
         cancellation_policy: form.cancellationPolicy,
+        amenities: form.amenities,
       },
       {
         onSuccess: onClose,
@@ -230,6 +234,14 @@ function EditListingForm({
             />
             Instant book (guests can book without approval)
           </label>
+
+          <div className="space-y-1.5">
+            <Label>Amenities</Label>
+            <AmenitiesPicker
+              selected={form.amenities}
+              onChange={(next) => set("amenities", next)}
+            />
+          </div>
         </div>
 
         {error && <p className="text-sm text-destructive">{error}</p>}

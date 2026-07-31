@@ -36,6 +36,7 @@ interface ListPropertyWizardState {
   city: string;
   state: string;
   images: File[];
+  videos: File[];
   documents: File[];
   detailsComplete: boolean;
   mediaComplete: boolean;
@@ -54,6 +55,7 @@ interface ListPropertyWizardState {
     city: string;
     state: string;
     images: File[];
+    videos: File[];
   }) => void;
   setDocuments: (documents: File[]) => void;
   reset: () => void;
@@ -72,6 +74,7 @@ const initialState = {
   city: "",
   state: "",
   images: [] as File[],
+  videos: [] as File[],
   documents: [] as File[],
   detailsComplete: false,
   mediaComplete: false,

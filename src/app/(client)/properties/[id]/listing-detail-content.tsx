@@ -84,6 +84,23 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.address)}`;
   const isOwner = currentUserId != null && property.ownerId === currentUserId;
 
+  // Videos aren't images — rendered as players, separate from the photo gallery.
+  // Shared block dropped into both the mobile and desktop layouts below.
+  const videoSection = property.videoUrls.length > 0 && (
+    <div className="space-y-2">
+      {property.videoUrls.map((url) => (
+        <video
+          key={url}
+          src={url}
+          controls
+          playsInline
+          preload="metadata"
+          className="aspect-video w-full rounded-xl bg-black"
+        />
+      ))}
+    </div>
+  );
+
   return (
     <div className="max-w-6xl space-y-5 p-4 pb-0 sm:space-y-6 sm:p-6 sm:pb-6 lg:p-10">
       {/* ---------- Mobile (sm:hidden) — matches Figma node 72:6834 ---------- */}
@@ -158,6 +175,8 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
             ))}
           </div>
         )}
+
+        {videoSection && <div className="px-4 pt-3">{videoSection}</div>}
 
         <div className="space-y-3 px-4 pt-4">
           <div className="flex items-center justify-between gap-3">
@@ -388,6 +407,8 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
                 ))}
               </div>
             )}
+
+            {videoSection}
 
             <div className="space-y-3 rounded-2xl border p-5">
               <div className="flex items-center gap-2 text-xs font-medium">

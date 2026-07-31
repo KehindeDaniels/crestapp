@@ -140,6 +140,23 @@ export default function ListPropertyDocumentsPage() {
         }
       }
 
+      // Videos are a separate call — `media_type` is per-request, so images and
+      // videos can't share one upload. Assumes the endpoint accepts
+      // media_type:"video" (per backend, pending live confirmation).
+      if (wizard.videos.length > 0) {
+        const formData = new FormData();
+        for (const file of wizard.videos)
+          formData.append("media_files[]", file);
+        formData.append("media_type", "video");
+        try {
+          await uploadMedia.mutateAsync({ propertyId, formData });
+        } catch {
+          toast.warning(
+            "Listing created, but video upload failed — add videos later.",
+          );
+        }
+      }
+
       if (documents.length > 0) {
         await Promise.allSettled(
           documents.map((file) => {

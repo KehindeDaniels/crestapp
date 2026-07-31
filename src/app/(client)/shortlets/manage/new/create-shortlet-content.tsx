@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { ImageDropzone } from "@/components/ui/image-dropzone";
+import { FileDropzone } from "@/components/ui/file-dropzone";
 import { DocumentUploader, type TypedDocument } from "@/components/ui/document-uploader";
 import { apiErrorMessage } from "@/lib/api/errors";
 import { useCreateShortlet } from "@/features/shortlets";
@@ -74,6 +75,7 @@ export function CreateShortletContent() {
   const uploadVerificationDoc = useUploadVerificationDocument();
 
   const [photos, setPhotos] = useState<File[]>([]);
+  const [videos, setVideos] = useState<File[]>([]);
   const [documents, setDocuments] = useState<TypedDocument[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -146,6 +148,19 @@ export function CreateShortletContent() {
           await uploadMedia.mutateAsync({ propertyId, formData });
         } catch {
           toast.warning("Listing created, but photo upload failed — add photos later.");
+        }
+      }
+
+      // Videos are a separate call (`media_type` is per-request). Assumes the
+      // endpoint accepts media_type:"video" — pending live confirmation.
+      if (propertyId != null && videos.length > 0) {
+        const formData = new FormData();
+        for (const file of videos) formData.append("media_files[]", file);
+        formData.append("media_type", "video");
+        try {
+          await uploadMedia.mutateAsync({ propertyId, formData });
+        } catch {
+          toast.warning("Listing created, but video upload failed — add videos later.");
         }
       }
 
@@ -382,16 +397,19 @@ export function CreateShortletContent() {
           <ImageDropzone files={photos} onChange={setPhotos} />
         </div>
 
-        <div
-          className="space-y-2"
-          title="Not built — the media endpoint's only confirmed media_type is 'image'"
-        >
-          <p className="text-sm font-semibold text-muted-foreground/60">Video (up to 2)</p>
-          <div className="flex w-full cursor-not-allowed flex-col items-center gap-2 rounded-xl border border-dashed border-input bg-input-background py-8 text-sm text-muted-foreground/60">
-            <Video className="size-6" />
-            Upload your video or Browse
-            <span className="text-xs">Max 1min video size are allowed</span>
-          </div>
+        {/* Video — assumes the media endpoint accepts media_type:"video"
+            (per backend, pending live confirmation). */}
+        <div className="space-y-2">
+          <p className="flex items-center gap-2 text-sm font-semibold">
+            <Video className="size-4" />
+            Video (optional)
+          </p>
+          <FileDropzone
+            files={videos}
+            onChange={setVideos}
+            accept="video/*"
+            hint="Tap to upload MP4 or MOV"
+          />
         </div>
       </section>
 

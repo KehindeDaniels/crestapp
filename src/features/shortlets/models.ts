@@ -57,11 +57,25 @@ export interface ShortletCardModel {
   rooms: ShortletRoomModel[];
 }
 
-/** The photo to show on a card: the primary media item, else the first, prefixed to an absolute URL. */
+/**
+ * The photo to show on a card: the primary IMAGE (else the first image),
+ * prefixed to an absolute URL. Must filter to images — otherwise a video could
+ * be picked and rendered in an <img>, showing broken. Media with no `media_type`
+ * is treated as an image (older records predate the field).
+ */
 function toPrimaryImageUrl(listing: ApiShortletListing): string | null {
-  const media = listing.property.media ?? [];
-  const primary = media.find((m) => m.is_primary === 1) ?? media[0];
+  const images = (listing.property.media ?? []).filter(
+    (m) => (m.media_type ?? "image") === "image",
+  );
+  const primary = images.find((m) => m.is_primary === 1) ?? images[0];
   return primary ? toAbsoluteMediaUrl(primary.media_url) : null;
+}
+
+/** Absolute URLs of any uploaded videos (media_type === "video"). */
+function toVideoUrls(listing: ApiShortletListing): string[] {
+  return (listing.property.media ?? [])
+    .filter((m) => m.media_type === "video")
+    .map((m) => toAbsoluteMediaUrl(m.media_url));
 }
 
 export function toShortletCardModel(listing: ApiShortletListing): ShortletCardModel {
@@ -101,12 +115,15 @@ export interface ShortletDetailModel extends ShortletCardModel {
   minNights: number | null;
   maxNights: number | null;
   cancellationPolicy: string | null;
+  /** Uploaded videos (absolute .mp4 URLs) — no poster/thumbnail is returned for these. */
+  videoUrls: string[];
 }
 
 export function toShortletDetailModel(listing: ApiShortletListing): ShortletDetailModel {
   const card = toShortletCardModel(listing);
   return {
     ...card,
+    videoUrls: toVideoUrls(listing),
     description: listing.property.description ?? null,
     checkInTime: listing.check_in_time ?? null,
     cleaningFee: num(listing.cleaning_fee),

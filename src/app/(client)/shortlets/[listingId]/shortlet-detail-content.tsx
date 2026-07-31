@@ -142,6 +142,17 @@ export function ShortletDetailContent({ listingId }: { listingId: number }) {
             )}
           </div>
 
+          {listing.videoUrls.map((url) => (
+            <video
+              key={url}
+              src={url}
+              controls
+              playsInline
+              preload="metadata"
+              className="aspect-video w-full rounded-2xl bg-black"
+            />
+          ))}
+
           <div className="space-y-2">
             <h1 className="text-2xl font-bold">{listing.title}</h1>
             <p className="flex items-center gap-1 text-sm text-muted-foreground">

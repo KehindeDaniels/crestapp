@@ -45,8 +45,10 @@ export function toPropertyCardModel(property: ApiProperty): PropertyCardModel {
   // but live responses can omit them (e.g. a property whose owner relation
   // wasn't loaded, or one with no photos). One malformed record must NOT throw
   // and take the whole feed/page down into the error boundary.
-  const media = property.media ?? [];
-  const primaryMedia = media.find((m) => m.is_primary === 1) ?? media[0];
+  // Filter to images for the card thumbnail — a video picked here would render
+  // broken in an <img>. Media with no `media_type` predates the field → image.
+  const images = (property.media ?? []).filter((m) => (m.media_type ?? "image") === "image");
+  const primaryMedia = images.find((m) => m.is_primary === 1) ?? images[0];
   const profile = property.owner?.profile;
 
   return {
@@ -92,6 +94,8 @@ export interface PropertyDetailModel extends PropertyCardModel {
   allImages: PropertyDetailImage[];
   /** Same images grouped by category, for the "Property Details" modal's room tabs. */
   imagesByCategory: PropertyDetailCategory[];
+  /** Uploaded videos (absolute .mp4 URLs) — no poster/thumbnail is returned for these. */
+  videoUrls: string[];
   /**
    * Derived from the real `created_at` timestamp, not fabricated — computed
    * here (not at render time) since `Date.now()` is an impure call and this
@@ -105,16 +109,22 @@ const RECENTLY_ADDED_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 export function toPropertyDetailModel(property: ApiProperty): PropertyDetailModel {
   const card = toPropertyCardModel(property);
 
-  const sortedMedia = [...property.media].sort(
+  const sortedMedia = [...(property.media ?? [])].sort(
     (a, b) => a.display_order - b.display_order,
   );
-  const allImages: PropertyDetailImage[] = sortedMedia.map((m) => ({
+  // Videos must be split out of the image gallery — they'd render broken as <img>.
+  const imageMedia = sortedMedia.filter((m) => (m.media_type ?? "image") === "image");
+  const videoUrls = sortedMedia
+    .filter((m) => m.media_type === "video")
+    .map((m) => toAbsoluteMediaUrl(m.media_url));
+
+  const allImages: PropertyDetailImage[] = imageMedia.map((m) => ({
     url: toAbsoluteMediaUrl(m.media_url),
     caption: m.caption,
   }));
 
   const byCategory = new Map<string, PropertyDetailImage[]>();
-  for (const media of sortedMedia) {
+  for (const media of imageMedia) {
     const category = media.caption || "Other";
     const list = byCategory.get(category) ?? [];
     list.push({ url: toAbsoluteMediaUrl(media.media_url), caption: media.caption });
@@ -130,6 +140,7 @@ export function toPropertyDetailModel(property: ApiProperty): PropertyDetailMode
       category,
       images,
     })),
+    videoUrls,
     isRecentlyAdded:
       Date.now() - new Date(property.created_at).getTime() < RECENTLY_ADDED_WINDOW_MS,
   };

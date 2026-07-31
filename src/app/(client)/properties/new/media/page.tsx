@@ -9,6 +9,7 @@ import { ChevronLeft, ImagePlus, Video, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { FileDropzone } from "@/components/ui/file-dropzone";
 import {
   Form,
   FormControl,
@@ -38,6 +39,7 @@ export default function ListPropertyMediaPage() {
   const wizard = useListPropertyWizardStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState<File[]>(wizard.images);
+  const [videos, setVideos] = useState<File[]>(wizard.videos);
   const isRent = wizard.purpose === "rent";
 
   useEffect(() => {
@@ -73,7 +75,7 @@ export default function ListPropertyMediaPage() {
   }
 
   function onSubmit(values: ListPropertyMediaInput) {
-    wizard.setMedia({ ...values, price: Number(values.price), images });
+    wizard.setMedia({ ...values, price: Number(values.price), images, videos });
     router.push("/properties/new/review");
   }
 
@@ -324,20 +326,20 @@ export default function ListPropertyMediaPage() {
                   </div>
                 </div>
 
-                <div
-                  className="space-y-2"
-                  title="Not built — the media endpoint's only confirmed media_type is 'image'"
-                >
-                  <p className="text-muted-foreground/60 text-sm font-semibold">
-                    Video (up to 2)
+                {/* Video upload — assumes the media endpoint accepts
+                    media_type:"video" (per backend, pending live confirmation).
+                    Uploaded via the same POST /properties/{id}/media in step 4. */}
+                <div className="space-y-2">
+                  <p className="flex items-center gap-2 text-sm font-semibold">
+                    <Video className="size-4" />
+                    Video (optional)
                   </p>
-                  <div className="border-input bg-input-background text-muted-foreground/60 flex w-full cursor-not-allowed flex-col items-center gap-2 rounded-xl border border-dashed py-8 text-sm">
-                    <Video className="size-6" />
-                    Upload your video or Browse
-                    <span className="text-xs">
-                      Max 1min video size are allowed
-                    </span>
-                  </div>
+                  <FileDropzone
+                    files={videos}
+                    onChange={setVideos}
+                    accept="video/*"
+                    hint="Tap to upload MP4 or MOV"
+                  />
                 </div>
               </div>
             </div>

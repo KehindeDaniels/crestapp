@@ -96,6 +96,8 @@ export interface PropertyDetailModel extends PropertyCardModel {
   imagesByCategory: PropertyDetailCategory[];
   /** Uploaded videos (absolute .mp4 URLs) — no poster/thumbnail is returned for these. */
   videoUrls: string[];
+  /** Amenity labels (e.g. "Wi-Fi", "Parking Space"). */
+  amenities: string[];
   /**
    * Derived from the real `created_at` timestamp, not fabricated — computed
    * here (not at render time) since `Date.now()` is an impure call and this
@@ -141,6 +143,7 @@ export function toPropertyDetailModel(property: ApiProperty): PropertyDetailMode
       images,
     })),
     videoUrls,
+    amenities: property.amenities ?? [],
     isRecentlyAdded:
       Date.now() - new Date(property.created_at).getTime() < RECENTLY_ADDED_WINDOW_MS,
   };

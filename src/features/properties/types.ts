@@ -83,6 +83,8 @@ export interface ApiProperty {
   created_at: string;
   media: ApiPropertyMedia[];
   owner: ApiPropertyOwner;
+  /** Amenity labels (e.g. "Wi-Fi", "Parking Space") — confirmed live 2026-07-31. */
+  amenities?: string[];
 }
 
 export interface PropertySearchResponse {
@@ -136,6 +138,8 @@ export interface CreatePropertyPayload {
   bedrooms: number;
   bathrooms: number;
   square_meters: number;
+  /** Amenity labels from PROPERTY_AMENITIES (assumed create key — same as shortlets). */
+  amenities?: string[];
 }
 
 /**

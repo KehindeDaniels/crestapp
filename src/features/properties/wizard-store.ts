@@ -38,6 +38,7 @@ interface ListPropertyWizardState {
   images: File[];
   videos: File[];
   documents: File[];
+  amenities: string[];
   detailsComplete: boolean;
   mediaComplete: boolean;
   setDetails: (data: {
@@ -47,6 +48,7 @@ interface ListPropertyWizardState {
     bathrooms: number;
     squareMeters: number;
     description: string;
+    amenities: string[];
   }) => void;
   setMedia: (data: {
     title: string;
@@ -76,6 +78,7 @@ const initialState = {
   images: [] as File[],
   videos: [] as File[],
   documents: [] as File[],
+  amenities: [] as string[],
   detailsComplete: false,
   mediaComplete: false,
 };

@@ -115,6 +115,7 @@ export default function ListPropertyDocumentsPage() {
         bedrooms: wizard.bedrooms,
         bathrooms: wizard.bathrooms,
         square_meters: wizard.squareMeters,
+        amenities: wizard.amenities,
       });
 
       const propertyId = response.data?.property_id;

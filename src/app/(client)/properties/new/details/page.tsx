@@ -5,11 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
-import { ChevronLeft, Plus, X } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { AmenitiesPicker } from "@/components/ui/amenities-picker";
+import { PROPERTY_AMENITIES } from "@/config/constants";
 import {
   Form,
   FormControl,
@@ -26,7 +28,6 @@ import {
   listPropertyDetailsSchema,
   LIST_PROPERTY_PURPOSE_CARDS,
   LIST_PROPERTY_TYPES,
-  APARTMENT_FEATURES,
   LAND_FEATURES,
   type ListPropertyDetailsInput,
 } from "@/features/properties";
@@ -49,6 +50,7 @@ import {
 export default function ListPropertyDetailsPage() {
   const router = useRouter();
   const wizard = useListPropertyWizardStore();
+  const [amenities, setAmenities] = useState<string[]>(wizard.amenities);
   const role = useSessionStore((s) => s.user?.role);
   const allowedPurpose: ListablePurpose | null =
     role === "landlord" ? "rent" : role === "seller" ? "sale" : null;
@@ -76,7 +78,8 @@ export default function ListPropertyDetailsPage() {
     name: "propertyType",
   });
   const isLand = propertyType === "land";
-  const presetFeatures = isLand ? LAND_FEATURES : APARTMENT_FEATURES;
+  // Land has its own feature list; everything else uses the canonical amenities.
+  const presetFeatures = isLand ? [...LAND_FEATURES] : [...PROPERTY_AMENITIES];
 
   if (!allowedPurpose) return null;
 
@@ -89,6 +92,7 @@ export default function ListPropertyDetailsPage() {
       // Land has no bedroom/bathroom fields in the design — not collected, sent as 0.
       bedrooms: isLand ? 0 : Number(values.bedrooms),
       bathrooms: isLand ? 0 : Number(values.bathrooms),
+      amenities,
     });
     router.push("/properties/new/media");
   }
@@ -317,7 +321,14 @@ export default function ListPropertyDetailsPage() {
                 )}
               />
 
-              <FeaturesPicker presetFeatures={presetFeatures} />
+              <div className="space-y-3">
+                <p className="text-sm font-medium">Property Features</p>
+                <AmenitiesPicker
+                  selected={amenities}
+                  onChange={setAmenities}
+                  options={presetFeatures}
+                />
+              </div>
             </div>
           </div>
 
@@ -326,64 +337,6 @@ export default function ListPropertyDetailsPage() {
           </Button>
         </form>
       </Form>
-    </div>
-  );
-}
-
-/**
- * Replaces the earlier prefilled-checkbox list — per feedback, users should
- * be able to pick from common features OR type their own. Fully disabled:
- * no backend field exists for property features at all (confirmed by an
- * exhaustive search of the Postman collection), so this is "build it
- * complete, just non-functional" rather than a working feature, matching
- * every other confirmed-absent field in this wizard.
- */
-function FeaturesPicker({ presetFeatures }: { presetFeatures: string[] }) {
-  const [customFeature, setCustomFeature] = useState("");
-
-  return (
-    <div
-      className="space-y-3"
-      title="No backend field exists for property features yet"
-    >
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium">Property Features</p>
-        <span className="text-muted-foreground text-xs">Coming soon</span>
-      </div>
-
-      <Select size="xl" disabled defaultValue="">
-        <option value="">Add a common feature…</option>
-        {presetFeatures.map((feature) => (
-          <option key={feature} value={feature}>
-            {feature}
-          </option>
-        ))}
-      </Select>
-
-      <div className="flex gap-2">
-        <Input
-          size="xl"
-          disabled
-          placeholder="Or type your own"
-          value={customFeature}
-          onChange={(e) => setCustomFeature(e.target.value)}
-        />
-        <Button type="button" variant="outline" size="icon-lg" disabled>
-          <Plus className="size-4" />
-        </Button>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {presetFeatures.slice(0, 3).map((feature) => (
-          <span
-            key={feature}
-            className="bg-muted text-muted-foreground/60 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs"
-          >
-            {feature}
-            <X className="size-3" />
-          </span>
-        ))}
-      </div>
     </div>
   );
 }

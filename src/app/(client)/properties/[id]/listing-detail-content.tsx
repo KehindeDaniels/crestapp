@@ -101,6 +101,22 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
     </div>
   );
 
+  const amenitiesSection = property.amenities.length > 0 && (
+    <div className="space-y-2">
+      <p className="text-sm font-semibold">Amenities</p>
+      <div className="flex flex-wrap gap-2">
+        {property.amenities.map((a) => (
+          <span
+            key={a}
+            className="rounded-full border bg-muted/40 px-3 py-1.5 text-sm text-muted-foreground"
+          >
+            {a}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="max-w-6xl space-y-5 p-4 pb-0 sm:space-y-6 sm:p-6 sm:pb-6 lg:p-10">
       {/* ---------- Mobile (sm:hidden) — matches Figma node 72:6834 ---------- */}
@@ -177,6 +193,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
         )}
 
         {videoSection && <div className="px-4 pt-3">{videoSection}</div>}
+        {amenitiesSection && <div className="px-4 pt-3">{amenitiesSection}</div>}
 
         <div className="space-y-3 px-4 pt-4">
           <div className="flex items-center justify-between gap-3">
@@ -409,6 +426,7 @@ export function ListingDetailContent({ propertyId }: { propertyId: number }) {
             )}
 
             {videoSection}
+            {amenitiesSection}
 
             <div className="space-y-3 rounded-2xl border p-5">
               <div className="flex items-center gap-2 text-xs font-medium">

@@ -1,32 +1,38 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import {
+  CalendarDays,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  Pencil,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { isApiError } from "@/lib/api/errors";
-import { useMyShortlets, useShortletDetail, useUpdateShortlet } from "@/features/shortlets";
+import { useMyShortlets, useUpdateShortlet } from "@/features/shortlets";
+import { EditListingDialog } from "./edit-listing-dialog";
 
 /**
  * Owner's single-listing management.
  *
- * Core data (status, rooms, activate) comes from the owner's own listing list
- * (`GET /api/shortlets`), which — crucially — includes *drafts*. The public
- * `browse` endpoint is active-only and 404s a draft, so it can't be the source
- * here; it's used only to enrich the extra stats (cleaning/service/nights) once
- * a listing is active.
+ * All data (status, fees, nights, rooms, description) comes from the owner's own
+ * listing list (`GET /api/shortlets`), which — crucially — includes *drafts* and
+ * carries every field. The public `browse` endpoint is active-only and 404s a
+ * draft, so it can't be the source here.
  *
- * Activation sends `{status: "active"}` only (the `PUT` accepts partial updates
- * — every field on `UpdateShortletPayload` is optional — so this avoids
- * re-sending, and possibly clobbering, fields we'd have to reconstruct). Each
- * room links to its calendar. See docs/design/shortlet-implementation-plan.md.
+ * Activation/edit send partial `PUT`s (every field on `UpdateShortletPayload` is
+ * optional). Each room links to its calendar. See
+ * docs/design/shortlet-implementation-plan.md.
  */
 export function ManageListingContent({ listingId }: { listingId: number }) {
   const { data: listings, isPending, isError } = useMyShortlets();
   const listing = listings?.find((l) => String(l.listingId) === String(listingId));
-  // `browse` is active-only — only fetch the richer detail when the listing is live.
-  const { data: detail } = useShortletDetail(listing?.status === "active" ? listingId : null);
   const updateShortlet = useUpdateShortlet(listingId);
+  const [editOpen, setEditOpen] = useState(false);
 
   if (isPending) {
     return (
@@ -67,30 +73,38 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
           <h1 className="text-xl font-bold sm:text-2xl">{listing.title}</h1>
           <p className="text-sm text-muted-foreground">{listing.city}</p>
         </div>
-        <span
-          className={cn(
-            "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize",
-            isActive && "bg-green-100 text-green-800",
-            isPaused && "bg-amber-100 text-amber-800",
-            isAwaitingApproval && "bg-muted text-muted-foreground",
-          )}
-        >
-          {listing.status}
-        </span>
+        <div className="flex shrink-0 items-center gap-2">
+          <span
+            className={cn(
+              "rounded-full px-2.5 py-1 text-xs font-medium capitalize",
+              isActive && "bg-green-100 text-green-800",
+              isPaused && "bg-amber-100 text-amber-800",
+              isAwaitingApproval && "bg-muted text-muted-foreground",
+            )}
+          >
+            {listing.status}
+          </span>
+          <Button type="button" variant="outline" size="sm" onClick={() => setEditOpen(true)}>
+            <Pencil className="size-4" />
+            Edit
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 rounded-2xl border p-4 text-sm sm:grid-cols-4">
         <Stat label="Per night" value={listing.pricePerNightFormatted} />
-        <Stat label="Cleaning" value={detail?.cleaningFeeFormatted ?? "—"} />
+        {/* Labelled "Caution" per product; the underlying field is `cleaning_fee`
+            (non-refundable, added to the guest's total) — see ShortletDetailModel. */}
+        <Stat label="Caution" value={listing.cleaningFeeFormatted} />
         <Stat
           label="Service fee"
-          value={detail?.serviceFeePercent != null ? `${detail.serviceFeePercent}%` : "—"}
+          value={listing.serviceFeePercent != null ? `${listing.serviceFeePercent}%` : "—"}
         />
         <Stat
           label="Nights"
           value={
-            detail?.minNights != null && detail?.maxNights != null
-              ? `${detail.minNights}–${detail.maxNights}`
+            listing.minNights != null && listing.maxNights != null
+              ? `${listing.minNights}–${listing.maxNights}`
               : "—"
           }
         />
@@ -158,6 +172,13 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
           ))}
         </div>
       </div>
+
+      <EditListingDialog
+        listingId={listingId}
+        listing={listing}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+      />
     </div>
   );
 }

@@ -257,7 +257,10 @@ export function CreateShortletContent() {
           <Field label="Base rate / night (₦)" htmlFor="s-rate">
             <Input id="s-rate" type="number" min={0} value={baseRate} onChange={(e) => setBaseRate(Number(e.target.value))} />
           </Field>
-          <Field label="Cleaning fee (₦)" htmlFor="s-clean">
+          {/* "Caution fee" is a label only — the backend field is `cleaning_fee`
+              (non-refundable, added to the guest's total). A real refundable
+              caution/deposit would need backend support. */}
+          <Field label="Caution fee (₦)" htmlFor="s-clean">
             <Input id="s-clean" type="number" min={0} value={cleaningFee} onChange={(e) => setCleaningFee(Number(e.target.value))} />
           </Field>
           <Field label="Service fee (bps)" htmlFor="s-svc">

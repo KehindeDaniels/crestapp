@@ -21,12 +21,18 @@ import type {
 
 // --- Owner: listings ---
 
-/** `GET /api/shortlets` — the owner's own listings. */
+/**
+ * `GET /api/shortlets` — the owner's own listings. Maps to the *full* detail
+ * model (not just the card): the live list response includes every field
+ * (fees, nights, check-in, rooms, description…), so the owner manage/edit pages
+ * get everything they need from this one call — no active-only `browse` needed,
+ * which also means draft/pending listings are fully editable.
+ */
 export function useMyShortlets() {
   const userId = useSessionStore((s) => s.user?.user_id);
   return useQuery({
     queryKey: queryKeys.shortlets.mine,
-    queryFn: async () => (await shortletsApi.listMine()).data.map(toShortletCardModel),
+    queryFn: async () => (await shortletsApi.listMine()).data.map(toShortletDetailModel),
     enabled: Boolean(userId),
   });
 }

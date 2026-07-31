@@ -82,11 +82,21 @@ export function toShortletCardModel(listing: ApiShortletListing): ShortletCardMo
 
 /** Full listing detail for the guest browse page. */
 export interface ShortletDetailModel extends ShortletCardModel {
+  description: string | null;
   checkInTime: string | null;
+  /**
+   * The `cleaning_fee` backend field. NOTE: the UI labels this "Caution fee",
+   * but it behaves like a cleaning fee — it's added to the guest's total and is
+   * NOT refundable. A true caution/security deposit (held then refunded) does
+   * not exist for shortlets in the backend (only rentals have `security_deposit`);
+   * adding one is a backend change. The label is cosmetic only.
+   */
   cleaningFee: number;
   cleaningFeeFormatted: string;
   /** Service fee as basis points (500 = 5%) — display as a percent. */
   serviceFeePercent: number | null;
+  /** Raw basis points, for editing (round-trips to `service_fee_bps`). */
+  serviceFeeBps: number | null;
   instantBook: boolean;
   minNights: number | null;
   maxNights: number | null;
@@ -97,10 +107,12 @@ export function toShortletDetailModel(listing: ApiShortletListing): ShortletDeta
   const card = toShortletCardModel(listing);
   return {
     ...card,
+    description: listing.property.description ?? null,
     checkInTime: listing.check_in_time ?? null,
     cleaningFee: num(listing.cleaning_fee),
     cleaningFeeFormatted: formatCurrency(num(listing.cleaning_fee), card.currency),
     serviceFeePercent: listing.service_fee_bps != null ? listing.service_fee_bps / 100 : null,
+    serviceFeeBps: listing.service_fee_bps ?? null,
     instantBook: listing.instant_book ?? false,
     minNights: listing.min_nights ?? null,
     maxNights: listing.max_nights ?? null,

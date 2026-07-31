@@ -63,6 +63,7 @@ export interface ApiShortletMedia {
 export interface ApiShortletPropertySummary {
   property_id?: ID;
   title: string;
+  description?: string;
   purpose: string;
   city: string;
   /** Present on some examples (create/list), absent on others (browse/search). */

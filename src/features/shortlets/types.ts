@@ -85,6 +85,8 @@ export interface ApiShortletListing {
   rooms: ApiShortletRoom[];
   /** Present on the fuller examples (create/browse), trimmed from list/search. */
   check_in_time?: string;
+  /** Renamed `cleaning_fee` → `caution_fee` (2026-08). Read both for safety. */
+  caution_fee?: Money;
   cleaning_fee?: Money;
   service_fee_bps?: number;
   instant_book?: boolean;
@@ -126,7 +128,7 @@ export interface CreateShortletPayload {
   max_nights: number;
   check_in_time: string;
   instant_book: boolean;
-  cleaning_fee: number;
+  caution_fee: number;
   service_fee_bps: number;
   cancellation_policy: string;
   /** Amenity labels from PROPERTY_AMENITIES (assumed create key — verify on first save). */
@@ -150,7 +152,7 @@ export interface UpdateShortletPayload {
   max_nights?: number;
   check_in_time?: string;
   instant_book?: boolean;
-  cleaning_fee?: number;
+  caution_fee?: number;
   service_fee_bps?: number;
   cancellation_policy?: string;
   title?: string;
@@ -261,7 +263,9 @@ export interface ShortletQuoteResponse {
     currency: string;
     rooms: ApiQuoteRoom[];
     subtotal: Money;
-    cleaning_fee: Money;
+    /** Renamed `cleaning_fee` → `caution_fee` (2026-08). Read both for safety. */
+    caution_fee?: Money;
+    cleaning_fee?: Money;
     service_fee: Money;
     total_amount: Money;
     check_in_at: string;

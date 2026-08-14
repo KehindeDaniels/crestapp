@@ -92,7 +92,7 @@ export function CreateShortletContent() {
   const [bathrooms, setBathrooms] = useState(1);
   const [squareMeters, setSquareMeters] = useState(0);
   const [baseRate, setBaseRate] = useState(0);
-  const [cleaningFee, setCleaningFee] = useState(0);
+  const [cautionFee, setCautionFee] = useState(0);
   const [serviceFeeBps, setServiceFeeBps] = useState(500);
   const [minNights, setMinNights] = useState(1);
   const [maxNights, setMaxNights] = useState(14);
@@ -130,7 +130,7 @@ export function CreateShortletContent() {
         max_nights: maxNights,
         check_in_time: checkInTime,
         instant_book: instantBook,
-        cleaning_fee: cleaningFee,
+        caution_fee: cautionFee,
         service_fee_bps: serviceFeeBps,
         cancellation_policy: cancellationPolicy,
         amenities,
@@ -275,11 +275,9 @@ export function CreateShortletContent() {
           <Field label="Base rate / night (₦)" htmlFor="s-rate">
             <Input id="s-rate" type="number" min={0} value={baseRate} onChange={(e) => setBaseRate(Number(e.target.value))} />
           </Field>
-          {/* "Caution fee" is a label only — the backend field is `cleaning_fee`
-              (non-refundable, added to the guest's total). A real refundable
-              caution/deposit would need backend support. */}
-          <Field label="Caution fee (₦)" htmlFor="s-clean">
-            <Input id="s-clean" type="number" min={0} value={cleaningFee} onChange={(e) => setCleaningFee(Number(e.target.value))} />
+          {/* Backend field `caution_fee` (renamed from cleaning_fee). Added to the guest's total. */}
+          <Field label="Caution fee (₦)" htmlFor="s-caution">
+            <Input id="s-caution" type="number" min={0} value={cautionFee} onChange={(e) => setCautionFee(Number(e.target.value))} />
           </Field>
           <Field label="Service fee (bps)" htmlFor="s-svc">
             <Input id="s-svc" type="number" min={0} value={serviceFeeBps} onChange={(e) => setServiceFeeBps(Number(e.target.value))} />

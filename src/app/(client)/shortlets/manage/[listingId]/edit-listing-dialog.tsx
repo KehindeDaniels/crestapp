@@ -22,7 +22,7 @@ interface FormState {
   title: string;
   description: string;
   baseRate: number;
-  cleaningFee: number;
+  cautionFee: number;
   serviceFeeBps: number;
   minNights: number;
   maxNights: number;
@@ -37,7 +37,7 @@ function toForm(l: ShortletDetailModel): FormState {
     title: l.title,
     description: l.description ?? "",
     baseRate: l.pricePerNight,
-    cleaningFee: l.cleaningFee,
+    cautionFee: l.cautionFee,
     serviceFeeBps: l.serviceFeeBps ?? 0,
     minNights: l.minNights ?? 1,
     maxNights: l.maxNights ?? 1,
@@ -54,9 +54,8 @@ function toForm(l: ShortletDetailModel): FormState {
  * update). Room names/rates are NOT editable here: the update endpoint has no
  * `rooms` field, so this covers listing-level fields only.
  *
- * The "Caution fee" field maps to the backend's `cleaning_fee` — a cosmetic
- * rename. It stays non-refundable and added to the guest's total; a real
- * refundable deposit would need backend support (see ShortletDetailModel).
+ * The "Caution fee" field maps to the backend's `caution_fee` (renamed from
+ * `cleaning_fee`, 2026-08). It's added to the guest's booking total.
  */
 export function EditListingDialog({
   listingId,
@@ -112,7 +111,7 @@ function EditListingForm({
         title: form.title.trim(),
         description: form.description.trim(),
         base_nightly_rate: form.baseRate,
-        cleaning_fee: form.cleaningFee,
+        caution_fee: form.cautionFee,
         service_fee_bps: form.serviceFeeBps,
         min_nights: form.minNights,
         max_nights: form.maxNights,
@@ -159,14 +158,14 @@ function EditListingForm({
               />
             </div>
             <div className="space-y-1.5">
-              {/* Backend field is `cleaning_fee`; label only. Non-refundable, added to total. */}
+              {/* Backend field `caution_fee` (renamed from cleaning_fee). Added to the guest's total. */}
               <Label htmlFor="e-caution">Caution fee (₦)</Label>
               <Input
                 id="e-caution"
                 type="number"
                 min={0}
-                value={form.cleaningFee}
-                onChange={(e) => set("cleaningFee", Number(e.target.value))}
+                value={form.cautionFee}
+                onChange={(e) => set("cautionFee", Number(e.target.value))}
               />
             </div>
             <div className="space-y-1.5">

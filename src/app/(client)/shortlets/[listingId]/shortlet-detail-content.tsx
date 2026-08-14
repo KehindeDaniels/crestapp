@@ -356,9 +356,8 @@ export function ShortletDetailContent({ listingId }: { listingId: number }) {
                     <span>{quote.subtotalFormatted}</span>
                   </div>
                   <div className="flex justify-between">
-                    {/* Label only — the `cleaning_fee` field; non-refundable, part of the total. */}
                     <span className="text-muted-foreground">Caution fee</span>
-                    <span>{quote.cleaningFeeFormatted}</span>
+                    <span>{quote.cautionFeeFormatted}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Service fee</span>

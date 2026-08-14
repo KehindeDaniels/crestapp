@@ -110,14 +110,11 @@ export interface ShortletDetailModel extends ShortletCardModel {
   description: string | null;
   checkInTime: string | null;
   /**
-   * The `cleaning_fee` backend field. NOTE: the UI labels this "Caution fee",
-   * but it behaves like a cleaning fee — it's added to the guest's total and is
-   * NOT refundable. A true caution/security deposit (held then refunded) does
-   * not exist for shortlets in the backend (only rentals have `security_deposit`);
-   * adding one is a backend change. The label is cosmetic only.
+   * The `caution_fee` backend field (renamed from `cleaning_fee`, 2026-08).
+   * Added to the guest's booking total.
    */
-  cleaningFee: number;
-  cleaningFeeFormatted: string;
+  cautionFee: number;
+  cautionFeeFormatted: string;
   /** Service fee as basis points (500 = 5%) — display as a percent. */
   serviceFeePercent: number | null;
   /** Raw basis points, for editing (round-trips to `service_fee_bps`). */
@@ -143,8 +140,11 @@ export function toShortletDetailModel(listing: ApiShortletListing): ShortletDeta
     amenities: listing.property.amenities ?? [],
     description: listing.property.description ?? null,
     checkInTime: listing.check_in_time ?? null,
-    cleaningFee: num(listing.cleaning_fee),
-    cleaningFeeFormatted: formatCurrency(num(listing.cleaning_fee), card.currency),
+    cautionFee: num(listing.caution_fee ?? listing.cleaning_fee),
+    cautionFeeFormatted: formatCurrency(
+      num(listing.caution_fee ?? listing.cleaning_fee),
+      card.currency,
+    ),
     serviceFeePercent: listing.service_fee_bps != null ? listing.service_fee_bps / 100 : null,
     serviceFeeBps: listing.service_fee_bps ?? null,
     instantBook: listing.instant_book ?? false,
@@ -187,7 +187,7 @@ export interface QuoteModel {
   checkInAt: string;
   endsAt: string;
   subtotalFormatted: string;
-  cleaningFeeFormatted: string;
+  cautionFeeFormatted: string;
   serviceFeeFormatted: string;
   totalFormatted: string;
   rooms: { roomId: ID; name: string; nights: number; lineTotalFormatted: string }[];
@@ -203,7 +203,7 @@ export function toQuoteModel(data: ShortletQuoteResponse["data"]): QuoteModel {
     checkInAt: data.check_in_at,
     endsAt: data.ends_at,
     subtotalFormatted: formatCurrency(num(data.subtotal), currency),
-    cleaningFeeFormatted: formatCurrency(num(data.cleaning_fee), currency),
+    cautionFeeFormatted: formatCurrency(num(data.caution_fee ?? data.cleaning_fee), currency),
     serviceFeeFormatted: formatCurrency(num(data.service_fee), currency),
     totalFormatted: formatCurrency(num(data.total_amount), currency),
     rooms: data.rooms.map((room) => ({

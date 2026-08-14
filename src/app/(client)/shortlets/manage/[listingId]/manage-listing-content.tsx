@@ -93,9 +93,7 @@ export function ManageListingContent({ listingId }: { listingId: number }) {
 
       <div className="grid grid-cols-2 gap-3 rounded-2xl border p-4 text-sm sm:grid-cols-4">
         <Stat label="Per night" value={listing.pricePerNightFormatted} />
-        {/* Labelled "Caution" per product; the underlying field is `cleaning_fee`
-            (non-refundable, added to the guest's total) — see ShortletDetailModel. */}
-        <Stat label="Caution" value={listing.cleaningFeeFormatted} />
+        <Stat label="Caution" value={listing.cautionFeeFormatted} />
         <Stat
           label="Service fee"
           value={listing.serviceFeePercent != null ? `${listing.serviceFeePercent}%` : "—"}

@@ -27,7 +27,14 @@ export function ShortletSearchContent() {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [params, setParams] = useState<ShortletSearchParams | null>(null);
+  // Run a default search on load (today + 2 nights, no city) so guests land on
+  // real listings instead of an empty state — better UX. There's no separate
+  // "browse all" endpoint; search with just date/nights returns everything
+  // available, which is what we want here.
+  const [params, setParams] = useState<ShortletSearchParams | null>({
+    check_in_date: todayIso(),
+    nights: 2,
+  });
 
   const { data, isFetching, isError } = useShortletSearch(params);
 

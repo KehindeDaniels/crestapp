@@ -71,6 +71,17 @@ function toPrimaryImageUrl(listing: ApiShortletListing): string | null {
   return primary ? toAbsoluteMediaUrl(primary.media_url) : null;
 }
 
+/** All image URLs (absolute), primary first — for the detail gallery. */
+function toImageUrls(listing: ApiShortletListing): string[] {
+  const images = (listing.property.media ?? []).filter(
+    (m) => (m.media_type ?? "image") === "image",
+  );
+  const sorted = [...images].sort(
+    (a, b) => (b.is_primary === 1 ? 1 : 0) - (a.is_primary === 1 ? 1 : 0),
+  );
+  return sorted.map((m) => toAbsoluteMediaUrl(m.media_url));
+}
+
 /** Absolute URLs of any uploaded videos (media_type === "video"). */
 function toVideoUrls(listing: ApiShortletListing): string[] {
   return (listing.property.media ?? [])
@@ -115,6 +126,8 @@ export interface ShortletDetailModel extends ShortletCardModel {
   minNights: number | null;
   maxNights: number | null;
   cancellationPolicy: string | null;
+  /** All photos (absolute URLs), primary first — for the detail gallery. */
+  imageUrls: string[];
   /** Uploaded videos (absolute .mp4 URLs) — no poster/thumbnail is returned for these. */
   videoUrls: string[];
   /** Amenity labels (e.g. "Wi-Fi", "Parking Space"). */
@@ -125,6 +138,7 @@ export function toShortletDetailModel(listing: ApiShortletListing): ShortletDeta
   const card = toShortletCardModel(listing);
   return {
     ...card,
+    imageUrls: toImageUrls(listing),
     videoUrls: toVideoUrls(listing),
     amenities: listing.property.amenities ?? [],
     description: listing.property.description ?? null,

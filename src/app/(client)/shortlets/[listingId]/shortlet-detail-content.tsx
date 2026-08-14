@@ -49,6 +49,8 @@ export function ShortletDetailContent({ listingId }: { listingId: number }) {
   const [nights, setNights] = useState(Number(searchParams.get("nights")) || 2);
   const [selectedRooms, setSelectedRooms] = useState<ID[]>([]);
   const [quote, setQuote] = useState<QuoteModel | null>(null);
+  const [activeImage, setActiveImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const { data: listing, isPending, isError } = useShortletDetail(listingId);
   const { data: availabilityRaw, isFetching: availabilityLoading } = useShortletAvailability(
@@ -130,17 +132,50 @@ export function ShortletDetailContent({ listingId }: { listingId: number }) {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-muted">
-            {listing.imageUrl && (
+          {/* Main image — click to open the full-screen gallery. */}
+          <button
+            type="button"
+            onClick={() => listing.imageUrls.length > 0 && setLightboxOpen(true)}
+            className={cn(
+              "relative block aspect-video w-full overflow-hidden rounded-2xl bg-muted",
+              listing.imageUrls.length > 0 && "cursor-zoom-in",
+            )}
+            aria-label="View photos"
+          >
+            {listing.imageUrls[activeImage] && (
               <Image
-                src={listing.imageUrl}
+                src={listing.imageUrls[activeImage]}
                 alt={listing.title}
                 fill
                 sizes="(min-width: 1024px) 66vw, 100vw"
                 className="object-cover"
               />
             )}
-          </div>
+            {listing.imageUrls.length > 1 && (
+              <span className="absolute right-3 bottom-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white">
+                {activeImage + 1}/{listing.imageUrls.length} · View photos
+              </span>
+            )}
+          </button>
+
+          {/* Thumbnail strip — click to switch the main image. */}
+          {listing.imageUrls.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {listing.imageUrls.map((url, i) => (
+                <button
+                  key={url}
+                  type="button"
+                  onClick={() => setActiveImage(i)}
+                  className={cn(
+                    "relative aspect-video h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-2 transition",
+                    i === activeImage ? "ring-primary" : "ring-transparent",
+                  )}
+                >
+                  <Image src={url} alt="" fill sizes="120px" className="object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
 
           {listing.videoUrls.map((url) => (
             <video
@@ -374,6 +409,59 @@ export function ShortletDetailContent({ listingId }: { listingId: number }) {
           </div>
         </div>
       </div>
+
+      {lightboxOpen && listing.imageUrls.length > 0 && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-black/90"
+          onClick={() => setLightboxOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="flex items-center justify-between p-4 text-white">
+            <span className="text-sm">
+              {activeImage + 1} / {listing.imageUrls.length}
+            </span>
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(false)}
+              className="rounded-full bg-white/10 px-3 py-1 text-sm"
+            >
+              Close
+            </button>
+          </div>
+          <div className="relative flex-1" onClick={(e) => e.stopPropagation()}>
+            <Image
+              src={listing.imageUrls[activeImage]}
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-contain"
+            />
+            {listing.imageUrls.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveImage((i) => (i - 1 + listing.imageUrls.length) % listing.imageUrls.length)
+                  }
+                  className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-white/15 p-2 text-white"
+                  aria-label="Previous photo"
+                >
+                  <ChevronLeft className="size-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveImage((i) => (i + 1) % listing.imageUrls.length)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 rotate-180 rounded-full bg-white/15 p-2 text-white"
+                  aria-label="Next photo"
+                >
+                  <ChevronLeft className="size-6" />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { isApiError } from "@/lib/api/errors";
+import { apiErrorMessage } from "@/lib/api/errors";
 import { useKycWizardStore, useSubmitKyc } from "@/features/kyc";
 import { useSessionStore } from "@/features/auth";
 
@@ -96,7 +96,7 @@ export default function KycProcessingPage() {
         onSuccess: () => wizard.markSubmissionSuccess(),
         onError: (error) =>
           wizard.markSubmissionError(
-            isApiError(error) ? error.message : "Something went wrong submitting your verification.",
+            apiErrorMessage(error, "Something went wrong submitting your verification."),
           ),
       },
     );
@@ -124,7 +124,7 @@ export default function KycProcessingPage() {
         onSuccess: () => wizard.markSubmissionSuccess(),
         onError: (error) =>
           wizard.markSubmissionError(
-            isApiError(error) ? error.message : "Something went wrong submitting your verification.",
+            apiErrorMessage(error, "Something went wrong submitting your verification."),
           ),
       },
     );

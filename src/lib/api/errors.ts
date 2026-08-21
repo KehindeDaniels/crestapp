@@ -57,7 +57,7 @@ export async function toApiError(response: Response): Promise<ApiError> {
   const message =
     (typeof record.message === "string" && record.message) ||
     response.statusText ||
-    "Request failed";
+    `Request failed (HTTP ${response.status})`;
 
   const fieldErrors =
     record.errors && typeof record.errors === "object"

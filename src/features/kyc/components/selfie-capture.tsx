@@ -16,6 +16,22 @@ type CameraState =
   | "denied";
 
 /**
+ * iOS blocks the live camera (`getUserMedia`) inside in-app browsers (opening a
+ * link from Instagram, Facebook, WhatsApp, etc.) — it only works in Safari
+ * proper. Detect the common ones so we can tell iPhone users to switch to
+ * Safari instead of leaving them stuck. Conservative match (known in-app UA
+ * tokens only) to avoid false-positives on real Safari.
+ */
+function isIosInAppBrowser(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  return (
+    /iPhone|iPad|iPod/.test(ua) &&
+    /FBAN|FBAV|Instagram|Line|Twitter|LinkedIn|Snapchat|Pinterest|WhatsApp|MicroMessenger/i.test(ua)
+  );
+}
+
+/**
  * Live camera capture for the KYC selfie step (getUserMedia), matching the
  * Figma design's in-app camera frame rather than a plain file picker. Falls
  * back to `FileUploadField` (the pre-existing file-input flow) when the
@@ -62,10 +78,23 @@ export function SelfieCapture({
           return;
         }
         streamRef.current = stream;
-        if (videoRef.current) videoRef.current.srcObject = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          // iOS Safari frequently won't autoplay a MediaStream from the
+          // `autoPlay` attribute alone — the preview stays BLACK. An explicit
+          // play() (plus the `onLoadedMetadata` handler on the element) is
+          // required. This is the main reason the live camera "only fails on
+          // iPhone". Errors are swallowed (e.g. play() interrupted by unmount).
+          videoRef.current.play().catch(() => {});
+        }
         setState("streaming");
       })
-      .catch(() => setState("denied"));
+      .catch((err: unknown) => {
+        // Distinguish an actual permission denial from "camera unavailable"
+        // (no camera, camera in use, or blocked by an iOS in-app browser).
+        const name = err instanceof Error ? err.name : "";
+        setState(name === "NotAllowedError" ? "denied" : "unsupported");
+      });
 
     return () => {
       cancelled = true;
@@ -128,9 +157,18 @@ export function SelfieCapture({
       <div>
         <p className="mb-3 text-sm text-muted-foreground">
           {state === "denied"
-            ? "Camera access was denied — upload a photo instead."
-            : "Your browser doesn't support camera capture — upload a photo instead."}
+            ? "We couldn't access your camera — it may be blocked. You can upload a photo instead."
+            : "The live camera isn't available on this browser — you can upload a photo instead."}
         </p>
+
+        {isIosInAppBrowser() && (
+          <p className="mb-3 rounded-lg bg-muted p-3 text-xs text-muted-foreground">
+            On iPhone, the live camera doesn&apos;t work inside another app&apos;s browser. Open this
+            page in <span className="font-medium">Safari</span> to use the camera — or just tap below
+            to take/upload a photo.
+          </p>
+        )}
+
         <FileUploadField
           label="Take a Selfie"
           purpose={purpose}
@@ -157,6 +195,10 @@ export function SelfieCapture({
           autoPlay
           playsInline
           muted
+          // Play once the stream is attached and the element is visible — the
+          // reliable trigger on iOS (the .then's play() can run while the
+          // element is still hidden).
+          onLoadedMetadata={(e) => e.currentTarget.play().catch(() => {})}
           className={cn(
             "size-full object-cover [transform:scaleX(-1)]",
             state !== "streaming" && "hidden",

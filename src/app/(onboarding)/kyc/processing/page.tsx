@@ -14,18 +14,30 @@ import { useSessionStore } from "@/features/auth";
  * (docs/design/screenshots/kyc/Scanning.png) — shown over the real captured
  * selfie while `kyc/submit` is in flight.
  */
-function ScanningFrame({ imageUrl, scanning }: { imageUrl: string; scanning: boolean }) {
+function ScanningFrame({
+  imageUrl,
+  scanning,
+}: {
+  imageUrl: string;
+  scanning: boolean;
+}) {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-80">
-      <span className="absolute top-4 left-4 size-8 rounded-tl-lg border-t-4 border-l-4 border-primary" />
-      <span className="absolute top-4 right-4 size-8 rounded-tr-lg border-t-4 border-r-4 border-primary" />
-      <span className="absolute bottom-4 left-4 size-8 rounded-bl-lg border-b-4 border-l-4 border-primary" />
-      <span className="absolute right-4 bottom-4 size-8 rounded-br-lg border-r-4 border-b-4 border-primary" />
+      <span className="border-primary absolute top-4 left-4 size-8 rounded-tl-lg border-t-4 border-l-4" />
+      <span className="border-primary absolute top-4 right-4 size-8 rounded-tr-lg border-t-4 border-r-4" />
+      <span className="border-primary absolute bottom-4 left-4 size-8 rounded-bl-lg border-b-4 border-l-4" />
+      <span className="border-primary absolute right-4 bottom-4 size-8 rounded-br-lg border-r-4 border-b-4" />
 
       <div className="absolute inset-6 overflow-hidden rounded-2xl">
-        <Image src={imageUrl} alt="Captured selfie" fill className="object-cover" unoptimized />
+        <Image
+          src={imageUrl}
+          alt="Captured selfie"
+          fill
+          className="object-cover"
+          unoptimized
+        />
         {scanning && (
-          <div className="absolute inset-x-0 top-0 h-1 animate-[scan_2.4s_ease-in-out_infinite] bg-primary shadow-[0_0_12px_4px_rgba(6,29,82,0.5)]" />
+          <div className="bg-primary absolute inset-x-0 top-0 h-1 animate-[scan_2.4s_ease-in-out_infinite] shadow-[0_0_12px_4px_rgba(6,29,82,0.5)]" />
         )}
       </div>
     </div>
@@ -96,7 +108,10 @@ export default function KycProcessingPage() {
         onSuccess: () => wizard.markSubmissionSuccess(),
         onError: (error) =>
           wizard.markSubmissionError(
-            apiErrorMessage(error, "Something went wrong submitting your verification."),
+            apiErrorMessage(
+              error,
+              "Something went wrong submitting your verification.",
+            ),
           ),
       },
     );
@@ -124,7 +139,10 @@ export default function KycProcessingPage() {
         onSuccess: () => wizard.markSubmissionSuccess(),
         onError: (error) =>
           wizard.markSubmissionError(
-            apiErrorMessage(error, "Something went wrong submitting your verification."),
+            apiErrorMessage(
+              error,
+              "Something went wrong submitting your verification.",
+            ),
           ),
       },
     );
@@ -135,7 +153,9 @@ export default function KycProcessingPage() {
     router.push("/home");
   }
 
-  const isProcessing = wizard.submissionStatus === "idle" || wizard.submissionStatus === "submitting";
+  const isProcessing =
+    wizard.submissionStatus === "idle" ||
+    wizard.submissionStatus === "submitting";
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 p-6 text-center">
@@ -145,28 +165,33 @@ export default function KycProcessingPage() {
         <div className="w-full space-y-6">
           <ScanningFrame imageUrl={wizard.selfieFileUrl} scanning />
 
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Hold still, we are processing
           </p>
 
           <div className="space-y-1">
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+            <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full">
               <div
-                className="h-full rounded-full bg-primary transition-all duration-300"
+                className="bg-primary h-full rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-xs text-muted-foreground">{Math.round(progress)}%</p>
+            <p className="text-muted-foreground text-xs">
+              {Math.round(progress)}%
+            </p>
           </div>
         </div>
       )}
 
       {wizard.submissionStatus === "error" && (
         <div className="space-y-4">
-          <p className="text-sm text-destructive">
-            {wizard.submissionError ?? "Something went wrong submitting your verification."}
+          <p className="text-destructive text-sm">
+            {wizard.submissionError ??
+              "Something went wrong submitting your verification."}
           </p>
-          {wizard.submissionError?.toLowerCase().includes("pending kyc submission") ? (
+          {wizard.submissionError
+            ?.toLowerCase()
+            .includes("pending kyc submission") ? (
             // Defense-in-depth: the (onboarding)/kyc/(wizard)/layout.tsx gate
             // should prevent reaching this page at all in this case. If it
             // still happens (stale cache, race), retrying will just fail
@@ -175,7 +200,7 @@ export default function KycProcessingPage() {
             // docs/design-vs-backend-gaps.md.
             <Link
               href="/home"
-              className="inline-block rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+              className="bg-primary text-primary-foreground inline-block rounded-lg px-4 py-2 text-sm font-medium"
             >
               Back to Home
             </Link>
@@ -190,7 +215,7 @@ export default function KycProcessingPage() {
       {wizard.submissionStatus === "success" && (
         <div className="w-full space-y-4 rounded-xl border p-6">
           <p className="font-semibold">Verification submitted</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Processing typically takes 24hrs. You will be notify via email or
             phone number upon successful verification.
           </p>

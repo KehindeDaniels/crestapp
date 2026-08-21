@@ -71,7 +71,13 @@ export async function toApiError(response: Response): Promise<ApiError> {
         ? record.error
         : undefined;
 
-  return new ApiError({ status: response.status, message, code, fieldErrors, details: record });
+  return new ApiError({
+    status: response.status,
+    message,
+    code,
+    fieldErrors,
+    details: record,
+  });
 }
 
 /** Type guard for consumers. */
@@ -91,7 +97,9 @@ export function apiErrorMessage(
   fallback = "Something went wrong. Please try again.",
 ): string {
   if (isApiError(err)) {
-    const fieldMessages = err.fieldErrors ? Object.values(err.fieldErrors).flat() : [];
+    const fieldMessages = err.fieldErrors
+      ? Object.values(err.fieldErrors).flat()
+      : [];
     return fieldMessages.length > 0 ? fieldMessages.join(" ") : err.message;
   }
   return fallback;

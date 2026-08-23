@@ -24,7 +24,8 @@ export default function KycIdUploadPage() {
   const router = useRouter();
   const setIdDocument = useKycWizardStore((s) => s.setIdDocument);
 
-  const [documentType, setDocumentType] = useState<KycDocumentType>("national_id");
+  const [documentType, setDocumentType] =
+    useState<KycDocumentType>("national_id");
   const [documentNumber, setDocumentNumber] = useState("");
   const [frontFileUrl, setFrontFileUrl] = useState("");
   const [frontFileName, setFrontFileName] = useState("");
@@ -32,7 +33,9 @@ export default function KycIdUploadPage() {
   const [backFileName, setBackFileName] = useState("");
 
   const canContinue =
-    documentNumber.trim().length > 0 && Boolean(frontFileUrl) && Boolean(backFileUrl);
+    documentNumber.trim().length > 0 &&
+    Boolean(frontFileUrl) &&
+    Boolean(backFileUrl);
 
   function handleContinue() {
     setIdDocument({
@@ -50,23 +53,27 @@ export default function KycIdUploadPage() {
     <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-6 p-6 sm:justify-center">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Upload a valid ID</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Upload a valid ID
+          </h1>
+          <p className="text-muted-foreground text-sm">
             Make sure the details are clear and readable.
           </p>
         </div>
-        <span className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground">
+        <span className="bg-primary text-primary-foreground rounded-lg px-3 py-1.5 text-sm font-medium">
           1/2
         </span>
       </div>
 
-      <div className="rounded-2xl bg-muted p-4 sm:p-6">
+      <div className="bg-muted rounded-2xl p-4 sm:p-6">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <section className="space-y-5 rounded-xl border bg-background p-5 sm:p-6">
+          <section className="bg-background space-y-5 rounded-xl border p-5 sm:p-6">
             <div>
-              <p className="text-sm font-semibold text-primary">Step 1</p>
-              <h2 className="mt-1 text-lg font-semibold">Tell us about your ID</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="text-primary text-sm font-semibold">Step 1</p>
+              <h2 className="mt-1 text-lg font-semibold">
+                Tell us about your ID
+              </h2>
+              <p className="text-muted-foreground mt-1 text-sm">
                 Select the document you&apos;ll upload and enter its number.
               </p>
             </div>
@@ -87,7 +94,9 @@ export default function KycIdUploadPage() {
                     )}
                   >
                     {DOCUMENT_TYPE_LABELS[type]}
-                    {documentType === type && <CheckCircle2 className="size-4 shrink-0" />}
+                    {documentType === type && (
+                      <CheckCircle2 className="size-4 shrink-0" />
+                    )}
                   </button>
                 ))}
               </div>
@@ -96,44 +105,45 @@ export default function KycIdUploadPage() {
               <Label htmlFor="document_number">Document number</Label>
               <Input
                 id="document_number"
-                className="h-11 bg-background"
+                className="bg-background h-11"
                 placeholder="Enter your ID number"
                 value={documentNumber}
                 onChange={(e) => setDocumentNumber(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 Enter the number exactly as it appears on your document.
               </p>
             </div>
           </section>
 
-          <section className="space-y-5 rounded-xl border bg-background p-5 sm:p-6">
+          <section className="bg-background space-y-5 rounded-xl border p-5 sm:p-6">
             <div>
-              <p className="text-sm font-semibold text-primary">Step 2</p>
+              <p className="text-primary text-sm font-semibold">Step 2</p>
               <h2 className="mt-1 text-lg font-semibold">Upload both sides</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Add clear photos of the front and back of your {DOCUMENT_TYPE_LABELS[documentType]}.
+              <p className="text-muted-foreground mt-1 text-sm">
+                Add clear photos of the front and back of your{" "}
+                {DOCUMENT_TYPE_LABELS[documentType]}.
               </p>
             </div>
             <div className="space-y-4">
-            <FileUploadField
-              label="Upload Front ID Card"
-              purpose="kyc_document_front"
-              fileName={frontFileName}
-              onUploaded={(url, name) => {
-                setFrontFileUrl(url);
-                setFrontFileName(name);
-              }}
-            />
-            <FileUploadField
-              label="Upload Back ID Card"
-              purpose="kyc_document_back"
-              fileName={backFileName}
-              onUploaded={(url, name) => {
-                setBackFileUrl(url);
-                setBackFileName(name);
-              }}
-            />
+              <FileUploadField
+                label="Upload Front ID Card"
+                purpose="kyc_document_front"
+                fileName={frontFileName}
+                onUploaded={(url, name) => {
+                  setFrontFileUrl(url);
+                  setFrontFileName(name);
+                }}
+              />
+              <FileUploadField
+                label="Upload Back ID Card"
+                purpose="kyc_document_back"
+                fileName={backFileName}
+                onUploaded={(url, name) => {
+                  setBackFileUrl(url);
+                  setBackFileName(name);
+                }}
+              />
             </div>
             <Button
               type="button"
@@ -143,7 +153,7 @@ export default function KycIdUploadPage() {
             >
               Continue to selfie
             </Button>
-            <p className="text-center text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-center text-xs">
               Both sides must finish uploading before you can continue.
             </p>
           </section>
